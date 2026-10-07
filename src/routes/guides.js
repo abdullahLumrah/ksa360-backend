@@ -1,7 +1,45 @@
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 const { Router } = require('express');
+const multer = require('multer');
 const { db, publicPost } = require('../db');
+const { requireUser } = require('../auth');
 
 const router = Router();
+const UPLOAD_DIR = path.join(__dirname, '..', '..', 'data', 'uploads', 'guides');
+fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+
+const IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.heic', '.heif', '.gif']);
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname || '').toLowerCase() || '.jpg';
+    cb(null, `${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`);
+  },
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 8 * 1024 * 1024, files: 1 },
+  fileFilter: (_req, file, cb) => {
+    const type = String(file.mimetype || '').toLowerCase();
+    const ext = path.extname(file.originalname || '').toLowerCase();
+    if (type.startsWith('image/') || IMAGE_EXT.has(ext)) return cb(null, true);
+    cb(new Error('Only an image can be attached'));
+  },
+});
+
+function receivePostImage(req, res, next) {
+  upload.single('image')(req, res, (err) => {
+    if (!err) return next();
+    return res.status(400).json({ error: err.message || 'Could not upload the image' });
+  });
+}
+
+function publishedSql(alias = '') {
+  const col = alias ? `${alias}.status` : 'status';
+  return `COALESCE(${col}, 'published') = 'published'`;
+}
 
 function allCategories() {
   return db().prepare('SELECT * FROM categories ORDER BY sort_order ASC, name ASC').all();
@@ -27,7 +65,13 @@ function descendantIds(id, byParent) {
 
 function countMap() {
   const rows = db()
-    .prepare('SELECT category_id, COUNT(*) AS n FROM post_categories GROUP BY category_id')
+    .prepare(
+      `SELECT pc.category_id, COUNT(*) AS n
+       FROM post_categories pc
+       JOIN posts p ON p.id = pc.post_id
+       WHERE ${publishedSql('p')}
+       GROUP BY pc.category_id`,
+    )
     .all();
   return new Map(rows.map((row) => [row.category_id, row.n]));
 }
@@ -117,7 +161,7 @@ function decoratePosts(rows, includeBody = false) {
 router.get('/', (_req, res) => {
   const categories = decorateCategories(allCategories());
   const posts = decoratePosts(
-    db().prepare('SELECT * FROM posts ORDER BY date DESC').all(),
+    db().prepare(`SELECT * FROM posts WHERE ${publishedSql()} ORDER BY date DESC`).all(),
     false,
   );
   res.json({
@@ -147,7 +191,7 @@ router.get('/categories/:id', (req, res) => {
         `SELECT DISTINCT p.*
          FROM posts p
          JOIN post_categories pc ON pc.post_id = p.id
-         WHERE pc.category_id IN (${placeholders})
+         WHERE pc.category_id IN (${placeholders}) AND ${publishedSql('p')}
          ORDER BY p.date DESC`,
       )
       .all(...ids),
@@ -173,12 +217,12 @@ router.get('/posts', (req, res) => {
         `SELECT DISTINCT p.*
          FROM posts p
          JOIN post_categories pc ON pc.post_id = p.id
-         WHERE pc.category_id IN (${placeholders})
+         WHERE pc.category_id IN (${placeholders}) AND ${publishedSql('p')}
          ORDER BY p.date DESC`,
       )
       .all(...ids);
   } else {
-    rows = db().prepare('SELECT * FROM posts ORDER BY date DESC').all();
+    rows = db().prepare(`SELECT * FROM posts WHERE ${publishedSql()} ORDER BY date DESC`).all();
   }
   if (q) {
     rows = rows.filter((row) => {
@@ -194,7 +238,9 @@ router.get('/posts/:id', (req, res) => {
   const row =
     db().prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id) ||
     db().prepare('SELECT * FROM posts WHERE slug = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Post not found' });
+  if (!row || (row.status && row.status !== 'published')) {
+    return res.status(404).json({ error: 'Post not found' });
+  }
   res.json(decoratePosts([row], true)[0]);
 });
 
@@ -219,33 +265,42 @@ router.post('/categories', (req, res) => {
   res.status(201).json(publicCategory(row, { childIds: [], directCount: 0, totalCount: 0 }));
 });
 
-router.post('/posts', (req, res) => {
+router.post('/posts', requireUser, receivePostImage, (req, res) => {
   const body = req.body || {};
   const title = String(body.title || '').trim();
+  const description = String(body.description || body.excerpt || body.body || '').trim();
   if (!title) return res.status(400).json({ error: 'title is required' });
-  const id = String(body.id || `post-${Date.now()}`).trim();
+  if (!description) return res.status(400).json({ error: 'description is required' });
+  const id = `post-${crypto.randomUUID()}`;
+  const slug = String(body.slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+  const image = req.file
+    ? `/uploads/guides/${req.file.filename}`
+    : String(body.image || '').trim();
+  const words = description.split(/\s+/).filter(Boolean).length;
   db()
     .prepare(
       `INSERT INTO posts (
         id, title, slug, date, excerpt, preview, body, image,
-        word_count, source, source_label
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        word_count, source, source_label, status, author_id, author_name
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'awaiting_approval', ?, ?)`,
     )
     .run(
       id,
       title,
-      String(body.slug || ''),
-      String(body.date || new Date().toISOString()),
-      String(body.excerpt || ''),
-      String(body.preview || ''),
-      String(body.body || ''),
-      String(body.image || ''),
-      Number(body.wordCount ?? 0),
-      String(body.source || 'admin'),
-      String(body.sourceLabel || 'KSA 360'),
+      slug,
+      new Date().toISOString(),
+      description,
+      description,
+      description,
+      image,
+      words,
+      'user',
+      req.user.name || 'Community',
+      req.user.id,
+      req.user.name || '',
     );
   const categoryIds = body.categoryIds || [];
-  const names = body.categories || [];
+  const names = [].concat(body.categories || []);
   const insertLink = db().prepare(
     'INSERT OR IGNORE INTO post_categories (post_id, category_id) VALUES (?, ?)',
   );
@@ -254,11 +309,11 @@ router.post('/posts', (req, res) => {
     const cat = db().prepare('SELECT id FROM categories WHERE lower(name) = lower(?)').get(String(name));
     if (cat) insertLink.run(id, cat.id);
   }
-  for (const tag of body.tags || []) {
-    db().prepare('INSERT OR IGNORE INTO post_tags (post_id, tag) VALUES (?, ?)').run(id, String(tag));
-  }
   const row = db().prepare('SELECT * FROM posts WHERE id = ?').get(id);
-  res.status(201).json(decoratePosts([row], true)[0]);
+  res.status(201).json({
+    ...decoratePosts([row], true)[0],
+    message: 'Sent for review. It appears after approval.',
+  });
 });
 
 module.exports = { router };

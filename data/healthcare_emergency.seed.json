@@ -1,0 +1,75 @@
+{
+  "hotlines": [
+    {
+      "id": "911",
+      "label": "911",
+      "number": "911",
+      "detail": "Police, ambulance, and fire — unified emergency number across Saudi Arabia.",
+      "sort": 1
+    },
+    {
+      "id": "997",
+      "label": "Ambulance",
+      "number": "997",
+      "detail": "Saudi Red Crescent ambulance.",
+      "sort": 2
+    },
+    {
+      "id": "998",
+      "label": "Civil Defense",
+      "number": "998",
+      "detail": "Fire and rescue.",
+      "sort": 3
+    },
+    {
+      "id": "999",
+      "label": "Police",
+      "number": "999",
+      "detail": "Direct police line.",
+      "sort": 4
+    },
+    {
+      "id": "937",
+      "label": "MOH 937",
+      "number": "937",
+      "detail": "Ministry of Health medical consultation and Seha support.",
+      "sort": 5
+    },
+    {
+      "id": "993",
+      "label": "Traffic",
+      "number": "993",
+      "detail": "Traffic accidents and Saher.",
+      "sort": 6
+    },
+    {
+      "id": "933",
+      "label": "Electricity",
+      "number": "933",
+      "detail": "Power outage.",
+      "sort": 7
+    }
+  ],
+  "steps": [
+    {
+      "id": "call-911",
+      "title": "Call 911 first if life is at risk",
+      "detail": "911 reaches police, ambulance, and fire in every region. Stay on the line and give the city and a landmark."
+    },
+    {
+      "id": "ambulance",
+      "title": "Ambulance is 997",
+      "detail": "If you already know you need the Red Crescent, 997 is the direct ambulance line."
+    },
+    {
+      "id": "moh",
+      "title": "Non-emergency medical advice is 937",
+      "detail": "The Ministry of Health 937 line can point you to the right service when it is not an emergency."
+    },
+    {
+      "id": "nearest",
+      "title": "Go to the nearest hospital with an ER",
+      "detail": "This app lists nearby hospitals and clinics with map coordinates. Prefer a facility marked emergency when someone needs an ER."
+    }
+  ]
+}

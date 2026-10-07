@@ -80,7 +80,7 @@ function inferBodyType(text) {
     return 'suv';
   }
   if (/yaris|spark|polo|fiesta|accent|هاتش|picanto|i10|i20/.test(t)) return 'hatchback';
-  return 'sedan';
+  return '';
 }
 
 function inferMake(text) {
@@ -154,16 +154,23 @@ function parseMileage(raw, extraText = '') {
   return n == null ? null : n <= 400 ? n * 1000 : n;
 }
 
-function parseExpatTitle(title) {
+function parseExpatTitle(title, { literalSar = false } = {}) {
   const raw = String(title || '').replace(/\s+/g, ' ').trim();
   let price = null;
   let rest = raw;
   const priceHead = raw.match(/^(SAR|USD|AED)?\s*([\d,]+)\s*,\s*/i);
   if (priceHead) {
-    price = parsePrice(priceHead[2], raw);
+    const n = parseNumber(priceHead[2]);
+    if (n == null || n === 1 || n === 12) {
+      price = null;
+    } else if (literalSar) {
+      price = n;
+    } else {
+      price = parsePrice(priceHead[2], raw);
+    }
     rest = raw.slice(priceHead[0].length);
   } else {
-    price = parsePrice(null, raw);
+    price = literalSar ? parseNumber(raw) : parsePrice(null, raw);
   }
   const parts = rest.split(',').map((part) => part.trim()).filter(Boolean);
   const vehicle = parts[0] || rest;
@@ -205,10 +212,14 @@ function parseExpatTitle(title) {
 
 function listingSpecs(source, item) {
   const title = String(item.title || '').trim();
-  const fromTitle = source === 'expatriates' ? parseExpatTitle(title) : {};
+  const souqCat = String(item.souqCategory || item.categoryId || '').trim();
+  const literalSar = source === 'expatriates' && souqCat !== '' && souqCat !== 'cars';
+  const fromTitle = source === 'expatriates' ? parseExpatTitle(title, { literalSar }) : {};
   const year = Number(item.Year || item.year || fromTitle.year || 0) || null;
   const mileage = parseMileage(item.mileage ?? item.Mileage, title);
-  const price = parsePrice(item.price, title) ?? fromTitle.price ?? null;
+  const price = literalSar
+    ? (fromTitle.price ?? parseNumber(item.price))
+    : (parsePrice(item.price, title) ?? fromTitle.price ?? null);
   return {
     year,
     mileage: mileage ?? fromTitle.mileage ?? null,
@@ -230,7 +241,8 @@ function classifyCar({ title = '', subtitle = '', description = '', attributes =
     normalizeBodyType(bodyType) ||
     normalizeBodyType(subcategoryId) ||
     normalizeBodyType(attrs.bodyType) ||
-    inferBodyType(blob);
+    inferBodyType(blob) ||
+    'sedan';
   attrs.make = resolvedMake;
   attrs.bodyType = bodyLabel(resolvedBody);
   if (attrs.model == null) attrs.model = '';

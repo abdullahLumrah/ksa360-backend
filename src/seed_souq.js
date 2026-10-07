@@ -56,9 +56,50 @@ function mapCondition(raw) {
 function mapImported(source, item) {
   const id = `${source}-${item.id}`;
   const images = Array.isArray(item.images) ? item.images.filter(Boolean).map(String) : [];
-  const rawMake = String(item.Brand || item.brand || item.make || '').trim();
-  const title = String(item.title || '').trim() || 'Car for sale';
+  const title = String(item.title || '').trim() || 'Listing';
+  const souqCat = String(item.souqCategory || item.categoryId || '').trim() || 'cars';
   const specs = listingSpecs(source, item);
+  if (souqCat !== 'cars') {
+    const subtitle = [item.district, item.city, item.category].filter(Boolean).join(' · ');
+    const description = [item.description, title].filter(Boolean).join(' · ');
+    return {
+      ad_id: id,
+      seller_id: `${source}:${item.author || 'seller'}`,
+      seller_name: String(item.author || 'Expat seller'),
+      seller_avatar: '',
+      category_id: souqCat,
+      subcategory_id: String(item.souqSubcategory || ''),
+      make: '',
+      body_type: '',
+      title,
+      subtitle,
+      description,
+      price: specs.price,
+      currency: 'SAR',
+      is_negotiable: specs.price == null ? 1 : 0,
+      city: String(item.city || ''),
+      district: String(item.district || ''),
+      phone: '',
+      images: JSON.stringify(images),
+      video: '',
+      status: 'approved',
+      views: 0,
+      condition: mapCondition(item.condition),
+      attributes: JSON.stringify({ sellerType: source, origin: item.category || '' }),
+      contact: JSON.stringify({
+        call: false,
+        whatsapp: false,
+        chat: true,
+        hidePhone: true,
+      }),
+      source,
+      source_url: String(item.url || ''),
+      created_at: parseWhen(item.postDate || item.date),
+      updated_at: parseWhen(item.postDate || item.date),
+      expires_at: null,
+    };
+  }
+  const rawMake = String(item.Brand || item.brand || item.make || '').trim();
   const classified = classifyCar({
     title,
     make: rawMake,
@@ -175,6 +216,47 @@ function seedImportedAds() {
   return count;
 }
 
+function insertAds(rows) {
+  if (!rows.length) return 0;
+  const insert = db().prepare(`
+    INSERT INTO souq_ads (
+      ad_id, seller_id, seller_name, seller_avatar, category_id, subcategory_id,
+      title, subtitle, description, price, currency, is_negotiable, city, district,
+      phone, images, video, status, views, condition, attributes, contact,
+      source, source_url, created_at, updated_at, expires_at, make, body_type
+    ) VALUES (
+      @ad_id, @seller_id, @seller_name, @seller_avatar, @category_id, @subcategory_id,
+      @title, @subtitle, @description, @price, @currency, @is_negotiable, @city, @district,
+      @phone, @images, @video, @status, @views, @condition, @attributes, @contact,
+      @source, @source_url, @created_at, @updated_at, @expires_at, @make, @body_type
+    )
+    ON CONFLICT(ad_id) DO UPDATE SET
+      price = excluded.price,
+      is_negotiable = excluded.is_negotiable,
+      title = excluded.title,
+      subtitle = excluded.subtitle,
+      description = excluded.description,
+      updated_at = datetime('now')
+  `);
+  const run = db().transaction((items) => {
+    let n = 0;
+    for (const row of items) {
+      const info = insert.run(row);
+      if (info.changes) n += 1;
+    }
+    return n;
+  });
+  return run(rows);
+}
+
+function seedExpatClassifieds() {
+  const listings = readGzipJson('expat_classifieds.json.gz').listings || [];
+  if (!listings.length) return 0;
+  const count = insertAds(listings.map((item) => mapImported('expatriates', item)));
+  console.log(`Seeded ${count} extra Expat classifieds (${listings.length} in dump).`);
+  return count;
+}
+
 function backfillCarFilters() {
   const pending = db()
     .prepare(
@@ -272,9 +354,10 @@ function refreshImportedSpecs() {
 function seedSouq() {
   const cats = seedSouqCategories();
   const ads = seedImportedAds();
+  const extra = seedExpatClassifieds();
   refreshImportedSpecs();
   backfillCarFilters();
-  console.log(`Souq ready: ${cats} categories, ${ads} imported ads.`);
+  console.log(`Souq ready: ${cats} categories, ${ads} imported ads (+${extra} classifieds).`);
 }
 
 if (require.main === module) {

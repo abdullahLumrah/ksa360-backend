@@ -16,7 +16,7 @@ function nearbyQuery(req, defaults = {}) {
   const kind = String(req.query.kind || defaults.kind || 'nearby').trim();
   const q = String(req.query.q || req.query.query || '').trim().toLowerCase();
   const city = String(req.query.city || '').trim();
-  const limit = Math.min(Math.max(Number(req.query.limit) || defaults.limit || 80, 1), 400);
+  const limit = Math.min(Math.max(Number(req.query.limit) || defaults.limit || 80, 1), 800);
   const radius = Math.min(Math.max(Number(req.query.radiusKm) || 80, 1), 250);
   return { lat, lng, kind, q, city, limit, radius };
 }
@@ -103,12 +103,36 @@ router.get('/video', (req, res) => {
   res.json({ name, video });
 });
 
+function restaurantDishes(restaurantId) {
+  return db()
+    .prepare(
+      `SELECT category, name, description, price, image
+       FROM restaurant_menu_items
+       WHERE restaurant_id = ?
+       ORDER BY sort_order, name`,
+    )
+    .all(restaurantId)
+    .map((item) => ({
+      name: item.name,
+      detail: item.description || item.category || '',
+      price: item.price || '',
+      image: item.image || '',
+      category: item.category || '',
+    }));
+}
+
 router.get('/:id', (req, res) => {
   const row = db()
     .prepare('SELECT * FROM restaurants WHERE id = ?')
     .get(req.params.id);
   if (!row) return res.status(404).json({ error: 'Restaurant not found' });
-  res.json(publicRestaurant(row));
+  const dishes = restaurantDishes(row.id);
+  res.json(
+    publicRestaurant(row, undefined, {
+      dishes,
+      reviewSource: row.rating > 0 ? 'HungerStation' : '',
+    }),
+  );
 });
 
 router.post('/', (req, res) => {
@@ -145,6 +169,86 @@ router.post('/', (req, res) => {
     .run(row);
   const saved = db().prepare('SELECT * FROM restaurants WHERE id = ?').get(id);
   res.status(201).json(publicRestaurant(saved));
+});
+
+router.post('/photos', (req, res) => {
+  const items = Array.isArray(req.body?.items) ? req.body.items : [];
+  const upsert = db().prepare(`
+    INSERT INTO restaurants (
+      id, name, lat, lng, kind, cuisine, city, phone, hours, web,
+      amenity, image, rating, ratings, youtube_id, google_place_id, source, updated_at
+    ) VALUES (
+      @id, @name, @lat, @lng, @kind, @cuisine, @city, @phone, @hours, @web,
+      @amenity, @image, @rating, @ratings, @youtube_id, @google_place_id, @source, datetime('now')
+    )
+    ON CONFLICT(id) DO UPDATE SET
+      image = CASE
+        WHEN excluded.image LIKE '%googleusercontent.com%'
+          OR excluded.image LIKE '%places.googleapis.com%'
+          OR excluded.image LIKE '%maps.googleapis.com/maps/api/place/photo%' THEN excluded.image
+        WHEN restaurants.image LIKE '%googleusercontent.com%'
+          OR restaurants.image LIKE '%places.googleapis.com%'
+          OR restaurants.image LIKE '%maps.googleapis.com/maps/api/place/photo%' THEN restaurants.image
+        WHEN excluded.image != '' AND (restaurants.image = '' OR restaurants.image LIKE '%unsplash.com%') THEN excluded.image
+        ELSE restaurants.image
+      END,
+      google_place_id = COALESCE(excluded.google_place_id, restaurants.google_place_id),
+      rating = CASE WHEN excluded.rating > restaurants.rating THEN excluded.rating ELSE restaurants.rating END,
+      ratings = CASE WHEN excluded.ratings > restaurants.ratings THEN excluded.ratings ELSE restaurants.ratings END,
+      updated_at = datetime('now')
+  `);
+  const updateOnly = db().prepare(`
+    UPDATE restaurants SET
+      image = CASE
+        WHEN @image LIKE '%googleusercontent.com%'
+          OR @image LIKE '%places.googleapis.com%'
+          OR @image LIKE '%maps.googleapis.com/maps/api/place/photo%' THEN @image
+        WHEN image LIKE '%googleusercontent.com%'
+          OR image LIKE '%places.googleapis.com%'
+          OR image LIKE '%maps.googleapis.com/maps/api/place/photo%' THEN image
+        WHEN @image != '' AND (image = '' OR image LIKE '%unsplash.com%') THEN @image
+        ELSE image
+      END,
+      google_place_id = COALESCE(@google_place_id, google_place_id),
+      updated_at = datetime('now')
+    WHERE id = @id
+  `);
+  let updated = 0;
+  let inserted = 0;
+  const run = db().transaction(() => {
+    for (const raw of items) {
+      const id = String(raw.id || '').trim();
+      const image = String(raw.image || '').trim();
+      const googlePlaceId = String(raw.googlePlaceId || raw.google_place_id || '').trim() || null;
+      if (!id || !image) continue;
+      const existing = db().prepare('SELECT id FROM restaurants WHERE id = ?').get(id);
+      if (existing) {
+        updateOnly.run({ id, image, google_place_id: googlePlaceId });
+        updated += 1;
+        continue;
+      }
+      const lat = Number(raw.lat);
+      const lng = Number(raw.lng);
+      const name = String(raw.name || '').trim();
+      if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) continue;
+      upsert.run(
+        restaurantRow({
+          ...raw,
+          id,
+          name,
+          lat,
+          lng,
+          image,
+          google_place_id: googlePlaceId,
+          city: canonicalCity(raw.city, lat, lng),
+          source: 'google',
+        }),
+      );
+      inserted += 1;
+    }
+  });
+  run();
+  res.json({ updated, inserted });
 });
 
 module.exports = { router, nameKey };

@@ -65,10 +65,26 @@ function seedRestaurants(videoMap) {
       hours = excluded.hours,
       web = excluded.web,
       amenity = excluded.amenity,
-      image = CASE WHEN excluded.image != '' THEN excluded.image ELSE restaurants.image END,
       rating = excluded.rating,
       ratings = excluded.ratings,
       youtube_id = CASE WHEN excluded.youtube_id != '' THEN excluded.youtube_id ELSE restaurants.youtube_id END,
+      google_place_id = COALESCE(excluded.google_place_id, restaurants.google_place_id),
+      image = CASE
+        WHEN excluded.image LIKE '%googleusercontent.com%'
+          OR excluded.image LIKE '%places.googleapis.com%'
+          OR excluded.image LIKE '%maps.googleapis.com/maps/api/place/photo%'
+          OR excluded.image LIKE '%deliveryhero.io%'
+          OR excluded.image LIKE '%hungerstation%'
+          OR excluded.image LIKE '%dhmedia.io%' THEN excluded.image
+        WHEN restaurants.image LIKE '%googleusercontent.com%'
+          OR restaurants.image LIKE '%places.googleapis.com%'
+          OR restaurants.image LIKE '%maps.googleapis.com/maps/api/place/photo%'
+          OR restaurants.image LIKE '%deliveryhero.io%'
+          OR restaurants.image LIKE '%hungerstation%'
+          OR restaurants.image LIKE '%dhmedia.io%' THEN restaurants.image
+        WHEN excluded.image != '' AND (restaurants.image = '' OR restaurants.image LIKE '%unsplash.com%') THEN excluded.image
+        ELSE restaurants.image
+      END,
       updated_at = datetime('now')
   `);
 
@@ -340,6 +356,270 @@ function seedGuides() {
   console.log(`Seeded ${catCount} categories and ${postCount} posts.`);
 }
 
+function seedShops() {
+  const raw = readJson('shops.seed.json');
+  const upsertCat = db().prepare(`
+    INSERT INTO shop_categories (id, name, blurb, image, icon, sort_order)
+    VALUES (@id, @name, @blurb, @image, @icon, @sort_order)
+    ON CONFLICT(id) DO UPDATE SET
+      name = excluded.name,
+      blurb = excluded.blurb,
+      image = excluded.image,
+      icon = excluded.icon,
+      sort_order = excluded.sort_order
+  `);
+  const upsertMerchant = db().prepare(`
+    INSERT INTO shop_merchants (id, name, blurb, website, android_id, ios_id, image, icon, kind, featured, sort_order)
+    VALUES (@id, @name, @blurb, @website, @android_id, @ios_id, @image, @icon, @kind, @featured, @sort_order)
+    ON CONFLICT(id) DO UPDATE SET
+      name = excluded.name,
+      blurb = excluded.blurb,
+      website = excluded.website,
+      android_id = excluded.android_id,
+      ios_id = excluded.ios_id,
+      image = excluded.image,
+      icon = excluded.icon,
+      kind = excluded.kind,
+      featured = excluded.featured,
+      sort_order = excluded.sort_order
+  `);
+  const clearLinks = db().prepare('DELETE FROM shop_merchant_categories WHERE merchant_id = ?');
+  const insertLink = db().prepare(
+    'INSERT OR IGNORE INTO shop_merchant_categories (merchant_id, category_id) VALUES (?, ?)',
+  );
+  const upsertCoupon = db().prepare(`
+    INSERT INTO shop_coupons (id, merchant_id, title, detail, code, url, sort_order)
+    VALUES (@id, @merchant_id, @title, @detail, @code, @url, @sort_order)
+    ON CONFLICT(id) DO UPDATE SET
+      merchant_id = excluded.merchant_id,
+      title = excluded.title,
+      detail = excluded.detail,
+      code = excluded.code,
+      url = excluded.url,
+      sort_order = excluded.sort_order
+  `);
+
+  const run = db().transaction(() => {
+    let cats = 0;
+    let merchants = 0;
+    let coupons = 0;
+    for (const item of raw.categories || []) {
+      const id = String(item.id || '').trim();
+      if (!id) continue;
+      upsertCat.run({
+        id,
+        name: String(item.name || '').trim(),
+        blurb: String(item.blurb || ''),
+        image: String(item.image || item.icon || ''),
+        icon: String(item.icon || item.image || ''),
+        sort_order: Number(item.sort || 0),
+      });
+      cats += 1;
+    }
+    (raw.merchants || []).forEach((item, index) => {
+      const id = String(item.id || '').trim();
+      if (!id) return;
+      upsertMerchant.run({
+        id,
+        name: String(item.name || '').trim(),
+        blurb: String(item.blurb || ''),
+        website: String(item.website || ''),
+        android_id: String(item.androidId || item.android_id || ''),
+        ios_id: String(item.iosId || item.ios_id || ''),
+        image: String(item.image || item.icon || ''),
+        icon: String(item.icon || item.image || ''),
+        kind: String(item.kind || 'app'),
+        featured: item.featured ? 1 : 0,
+        sort_order: Number(item.sort || index),
+      });
+      clearLinks.run(id);
+      for (const rawCat of item.categories || []) {
+        const categoryId = String(rawCat || '').trim();
+        if (categoryId) insertLink.run(id, categoryId);
+      }
+      merchants += 1;
+    });
+    (raw.coupons || []).forEach((item, index) => {
+      const id = String(item.id || '').trim();
+      const merchantId = String(item.merchantId || item.merchant_id || '').trim();
+      if (!id || !merchantId) return;
+      upsertCoupon.run({
+        id,
+        merchant_id: merchantId,
+        title: String(item.title || '').trim(),
+        detail: String(item.detail || ''),
+        code: String(item.code || ''),
+        url: String(item.url || ''),
+        sort_order: Number(item.sort || index),
+      });
+      coupons += 1;
+    });
+    return { cats, merchants, coupons };
+  });
+  const counts = run();
+  const keepCats = (raw.categories || []).map((item) => String(item.id || '').trim()).filter(Boolean);
+  const keepMerchants = (raw.merchants || []).map((item) => String(item.id || '').trim()).filter(Boolean);
+  const keepCoupons = (raw.coupons || []).map((item) => String(item.id || '').trim()).filter(Boolean);
+  if (keepCoupons.length) {
+    db().prepare(
+      `DELETE FROM shop_coupons WHERE id NOT IN (${keepCoupons.map(() => '?').join(',')})`,
+    ).run(...keepCoupons);
+  }
+  if (keepMerchants.length) {
+    db().prepare(
+      `DELETE FROM shop_merchant_categories WHERE merchant_id NOT IN (${keepMerchants.map(() => '?').join(',')})`,
+    ).run(...keepMerchants);
+    db().prepare(
+      `DELETE FROM shop_merchants WHERE id NOT IN (${keepMerchants.map(() => '?').join(',')})`,
+    ).run(...keepMerchants);
+  }
+  if (keepCats.length) {
+    db().prepare(
+      `DELETE FROM shop_merchant_categories WHERE category_id NOT IN (${keepCats.map(() => '?').join(',')})`,
+    ).run(...keepCats);
+    db().prepare(
+      `DELETE FROM shop_categories WHERE id NOT IN (${keepCats.map(() => '?').join(',')})`,
+    ).run(...keepCats);
+  }
+  console.log(
+    `Seeded ${counts.cats} shop categories, ${counts.merchants} merchants, ${counts.coupons} coupons.`,
+  );
+}
+
+function upsertFacility(stmt, place) {
+  const lat = Number(place.lat);
+  const lng = Number(place.lng);
+  if (!place.id || !place.name || !Number.isFinite(lat) || !Number.isFinite(lng)) {
+    return false;
+  }
+  stmt.run({
+    id: String(place.id),
+    name: String(place.name),
+    lat,
+    lng,
+    kind: String(place.kind || 'clinic'),
+    city: canonicalCity(place.city, lat, lng),
+    phone: String(place.phone || ''),
+    hours: String(place.hours || ''),
+    web: String(place.web || ''),
+    amenity: String(place.amenity || place.kind || 'clinic'),
+    emergency: place.emergency ? 1 : 0,
+    services: String(place.services || ''),
+    source: String(place.source || 'seed'),
+  });
+  return true;
+}
+
+function seedHealthcare() {
+  const upsert = db().prepare(`
+    INSERT INTO health_facilities (
+      id, name, lat, lng, kind, city, phone, hours, web,
+      amenity, emergency, services, source, updated_at
+    ) VALUES (
+      @id, @name, @lat, @lng, @kind, @city, @phone, @hours, @web,
+      @amenity, @emergency, @services, @source, datetime('now')
+    )
+    ON CONFLICT(id) DO UPDATE SET
+      name = excluded.name,
+      lat = excluded.lat,
+      lng = excluded.lng,
+      kind = excluded.kind,
+      city = excluded.city,
+      phone = CASE WHEN excluded.phone != '' THEN excluded.phone ELSE health_facilities.phone END,
+      hours = CASE WHEN excluded.hours != '' THEN excluded.hours ELSE health_facilities.hours END,
+      web = CASE WHEN excluded.web != '' THEN excluded.web ELSE health_facilities.web END,
+      amenity = excluded.amenity,
+      emergency = CASE WHEN excluded.emergency = 1 THEN 1 ELSE health_facilities.emergency END,
+      services = CASE WHEN excluded.services != '' THEN excluded.services ELSE health_facilities.services END,
+      source = excluded.source,
+      updated_at = datetime('now')
+    WHERE health_facilities.source != 'admin'
+  `);
+  const updatePhone = db().prepare(
+    `UPDATE health_facilities
+     SET phone = CASE WHEN phone = '' THEN @phone ELSE phone END,
+         emergency = CASE WHEN @emergency = 1 THEN 1 ELSE emergency END,
+         services = CASE WHEN services = '' THEN @services ELSE services END
+     WHERE lower(name) = lower(@name) AND lower(city) = lower(@city)
+       AND source != 'admin'`,
+  );
+
+  let osmCount = 0;
+  const osmPath = path.join(DATA, 'healthcare.seed.json');
+  if (fs.existsSync(osmPath)) {
+    const osm = JSON.parse(fs.readFileSync(osmPath, 'utf8'));
+    const places = osm.places || osm;
+    const runOsm = db().transaction((rows) => {
+      let n = 0;
+      for (const place of rows) {
+        if (upsertFacility(upsert, { ...place, source: place.source || 'osm' })) n += 1;
+      }
+      return n;
+    });
+    osmCount = runOsm(places);
+  }
+
+  const curated = readJson('healthcare_curated.seed.json');
+  const runCurated = db().transaction((rows) => {
+    let n = 0;
+    for (const place of rows) {
+      if (upsertFacility(upsert, place)) n += 1;
+      if (place.phone) {
+        updatePhone.run({
+          phone: String(place.phone),
+          emergency: place.emergency ? 1 : 0,
+          services: String(place.services || ''),
+          name: String(place.name),
+          city: canonicalCity(place.city, Number(place.lat), Number(place.lng)),
+        });
+      }
+    }
+    return n;
+  });
+  const curatedCount = runCurated(curated.places || curated);
+
+  const emergency = readJson('healthcare_emergency.seed.json');
+  const upsertLine = db().prepare(`
+    INSERT INTO health_hotlines (id, label, number, detail, sort_order)
+    VALUES (@id, @label, @number, @detail, @sort_order)
+    ON CONFLICT(id) DO UPDATE SET
+      label = excluded.label,
+      number = excluded.number,
+      detail = excluded.detail,
+      sort_order = excluded.sort_order
+  `);
+  const upsertStep = db().prepare(`
+    INSERT INTO health_steps (id, title, detail, sort_order)
+    VALUES (@id, @title, @detail, @sort_order)
+    ON CONFLICT(id) DO UPDATE SET
+      title = excluded.title,
+      detail = excluded.detail,
+      sort_order = excluded.sort_order
+  `);
+  (emergency.hotlines || []).forEach((item, index) => {
+    upsertLine.run({
+      id: String(item.id || item.number),
+      label: String(item.label || item.number),
+      number: String(item.number || ''),
+      detail: String(item.detail || ''),
+      sort_order: Number(item.sort || index),
+    });
+  });
+  (emergency.steps || []).forEach((item, index) => {
+    upsertStep.run({
+      id: String(item.id || `step-${index}`),
+      title: String(item.title || ''),
+      detail: String(item.detail || ''),
+      sort_order: Number(item.sort || index),
+    });
+  });
+  console.log(
+    `Seeded ${osmCount} OSM health places, ${curatedCount} curated hospitals, ${
+      (emergency.hotlines || []).length
+    } hotlines.`,
+  );
+}
+
 function seed() {
   const videos = seedPlaceVideos();
   seedRestaurants(videos);
@@ -347,10 +627,12 @@ function seed() {
   seedReels();
   seedGuides();
   seedSouq();
+  seedShops();
+  seedHealthcare();
 }
 
 if (require.main === module) {
   seed();
 }
 
-module.exports = { seed };
+module.exports = { seed, seedShops, seedHealthcare, seedRestaurants, seedPlaceVideos };

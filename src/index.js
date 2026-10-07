@@ -7,6 +7,9 @@ const rateLimit = require('express-rate-limit');
 const { db } = require('./db');
 const { optionalUser, softUser } = require('./auth');
 const { seedSouq } = require('./seed_souq');
+const { seedShops, seedHealthcare, seedRestaurants, seedPlaceVideos } = require('./seed');
+const { seedSchools } = require('./seed_schools');
+const { seedJobs } = require('./seed_jobs');
 const { router: restaurants } = require('./routes/restaurants');
 const { router: activities } = require('./routes/activities');
 const { router: reels } = require('./routes/reels');
@@ -56,7 +59,17 @@ app.use((req, res, next) => {
     req.user = null;
     return next();
   }
-  if (req.path.startsWith('/analytics')) {
+  if (
+    req.path.startsWith('/analytics') ||
+    req.path.startsWith('/shops') ||
+    req.path.startsWith('/healthcare') ||
+    req.path.startsWith('/schools') ||
+    req.path.startsWith('/restaurants') ||
+    req.path.startsWith('/activities') ||
+    req.path.startsWith('/reels') ||
+    req.path.startsWith('/guides') ||
+    req.path.startsWith('/jobs')
+  ) {
     return softUser(req, res, next);
   }
   return optionalUser(req, res, next);
@@ -73,11 +86,19 @@ app.get('/health', (_req, res) => {
     posts: db().prepare('SELECT COUNT(*) AS n FROM posts').get().n,
     souqCategories: db().prepare('SELECT COUNT(*) AS n FROM souq_categories').get().n,
     souqAds: db().prepare('SELECT COUNT(*) AS n FROM souq_ads').get().n,
+    shopCategories: db().prepare('SELECT COUNT(*) AS n FROM shop_categories').get().n,
+    healthFacilities: db().prepare('SELECT COUNT(*) AS n FROM health_facilities').get().n,
+    schools: db().prepare('SELECT COUNT(*) AS n FROM schools').get().n,
+    jobs: db().prepare("SELECT COUNT(*) AS n FROM jobs WHERE status = 'published'").get().n,
   });
 });
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'data', 'uploads')));
 app.use('/restaurants', restaurants);
+app.use('/shops', require('./routes/shops').router);
+app.use('/healthcare', require('./routes/healthcare').router);
+app.use('/schools', require('./routes/schools').router);
+app.use('/jobs', require('./routes/jobs').router);
 app.use('/activities', activities);
 app.use('/reels', reels);
 app.use('/guides', guides);
@@ -98,6 +119,15 @@ try {
   seedSouq();
 } catch (err) {
   console.error('Souq seed failed', err);
+}
+try {
+  seedRestaurants(seedPlaceVideos());
+  seedShops();
+  seedHealthcare();
+  seedSchools();
+  seedJobs();
+} catch (err) {
+  console.error('Shops/healthcare/restaurants seed failed', err);
 }
 
 app.listen(PORT, HOST, () => {

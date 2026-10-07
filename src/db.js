@@ -246,8 +246,170 @@ function openDb() {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
     CREATE INDEX IF NOT EXISTS admin_actions_created_idx ON admin_actions(created_at);
+
+    CREATE TABLE IF NOT EXISTS shop_categories (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      blurb TEXT NOT NULL DEFAULT '',
+      image TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS shop_merchants (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      blurb TEXT NOT NULL DEFAULT '',
+      website TEXT NOT NULL DEFAULT '',
+      android_id TEXT NOT NULL DEFAULT '',
+      ios_id TEXT NOT NULL DEFAULT '',
+      image TEXT NOT NULL DEFAULT '',
+      kind TEXT NOT NULL DEFAULT 'app',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS shop_merchant_categories (
+      merchant_id TEXT NOT NULL,
+      category_id TEXT NOT NULL,
+      PRIMARY KEY (merchant_id, category_id)
+    );
+    CREATE INDEX IF NOT EXISTS shop_merchant_categories_cat_idx ON shop_merchant_categories(category_id);
+
+    CREATE TABLE IF NOT EXISTS shop_coupons (
+      id TEXT PRIMARY KEY,
+      merchant_id TEXT NOT NULL,
+      title TEXT NOT NULL,
+      detail TEXT NOT NULL DEFAULT '',
+      code TEXT NOT NULL DEFAULT '',
+      url TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS shop_coupons_merchant_idx ON shop_coupons(merchant_id);
+
+    CREATE TABLE IF NOT EXISTS health_facilities (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      lat REAL NOT NULL,
+      lng REAL NOT NULL,
+      kind TEXT NOT NULL DEFAULT 'clinic',
+      city TEXT NOT NULL DEFAULT '',
+      phone TEXT NOT NULL DEFAULT '',
+      hours TEXT NOT NULL DEFAULT '',
+      web TEXT NOT NULL DEFAULT '',
+      amenity TEXT NOT NULL DEFAULT 'clinic',
+      emergency INTEGER NOT NULL DEFAULT 0,
+      services TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT 'seed',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS health_facilities_city_idx ON health_facilities(city);
+    CREATE INDEX IF NOT EXISTS health_facilities_kind_idx ON health_facilities(kind);
+    CREATE INDEX IF NOT EXISTS health_facilities_geo_idx ON health_facilities(lat, lng);
+
+    CREATE TABLE IF NOT EXISTS health_hotlines (
+      id TEXT PRIMARY KEY,
+      label TEXT NOT NULL,
+      number TEXT NOT NULL,
+      detail TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS health_steps (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      detail TEXT NOT NULL DEFAULT '',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+
+    CREATE TABLE IF NOT EXISTS schools (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      city TEXT NOT NULL DEFAULT '',
+      district TEXT NOT NULL DEFAULT '',
+      address TEXT NOT NULL DEFAULT '',
+      lat REAL,
+      lng REAL,
+      precision TEXT NOT NULL DEFAULT '',
+      gender TEXT NOT NULL DEFAULT '',
+      grades TEXT NOT NULL DEFAULT '',
+      age_range TEXT NOT NULL DEFAULT '',
+      established INTEGER,
+      phone TEXT NOT NULL DEFAULT '',
+      email TEXT NOT NULL DEFAULT '',
+      website TEXT NOT NULL DEFAULT '',
+      curriculum TEXT NOT NULL DEFAULT '',
+      curriculum_tags TEXT NOT NULL DEFAULT '',
+      stages TEXT NOT NULL DEFAULT '',
+      min_fee REAL,
+      max_fee REAL,
+      fee_year TEXT NOT NULL DEFAULT '',
+      fee_source_type TEXT NOT NULL DEFAULT '',
+      fee_source_name TEXT NOT NULL DEFAULT '',
+      fee_source_url TEXT NOT NULL DEFAULT '',
+      fees_published INTEGER NOT NULL DEFAULT 0,
+      payload TEXT NOT NULL DEFAULT '{}',
+      source TEXT NOT NULL DEFAULT 'seed',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS schools_city_idx ON schools(city);
+    CREATE INDEX IF NOT EXISTS schools_geo_idx ON schools(lat, lng);
+    CREATE INDEX IF NOT EXISTS schools_curriculum_idx ON schools(curriculum_tags);
+    CREATE INDEX IF NOT EXISTS schools_gender_idx ON schools(gender);
+
+    CREATE TABLE IF NOT EXISTS restaurant_menu_items (
+      id TEXT PRIMARY KEY,
+      restaurant_id TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT '',
+      name TEXT NOT NULL,
+      description TEXT NOT NULL DEFAULT '',
+      price TEXT NOT NULL DEFAULT '',
+      image TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT 'hungerstation',
+      sort_order INTEGER NOT NULL DEFAULT 0
+    );
+    CREATE INDEX IF NOT EXISTS restaurant_menu_restaurant_idx ON restaurant_menu_items(restaurant_id, sort_order);
+
+    CREATE TABLE IF NOT EXISTS jobs (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      category TEXT NOT NULL DEFAULT '',
+      company_name TEXT NOT NULL DEFAULT '',
+      company_industry TEXT NOT NULL DEFAULT '',
+      city TEXT NOT NULL DEFAULT '',
+      region TEXT NOT NULL DEFAULT '',
+      country TEXT NOT NULL DEFAULT 'Saudi Arabia',
+      location_text TEXT NOT NULL DEFAULT '',
+      work_mode TEXT NOT NULL DEFAULT '',
+      employment_type TEXT NOT NULL DEFAULT '',
+      experience_required TEXT NOT NULL DEFAULT '',
+      education_required TEXT NOT NULL DEFAULT '',
+      salary_display TEXT NOT NULL DEFAULT '',
+      salary_monthly_sar REAL,
+      salary_is_posted INTEGER NOT NULL DEFAULT 0,
+      summary TEXT NOT NULL DEFAULT '',
+      description TEXT NOT NULL DEFAULT '',
+      apply_url TEXT NOT NULL DEFAULT '',
+      apply_method TEXT NOT NULL DEFAULT '',
+      listing_url TEXT NOT NULL DEFAULT '',
+      date_posted TEXT NOT NULL DEFAULT '',
+      deadline TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT 'user',
+      source_platform TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'awaiting_approval',
+      author_id TEXT NOT NULL DEFAULT '',
+      author_name TEXT NOT NULL DEFAULT '',
+      payload TEXT NOT NULL DEFAULT '{}',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS jobs_status_idx ON jobs(status, date_posted);
+    CREATE INDEX IF NOT EXISTS jobs_category_idx ON jobs(category, status);
+    CREATE INDEX IF NOT EXISTS jobs_city_idx ON jobs(city, status);
+    CREATE INDEX IF NOT EXISTS jobs_author_idx ON jobs(author_id);
   `);
   migrateSouqAds(db);
+  migratePosts(db);
   return db;
 }
 
@@ -274,6 +436,84 @@ function migrateSouqAds(db) {
     CREATE INDEX IF NOT EXISTS souq_favorites_ad_idx ON souq_favorites(ad_id);
     CREATE INDEX IF NOT EXISTS souq_favorites_user_idx ON souq_favorites(user_id);
   `);
+  const shopCols = db.prepare('PRAGMA table_info(shop_merchants)').all().map((col) => col.name);
+  if (!shopCols.includes('featured')) {
+    db.exec('ALTER TABLE shop_merchants ADD COLUMN featured INTEGER NOT NULL DEFAULT 0');
+  }
+  if (!shopCols.includes('icon')) {
+    db.exec("ALTER TABLE shop_merchants ADD COLUMN icon TEXT NOT NULL DEFAULT ''");
+  }
+  const shopCatCols = db.prepare('PRAGMA table_info(shop_categories)').all().map((col) => col.name);
+  if (!shopCatCols.includes('icon')) {
+    db.exec("ALTER TABLE shop_categories ADD COLUMN icon TEXT NOT NULL DEFAULT ''");
+  }
+  const schoolCols = db.prepare('PRAGMA table_info(schools)').all().map((col) => col.name);
+  if (!schoolCols.includes('image')) {
+    db.exec("ALTER TABLE schools ADD COLUMN image TEXT NOT NULL DEFAULT ''");
+  }
+  if (!schoolCols.includes('google_place_id')) {
+    db.exec("ALTER TABLE schools ADD COLUMN google_place_id TEXT");
+  }
+  scrubNonCarVehicleFields(db);
+}
+
+function migratePosts(db) {
+  const cols = db.prepare('PRAGMA table_info(posts)').all().map((col) => col.name);
+  if (!cols.includes('status')) {
+    db.exec("ALTER TABLE posts ADD COLUMN status TEXT NOT NULL DEFAULT 'published'");
+  }
+  if (!cols.includes('author_id')) {
+    db.exec("ALTER TABLE posts ADD COLUMN author_id TEXT NOT NULL DEFAULT ''");
+  }
+  if (!cols.includes('author_name')) {
+    db.exec("ALTER TABLE posts ADD COLUMN author_name TEXT NOT NULL DEFAULT ''");
+  }
+  db.exec('CREATE INDEX IF NOT EXISTS posts_status_idx ON posts(status, date)');
+  const stale = db
+    .prepare("SELECT COUNT(*) AS n FROM posts WHERE date != '' AND date < '2026-01-01'")
+    .get().n;
+  if (!stale) return;
+  db.exec(`
+    DELETE FROM post_tags WHERE post_id IN (
+      SELECT id FROM posts WHERE date != '' AND date < '2026-01-01'
+    );
+    DELETE FROM post_categories WHERE post_id IN (
+      SELECT id FROM posts WHERE date != '' AND date < '2026-01-01'
+    );
+    DELETE FROM posts WHERE date != '' AND date < '2026-01-01';
+  `);
+  console.log(`Removed ${stale} guide posts dated before 2026`);
+}
+
+function scrubNonCarVehicleFields(db) {
+  db.prepare(
+    `UPDATE souq_ads SET make = '', body_type = ''
+     WHERE category_id != 'cars' AND (make != '' OR body_type != '')`,
+  ).run();
+  const dirty = db
+    .prepare(
+      `SELECT ad_id, attributes FROM souq_ads
+       WHERE category_id != 'cars' AND attributes LIKE '%bodyType%'`,
+    )
+    .all();
+  const update = db.prepare('UPDATE souq_ads SET attributes = ? WHERE ad_id = ?');
+  for (const row of dirty) {
+    let attrs = {};
+    try {
+      attrs = JSON.parse(row.attributes || '{}');
+    } catch (_) {
+      continue;
+    }
+    if (!attrs || typeof attrs !== 'object') continue;
+    if (attrs.bodyType == null && attrs.mileage == null && attrs.fuel == null && attrs.transmission == null) {
+      continue;
+    }
+    delete attrs.bodyType;
+    delete attrs.mileage;
+    delete attrs.fuel;
+    delete attrs.transmission;
+    update.run(JSON.stringify(attrs), row.ad_id);
+  }
 }
 
 let _db;
@@ -331,7 +571,84 @@ function activityRow(input) {
   };
 }
 
-function publicRestaurant(row, distanceKm) {
+function publicShopCoupon(row) {
+  return {
+    id: row.id,
+    merchantId: row.merchant_id,
+    title: row.title,
+    detail: row.detail || '',
+    code: row.code || '',
+    url: row.url || '',
+  };
+}
+
+function playStoreUrl(androidId) {
+  const id = String(androidId || '').trim();
+  return id ? `https://play.google.com/store/apps/details?id=${encodeURIComponent(id)}` : '';
+}
+
+function appStoreUrl(iosId) {
+  const id = String(iosId || '').trim();
+  return id ? `https://apps.apple.com/sa/app/id${id}` : '';
+}
+
+function publicShopMerchant(row, { categories = [], coupons = [] } = {}) {
+  const androidId = row.android_id || '';
+  const iosId = row.ios_id || '';
+  return {
+    id: row.id,
+    name: row.name,
+    blurb: row.blurb || '',
+    website: row.website || '',
+    androidId,
+    iosId,
+    androidUrl: playStoreUrl(androidId),
+    iosUrl: appStoreUrl(iosId),
+    icon: row.icon || row.image || '',
+    image: row.image || row.icon || '',
+    kind: row.kind || 'app',
+    featured: Boolean(row.featured),
+    categories,
+    coupons: coupons.map(publicShopCoupon),
+  };
+}
+
+function publicShopCategory(row, extra = {}) {
+  const icon = extra.icon || row.icon || row.image || '';
+  return {
+    id: row.id,
+    name: row.name,
+    blurb: row.blurb || '',
+    icon,
+    image: icon || row.image || '',
+    merchantCount: Number(extra.merchantCount || 0),
+    couponCount: Number(extra.couponCount || 0),
+  };
+}
+
+function publicHealthFacility(row, distanceKm) {
+  const services = String(row.services || '')
+    .split(',')
+    .map((part) => part.trim())
+    .filter(Boolean);
+  return {
+    id: row.id,
+    name: row.name,
+    lat: row.lat,
+    lng: row.lng,
+    kind: row.kind || 'clinic',
+    city: row.city || '',
+    phone: row.phone || '',
+    hours: row.hours || '',
+    web: row.web || '',
+    amenity: row.amenity || row.kind || 'clinic',
+    emergency: Boolean(row.emergency),
+    services,
+    km: distanceKm ?? 0,
+  };
+}
+
+function publicRestaurant(row, distanceKm, extra = {}) {
   return {
     id: row.id,
     name: row.name,
@@ -349,6 +666,8 @@ function publicRestaurant(row, distanceKm) {
     ratings: row.ratings,
     video: row.youtube_id || '',
     km: distanceKm ?? 0,
+    reviewSource: extra.reviewSource || '',
+    dishes: extra.dishes || [],
   };
 }
 
@@ -398,6 +717,9 @@ function publicPost(row, { categories = [], tags = [], includeBody = false } = {
     wordCount: row.word_count,
     source: row.source,
     sourceLabel: row.source_label,
+    status: row.status || 'published',
+    authorId: row.author_id || '',
+    authorName: row.author_name || '',
   };
   if (includeBody) item.body = row.body || '';
   return item;
@@ -421,9 +743,16 @@ function favoriteCount(adId) {
 
 function publicSouqAd(row) {
   const attributes = parseJson(row.attributes, {});
-  if (row.make && !attributes.make) attributes.make = row.make;
-  if (row.body_type) {
+  const isCar = row.category_id === 'cars';
+  if (isCar && row.make && !attributes.make) attributes.make = row.make;
+  if (isCar && row.body_type) {
     attributes.bodyType = attributes.bodyType || bodyLabel(row.body_type);
+  }
+  if (!isCar) {
+    delete attributes.bodyType;
+    delete attributes.mileage;
+    delete attributes.fuel;
+    delete attributes.transmission;
   }
   if (attributes.fuel) attributes.fuel = mapFuel(attributes.fuel);
   if (attributes.transmission) attributes.transmission = mapGear(attributes.transmission);
@@ -431,7 +760,7 @@ function publicSouqAd(row) {
     id: row.ad_id,
     source: row.source || 'user',
     categoryId: row.category_id,
-    subcategoryId: row.subcategory_id || row.body_type || null,
+    subcategoryId: row.subcategory_id || (isCar ? row.body_type : '') || null,
     title: row.title,
     subtitle: row.subtitle || '',
     description: row.description || '',
@@ -443,8 +772,8 @@ function publicSouqAd(row) {
     video: row.video || '',
     city: row.city || '',
     district: row.district || null,
-    make: row.make || attributes.make || '',
-    bodyType: row.body_type || '',
+    make: isCar ? row.make || attributes.make || '' : '',
+    bodyType: isCar ? row.body_type || '' : '',
     attributes,
     seller: {
       id: row.seller_id || 'unknown',
@@ -469,6 +798,44 @@ function publicSouqAd(row) {
     originalUrl: row.source_url || null,
     expiresAt: row.expires_at,
     isFeatured: row.source === 'haraj',
+  };
+}
+
+function publicJob(row, { detail = false } = {}) {
+  const item = {
+    id: row.id,
+    title: row.title,
+    category: row.category || '',
+    companyName: row.company_name || '',
+    companyIndustry: row.company_industry || '',
+    city: row.city || '',
+    region: row.region || '',
+    country: row.country || 'Saudi Arabia',
+    locationText: row.location_text || row.city || 'Saudi Arabia',
+    workMode: row.work_mode || '',
+    employmentType: row.employment_type || '',
+    experienceRequired: row.experience_required || '',
+    educationRequired: row.education_required || '',
+    salaryDisplay: row.salary_is_posted ? row.salary_display || '' : '',
+    salaryMonthlySar: row.salary_is_posted ? row.salary_monthly_sar : null,
+    salaryPosted: Boolean(row.salary_is_posted),
+    summary: row.summary || '',
+    applyUrl: row.apply_url || '',
+    applyMethod: row.apply_method || '',
+    listingUrl: row.listing_url || '',
+    datePosted: row.date_posted || '',
+    deadline: row.deadline || '',
+    source: row.source || 'user',
+    sourcePlatform: row.source_platform || '',
+    status: row.status || 'published',
+    authorName: row.author_name || '',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+  if (!detail) return item;
+  return {
+    ...item,
+    description: row.description || '',
   };
 }
 
@@ -499,4 +866,9 @@ module.exports = {
   publicReel,
   publicPost,
   publicSouqAd,
+  publicShopCoupon,
+  publicShopMerchant,
+  publicShopCategory,
+  publicHealthFacility,
+  publicJob,
 };

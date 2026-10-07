@@ -82,6 +82,20 @@ function parseObject(value) {
   }
 }
 
+function classifyOther(body) {
+  const attributes = parseObject(body.attributes);
+  delete attributes.bodyType;
+  delete attributes.mileage;
+  delete attributes.fuel;
+  delete attributes.transmission;
+  return {
+    make: '',
+    bodyType: '',
+    subcategoryId: String(body.subcategoryId || body.subcategory || '').trim(),
+    attributes,
+  };
+}
+
 function sortSql(sort) {
   switch (String(sort || 'newest')) {
     case 'priceAsc':
@@ -322,15 +336,18 @@ router.post(
     const priceRaw = req.body.price;
     const price =
       priceRaw === '' || priceRaw == null || priceRaw === 'null' ? null : Number(priceRaw);
-    const classified = classifyCar({
-      title,
-      subtitle: String(req.body.subtitle || '').trim(),
-      description,
-      attributes: parseObject(req.body.attributes),
-      subcategoryId: String(req.body.subcategoryId || req.body.subcategory || ''),
-      make: String(req.body.make || req.body.brand || ''),
-      bodyType: String(req.body.bodyType || req.body.body_type || ''),
-    });
+    const classified =
+      categoryId === 'cars'
+        ? classifyCar({
+            title,
+            subtitle: String(req.body.subtitle || '').trim(),
+            description,
+            attributes: parseObject(req.body.attributes),
+            subcategoryId: String(req.body.subcategoryId || req.body.subcategory || ''),
+            make: String(req.body.make || req.body.brand || ''),
+            bodyType: String(req.body.bodyType || req.body.body_type || ''),
+          })
+        : classifyOther(req.body);
 
     db()
       .prepare(
