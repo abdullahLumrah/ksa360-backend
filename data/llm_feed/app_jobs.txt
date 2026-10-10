@@ -1,0 +1,484 @@
+# KSA Guide Jobs
+
+The Jobs tab lists roles in Saudi Arabia. User-posted jobs need approval; seeded jobs may already be published.
+
+## Categories
+- IT & Software: 30 jobs
+- Hospitality & Food Service: 30 jobs
+- Health, Safety & Environment: 30 jobs
+- Finance & Accounting: 30 jobs
+- Engineering: 30 jobs
+- Construction & Real Estate: 30 jobs
+- Administration: 30 jobs
+- Technicians & Skilled Trades: 29 jobs
+- Sales: 29 jobs
+- Project Management: 29 jobs
+- Procurement: 29 jobs
+- Human Resources: 23 jobs
+- Marketing: 22 jobs
+- Data & AI: 14 jobs
+- Customer Service: 14 jobs
+- Quality Assurance & Control: 13 jobs
+- Education & Teaching: 13 jobs
+- Drivers & Transport: 13 jobs
+- Retail: 11 jobs
+- Cybersecurity: 10 jobs
+- Logistics & Supply Chain: 9 jobs
+- Legal: 9 jobs
+- Design & Creative: 8 jobs
+- Banking & Insurance: 7 jobs
+- Oil, Gas & Energy: 4 jobs
+- Healthcare & Medical: 4 jobs
+- Pharmacy: 1 jobs
+
+## Sample jobs (answer city / salary / remote questions from these)
+- aboodi @ sndjdjd · Riyadh · IT & Software · On-site · Full Time · 25000 · status published
+  Summary: heelsjxxbdjdbddjdjd xx djdjsjkawksbdjsj
+  Apply: www.youtube.com
+- Secretary @ Estethmar Holding · Riyadh · Administration · Not specified · Full Time · SAR 15,000 - SAR 18,750 · status published
+  Summary: Elevate your career as an Executive Secretary to the CEO, where your organizational prowess and proactive approach will be essential. This role demands managing the CEO's schedule, coordinating meetings, and preparing cr
+  Apply: https://www.bayt.com/en/job/apply/index/5491104/
+- Specialist, Board of Directors Secretariat Affairs @ ROSHN · Saudi Arabia · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: Expertise in protocol development and management is essential for ensuring compliance with regulations and best practices. This role requires collaboration with various departments, including clinical research and regula
+  Apply: https://www.bayt.com/en/job/apply/index/75270718/
+- Executive Secretary @ Accor · Saudi Arabia · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Executive Secretary at Rixos Murjana, a luxurious destination redefining hospitality in Saudi Arabia. This role demands exceptional organizational skills and discretion as you support the Region
+  Apply: https://www.bayt.com/en/job/apply/index/75269653/
+- Officer - Administration @ ELM · Riyadh · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: A critical role has been established to enhance the efficiency of administrative and transportation services. Responsibilities include coordinating daily service requests, managing transportation arrangements, and ensuri
+  Apply: https://www.bayt.com/en/job/apply/index/75269652/
+- Architect - Building @ AECOM · Riyadh · Construction & Real Estate · Not specified · Full Time · salary not posted · status published
+  Summary: Transform the architectural landscape in Saudi Arabia as a visionary Architect - Building with AECOM. In this key position, you will spearhead the design and management of building projects, ensuring compliance with loca
+  Apply: https://www.bayt.com/en/job/apply/index/75271623/
+- Senior Project Manager - Golf Course Specialist - Saudi National @ Mace Group · Riyadh · Construction & Real Estate · Not specified · Full Time · salary not posted · status published
+  Summary: An exceptional opportunity exists to oversee a prestigious luxury mixed-use development in Riyadh, Saudi Arabia. The role involves leading complex golf course projects, ensuring the integration of technical expertise acr
+  Apply: https://www.bayt.com/en/job/apply/index/75270527/
+- Agent-At Your Service @ Westin · Riyadh · Customer Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate guest experiences by effectively managing requests and inquiries through various communication channels. As an Agent-At Your Service, you will ensure guest satisfaction by accurately processing requests, providin
+  Apply: https://www.bayt.com/en/job/apply/index/75273143/
+- Business Continuity, Crisis & Cyber Resilience Senior Manager @ Accenture · Riyadh · Cybersecurity · Not specified · Full Time · salary not posted · status published
+  Summary: In a pivotal role, the Senior Manager for Business Continuity, Crisis & Cyber Resilience will spearhead the development and enhancement of critical organizational capabilities. This position is essential for ensuring eff
+  Apply: https://www.bayt.com/en/job/apply/index/75272598/
+- Associate Principal - Information Technology & Security Audit @ ELM · Riyadh · Cybersecurity · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Associate Principal in Information Technology & Security Audit, where your expertise will drive the internal auditing processes at Elm. You will oversee the auditing of IT controls and systems, 
+  Apply: https://www.bayt.com/en/job/apply/index/75269684/
+- Senior Design Manager - Saudi National @ Mace Group · Riyadh · Design & Creative · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Design Manager in a landmark programme focused on delivering premium buildings and infrastructure for a prestigious estate. This role demands a leader who drives design excellence, coordin
+  Apply: https://www.bayt.com/en/job/apply/index/75270538/
+- AI Video Creator and Editor @ وكالة نسق الألوان للدعاية والإعلان · Riyadh · Design & Creative · Not specified · Full Time · SAR 1,875 - SAR 3,750 · status published
+  Summary: Looking for a versatile AI Video Creator and Editor with a broad creative vision. This role demands expertise in utilizing AI tools and techniques to produce high-quality short videos, including Reels, TikToks, and Ads, 
+  Apply: https://www.bayt.com/en/job/apply/index/5491320/
+- Principal - Transport Planning & Mobility @ WSP · Jeddah · Drivers & Transport · Not specified · Full Time · salary not posted · status published
+  Summary: As a Principal in Transport Planning & Mobility, you will lead a team dedicated to delivering innovative transport solutions in the Riyadh region. Your role encompasses overseeing project lifecycles from concept to deliv
+  Apply: https://www.bayt.com/en/job/apply/index/75272381/
+- Spa Manager ''Female Saudi'' @ Luxury Collection · Jeddah · Education & Teaching · Not specified · Full Time · salary not posted · status published
+  Summary: As a Spa Manager, you will oversee the delivery of spa services, ensuring exceptional guest experiences and employee satisfaction. Your role includes managing operations, budgets, and staff while maintaining high standar
+  Apply: https://www.bayt.com/en/job/apply/index/75274423/
+- Surveyor @ AREEB · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: A surveyor is sought for a pivotal role in Riyadh, responsible for conducting precise on-site surveys and ensuring accurate measurements for facade projects. This position requires collaboration with engineers to maintai
+  Apply: https://www.bayt.com/en/job/apply/index/75272671/
+- Site Engineer @ AREEB · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Site Engineer in Riyadh, where you will play a crucial role in ensuring the successful execution of construction projects. This position involves overseeing daily site activities, coordinating wi
+  Apply: https://www.bayt.com/en/job/apply/index/75272800/
+- Senior Resident Engineer - Site Supervision @ HILL INTERNATIONAL · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: As a Senior Resident Engineer, you will lead multidisciplinary project supervision activities, ensuring compliance with contractual requirements and client expectations. Your role involves coordinating the site supervisi
+  Apply: https://www.bayt.com/en/job/apply/index/75272721/
+- Retrofit Solutions Engineer (Contract) @ Airbus S.A.S · Qatif · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: As a Retrofit Solutions Engineer, you will leverage advanced aerospace engineering principles to deliver high-quality cabin retrofit solutions. This role involves managing technical and project aspects of aircraft modifi
+  Apply: https://www.bayt.com/en/job/apply/index/75272256/
+- SR. ENGINEER - PLANNING @ El Seif Engineering Contracting Company · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Engineer in Planning, where your expertise in scheduling and project management will drive success. At El Seif, we uphold excellence, integrity, and innovation, ensuring precision in every
+  Apply: https://www.bayt.com/en/job/apply/index/75269816/
+- Mechanical Engineer @ مجموعة خالد سعود الشبيلي لأستثمار والتطوير العقاري · Khobar · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your engineering career in a dynamic environment where your expertise in mechanical systems will be crucial. This role involves reviewing technical specifications, overseeing site implementation, and ensuring com
+  Apply: https://www.bayt.com/en/job/apply/index/5491391/
+- Mechanical Estimation Engineer @ GLC COMPANY · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: The Mechanical Estimation Engineer role at Al Yasamin in Riyadh offers a pivotal opportunity for professionals skilled in mechanical systems evaluation. This position emphasizes precision and analytical capabilities, ens
+  Apply: https://www.bayt.com/en/job/apply/index/5491236/
+- Mechanical Engineer @ confidential · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your engineering career as a Mechanical Engineer in Saudi Arabia, where innovation meets excellence. This role demands a strong passion for mechanical systems and a commitment to quality in every project. Be part
+  Apply: https://www.bayt.com/en/job/apply/index/5491059/
+- PM Engineer @ AREEB · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: A PM Engineer is essential for ensuring compliance with local content requirements in Saudi Arabia. This role involves monitoring, reporting, and enhancing local sourcing initiatives across various projects and procureme
+  Apply: https://www.bayt.com/en/job/apply/index/75272434/
+- Rotating Manager | Oil and Gas | Saudi Arabia @ HUDSON · Eastern Province · Engineering · Remote · Full Time · salary not posted · status published
+  Summary: A Rotating Equipment's Service Manager is needed to oversee the execution of Field services for LSTK projects in the Oil and Gas sector. This role demands extensive experience with various rotating equipment, including p
+  Apply: https://www.bayt.com/en/job/apply/index/75271098/
+- Electrical Power Design Engineer II @ Raytheon · Qatif · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Electrical Power Design Engineer II at RTX, a leader in aerospace and defense. In this pivotal role, you'll design and test power conversion circuitry, guiding early-career engineers and ensurin
+  Apply: https://www.bayt.com/en/job/apply/index/75271778/
+- Senior Field Technical Engineer @ Abbott · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Field Technical Engineer in Riyadh, where you will play a vital role in advancing heart disease treatments. This position offers the opportunity to provide clinical and sales support in th
+  Apply: https://www.bayt.com/en/job/apply/index/75269609/
+- Accountant @ Al Fares Holding Company · Riyadh · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: An exciting opportunity exists for an Accountant in a prestigious accounting firm in Abha, Saudi Arabia. This role emphasizes the importance of accuracy in financial records and supports professional growth in a collabor
+  Apply: https://www.bayt.com/en/job/apply/index/5491119/
+- Senior Cost Control Engineer @ UrbaCon Contracting & Trading Company · Saudi Arabia · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: The Senior Cost Control Engineer plays a pivotal role in managing project budgets and monitoring expenditures to ensure financial compliance. This position requires collaboration with stakeholders to implement effective 
+  Apply: https://www.bayt.com/en/job/apply/index/75271901/
+- KPMG Audit Internship Program | Accounting Graduates (Jeddah, Madinah, and Khobar) @ KPMG · Medina · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: KPMG Middle East is a leading professional service provider, offering audit, tax, and advisory services. Our Audit Internship Program is tailored for Accounting graduates eager to transition their academic knowledge into
+  Apply: https://www.bayt.com/en/job/apply/index/75270101/
+- ACCOUNTANT, GENERAL @ alfanar Group · Riyadh · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: An Accountant in Riyadh, Saudi Arabia, is essential for maintaining accurate financial records and ensuring compliance with accounting standards. This role involves overseeing accounts payable and receivable, managing fi
+  Apply: https://www.bayt.com/en/job/apply/index/75270283/
+- Accounting Intern | COOP Training @ Smart Technology Solutions · Jeddah · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: Smart Technology Solutions is at the forefront of IT services in Saudi Arabia, providing essential support to organizations with scalable technology and business systems. As a Finance Intern, you will play a crucial role
+  Apply: https://www.bayt.com/en/job/apply/index/75270134/
+- Senior | Audit | Audit & Assurance | Riyadh @ Deloitte Middle East · Riyadh · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: A significant opportunity exists in Riyadh for a Senior professional in Audit and Assurance at Deloitte, a leader in the professional services sector. This role demands expertise in delivering high-quality services while
+  Apply: https://www.bayt.com/en/job/apply/index/75270126/
+- Application Specialist, Nurse Informatics @ InterSystems Corporation · Riyadh · Healthcare & Medical · Not specified · Full Time · salary not posted · status published
+  Summary: The Application Specialist will leverage their healthcare expertise and InterSystems product knowledge to ensure successful implementation of solutions. They will serve as a critical nursing resource, helping customers u
+  Apply: https://www.bayt.com/en/job/apply/index/75269599/
+- Reservations Shift Leader @ Courtyard by Marriott · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Reservations Shift Leader in Riyadh, where you will expertly manage all reservation requests and ensure exceptional guest experiences. You'll verify room availability, explain policies, and accom
+  Apply: https://www.bayt.com/en/job/apply/index/75274349/
+- Front Desk Shift Leader @ Courtyard by Marriott · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevating guest experiences is at the core of this role, where a seamless check-in and check-out process is just the beginning. Guest Experience Experts are empowered to provide exceptional service, ensuring every aspect
+  Apply: https://www.bayt.com/en/job/apply/index/75273073/
+- AsstDir-Event Mgmt @ Le Meridien · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: In this pivotal role, the Assistant Director of Event Management will ensure seamless execution of property events, aligning sales and operations effectively. The position focuses on maximizing event revenues and enhanci
+  Apply: https://www.bayt.com/en/job/apply/index/75272875/
+- Chef @ confidential · Dammam · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your culinary skills in a dynamic kitchen environment. As a Chef, you will prepare high-quality dishes, ensuring adherence to food safety and hygiene standards while collaborating with a dedicated team. Your expe
+  Apply: https://www.bayt.com/en/job/apply/index/5484626/
+- Sous Chef @ Courtyard by Marriott · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: The daily kitchen operations' success is ensured through effective leadership and culinary expertise. Responsibilities include managing food functions, supervising staff, and maintaining high standards of quality and san
+  Apply: https://www.bayt.com/en/job/apply/index/75274351/
+- Chef de Partie @ Luxury Collection · Jeddah · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: As a Chef de Partie, you will be responsible for preparing special meals and ensuring the quality of food items. Your role includes regulating oven temperatures, managing food logs, and communicating with the kitchen tea
+  Apply: https://www.bayt.com/en/job/apply/index/75273321/
+- Chef de Partie-Saudi only @ Sheraton · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A Chef de Partie is responsible for preparing special meals and managing kitchen operations efficiently. Key duties include regulating oven temperatures, ensuring food quality, and maintaining logs. The role requires eff
+  Apply: https://www.bayt.com/en/job/apply/index/75272702/
+- Demi Chef de Partie – Cold Kitchen @ Hyatt Regency Riyadh Olaya · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your culinary career as a Demi Chef de Partie in the Cold Kitchen, where you will craft exquisite salads, appetizers, and buffet displays. Your expertise will ensure that every dish meets Hyatt's high standards o
+  Apply: https://www.bayt.com/en/job/apply/index/75272238/
+- At Your Service Shift Leader @ Courtyard by Marriott · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate guest experiences as an At Your Service Shift Leader in Riyadh, where your proactive approach will create memorable stays. Empowered to navigate your environment, you will handle operational needs, address reques
+  Apply: https://www.bayt.com/en/job/apply/index/75272297/
+- Chef de Partie-pastry (Saudi only) @ Sheraton · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your culinary career as a Chef de Partie specializing in pastries in Riyadh, Saudi Arabia. In this role, you'll prepare exquisite meals, maintain food quality, and ensure exceptional presentation standards. Colla
+  Apply: https://www.bayt.com/en/job/apply/index/75272071/
+- Human Resources and Public Relations Officer @ WASSOUL SARI Commercial · Mecca · Human Resources · Not specified · Full Time · SAR 5,625 - SAR 7,500 · status published
+  Summary: Elevate your career in Human Resources and Public Relations with a dynamic role in a fast-paced environment. This position demands expertise in managing employee affairs and ensuring compliance with governmental regulati
+  Apply: https://www.bayt.com/en/job/apply/index/5491175/
+- Sr Mgr, Solutions Architecture, MENAT AGS SA @ AWS EMEA SARL (Saudi Arabia Branch) · Riyadh · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: Drive innovation and growth as a Sr. Manager, Solutions Architect at AWS in Riyadh, Saudi Arabia. Collaborate with customers and AWS teams to design scalable cloud architectures that solve business challenges and enhance
+  Apply: https://www.bayt.com/en/job/apply/index/75269831/
+- Software Engineer (Systems & Scalability) @ Jobs for Humanity · Riyadh · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career by designing and maintaining robust software systems that prioritize performance and scalability. As a Software Engineer, you will implement solid engineering practices and drive continuous improvemen
+  Apply: https://www.bayt.com/en/job/apply/index/75270895/
+- RECENT IT / IS GRADUATES | Riyadh | Onsite | 6-Months-1 Year Assignment @ Sutherland · Riyadh · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: Unlock your potential in the tech industry with Sutherland's Youth Empowerment Program in Riyadh! This unique opportunity invites recent graduates in Information Technology and Information Systems to enhance their skills
+  Apply: https://www.bayt.com/en/job/apply/index/75270645/
+- Customer Service Manager @ WASSOUL SARI Commercial · Mecca · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate customer service excellence as a Customer Service Manager in Mecca, Saudi Arabia. Lead a dedicated team, ensuring daily performance tracking and adherence to service standards. Your expertise will drive solutions
+  Apply: https://www.bayt.com/en/job/apply/index/5489876/
+- Customer Service Representative @ Direct · Jeddah · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: 🏢 About DIRECT Direct is a leading Saudi company and one of the largest in the Kingdom’s travel and tourism sector. We believe that…
+  Apply: https://www.bayt.com/en/job/apply/index/5491269/
+- Customer Service Representative (Recent Graduate) @ confidential · Riyadh · IT & Software · Remote · Full Time · salary not posted · status published
+  Summary: Elevate your career in customer service with a focus on remote work. We are seeking a recent graduate who is eager to support our team in delivering exceptional service and solutions. Your analytical skills will be essen
+  Apply: https://www.bayt.com/en/job/apply/index/5491201/
+- Customer Support & Sales Coordinator @ Abwab Smart Solutions IT · Dammam · IT & Software · Not specified · Full Time · SAR 3,750 - SAR 5,625 · status published
+  Summary: Elevate your career in customer support and sales coordination with a leading company in Saudi Arabia. This role involves direct communication with clients, providing essential support, and assisting in daily office oper
+  Apply: https://www.bayt.com/en/job/apply/index/5490845/
+- Sorting Team Leader @ JD.com · Saudi Arabia · IT & Software · Not specified · Full Time · salary not posted · status published
+  Summary: A pivotal role in logistics awaits, where expertise in sorting and team management will drive operational excellence. Responsibilities include developing sorting plans, optimizing workflows, and ensuring quality control 
+  Apply: https://www.bayt.com/en/job/apply/index/75272108/
+- Lawyer- Litigation @ Parker Connect · Saudi Arabia · Legal · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your legal career as a Litigation Lawyer in Saudi Arabia, where you'll manage a diverse portfolio of cases from assessment to resolution. Your expertise in commercial and civil litigation will be crucial as you d
+  Apply: https://www.bayt.com/en/job/apply/index/75272119/
+- Supply Chain & Engineering Consultant @ Accenture · Riyadh · Logistics & Supply Chain · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact opportunity exists for experienced Supply Chain & Engineering Consultants to tackle complex operational and engineering challenges. The role involves leading project workstreams, conducting structured analy
+  Apply: https://www.bayt.com/en/job/apply/index/75272456/
+- People Operations Sr Coord @ Pepsico · Saudi Arabia · Logistics & Supply Chain · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career in People Operations with a role that demands precision and dedication. As the on-site HR SPOC, you will manage daily operations and serve as the primary contact for HR-related matters, ensuring compl
+  Apply: https://www.bayt.com/en/job/apply/index/75269589/
+- Sales and Marketing Specialist (Recent Graduates) @ confidential · Riyadh · Marketing · Remote · Full Time · salary not posted · status published
+  Summary: A dynamic opportunity exists for candidates specializing in Sales and Marketing, particularly recent graduates. This role involves supporting the team in various assigned tasks while utilizing effective communication ski
+  Apply: https://www.bayt.com/en/job/apply/index/5491208/
+- Marketing Internship @ Rentocars · Riyadh · Marketing · Not specified · Intern · salary not posted · status published
+  Summary: This internship offers a unique opportunity to gain hands-on experience in a dynamic marketing team. You will play a crucial role in developing effective marketing strategies that enhance brand recognition and increase c
+  Apply: https://www.bayt.com/en/job/apply/index/5491121/
+- Senior Specialist - Project Management @ ELM · Riyadh · Marketing · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Specialist in Project Management, where your expertise will drive engineering and facilities projects from inception to completion. This role demands a proactive approach to managing proje
+  Apply: https://www.bayt.com/en/job/apply/index/75269668/
+- Digital Marketing Specialist @ الامداد المتمكن المحدودة · Riyadh · Marketing · Not specified · Full Time · SAR 3,750 - SAR 5,625 · status published
+  Summary: Looking for a creative digital marketing professional with the ability to craft compelling advertising campaigns from concept to results. This role demands expertise in transforming mere visibility into real engagement a
+  Apply: https://www.bayt.com/en/job/apply/index/5491319/
+- Head of Procurement @ Abdul Latif Jameel Enterprises · Jeddah · Procurement · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact leadership role is available in procurement management, focusing on strategic sourcing and supplier performance. The position requires expertise in contract management and governance to drive value optimiza
+  Apply: https://www.bayt.com/en/job/apply/index/5491052/
+- Senior Supervisor Purchasing @ Marriott Hotels & Resorts · Riyadh · Procurement · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Supervisor in Purchasing, where you'll manage essential documentation, oversee inventory levels, and ensure compliance with safety regulations. Your leadership will foster a productive env
+  Apply: https://www.bayt.com/en/job/apply/index/75274261/
+- Sales Executive @ najidsolar · Riyadh · Project Management · Hybrid · Full Time · SAR 7,500 - SAR 11,250 · status published
+  Summary: A dynamic opportunity exists for a Sales Executive specializing in solar energy systems. This role involves identifying potential clients, conducting site assessments, and preparing technical proposals. Strong communicat
+  Apply: https://www.bayt.com/en/job/apply/index/5491116/
+- Sales Manager – Heavy Equipment @ Ground Equipment For Environmental Solutions · Jeddah · Project Management · Not specified · Full Time · SAR 7,500 - SAR 11,250 · status published
+  Summary: A highly experienced Sales Manager is sought to lead sales initiatives for heavy equipment in Saudi Arabia. This role involves developing strategies, managing a sales team, and building client relationships to drive busi
+  Apply: https://www.bayt.com/en/job/apply/index/5488574/
+- Sales Manager @ Al Khater Group · Jubail · Project Management · Not specified · Full Time · $3,000 - $4,000 · status published
+  Summary: A dynamic Sales Manager role is available, requiring expertise in strategic planning and execution of sales strategies for sanitary pipe products. Responsibilities include managing sales teams, expanding distribution cha
+  Apply: https://www.bayt.com/en/job/apply/index/5491086/
+- Project Manager - Construction and Maintenance As Sifarat, Riyadh @ Samama Holding Co. · Riyadh · Project Management · Not specified · Full Time · salary not posted · status published
+  Summary: Seeking an experienced Project Manager with expertise in facility management and specialized in construction and maintenance projects in As Sifarat, Riyadh. The Project Manager will oversee comprehensive project manageme
+  Apply: https://www.bayt.com/en/job/apply/index/5491066/
+- Senior Construction Manager (Infra & Landscape) - Saudi National @ Mace Group · Riyadh · Project Management · Not specified · Full Time · salary not posted · status published
+  Summary: A significant opportunity exists to contribute to one of the largest development programmes in Saudi Arabia, focusing on mixed-use infrastructure and landscape projects. The role emphasizes contractor management, constru
+  Apply: https://www.bayt.com/en/job/apply/index/75270534/
+- Sales Executive (Manpower Sales) | Jubail, Saudi @ HUDSON · Eastern Province · Project Management · Remote · Full Time · salary not posted · status published
+  Summary: Unlock your potential as a Sales Executive specializing in Manpower Sales in Jubail, Saudi Arabia. This urgent long-term opportunity offers a competitive salary of SAR 4,500, along with company-provided accommodation and
+  Apply: https://www.bayt.com/en/job/apply/index/75271126/
+- Environmental Manager (Island & marine) @ Mace Group · Saudi Arabia · Project Management · Not specified · Full Time · salary not posted · status published
+  Summary: As an Environmental Manager specializing in island and marine ecosystems, you will lead initiatives to protect and enhance biodiversity in Saudi Arabia's unique coastal environments. Your expertise will drive sustainable
+  Apply: https://www.bayt.com/en/job/apply/index/75270503/
+- Sr. Project Control Manager @ El Seif Engineering Contracting Company · Saudi Arabia · Project Management · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Project Control Manager in Saudi Arabia, where your expertise will shape the future of construction. At El Seif, we are committed to excellence, integrity, and innovation, ensuring every p
+  Apply: https://www.bayt.com/en/job/apply/index/75269843/
+- Performance Monitoring Engineer @ Ericsson · Riyadh · Quality Assurance & Control · Not specified · Full Time · salary not posted · status published
+  Summary: A critical role exists for a Mobile Core Network Performance Engineer responsible for monitoring and analyzing network performance across various domains. This position involves ensuring service quality, capacity readine
+  Apply: https://www.bayt.com/en/job/apply/index/75271674/
+- Sales Representative @ link2u · Riyadh · Retail · Not specified · Full Time · SAR 5,625 - SAR 7,500 · status published
+  Summary: Elevate your career as a Sales Representative specializing in B2B solutions in Riyadh. This role focuses on engaging businesses to provide automated invoicing services and financial tracking solutions. You will be respon
+  Apply: https://www.bayt.com/en/job/apply/index/5490294/
+- Sales Specialist (Arabic & English) @ COMM-IT MIDDLE EAST LLC · Riyadh · Sales · Not specified · Full Time · $1,500 - $2,000 · status published
+  Summary: • Will be responsible for Presentation and client communication. (Arabic & English)• Build and manage sales pipeline, Proposal writing, requirement gathering, follow up, quoting (Complete lifecycle
+  Apply: https://www.bayt.com/en/job/apply/index/3952212/
+- Sales Associate @ EssilorLuxottica Chalhoub · Dammam · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: Exceptional sales results are delivered by assisting customers in selecting products that suit their lifestyle. The role encompasses various store functions, including opening and closing, merchandising, and selling. As 
+  Apply: https://www.bayt.com/en/job/apply/index/5471823/
+- Vacancy: Sales Account Executive – Bedding & Furniture Materials @ SAFA AL SHAMS TRADING COMPANY · Dammam · Sales · Not specified · Full Time · SAR 3,750 - SAR 5,625 · status published
+  Summary: Elevate your career as a Sales Account Executive specializing in bedding and furniture materials. This role demands a results-driven professional with a proven track record in sales and account management, capable of bui
+  Apply: https://www.bayt.com/en/job/apply/index/5490858/
+- Account Manager @ Midis Group · Riyadh · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Account Manager in Riyadh, where you'll drive the promotion of our products and services through strategic partnerships. This role demands a proactive approach to optimizing sales and executing 
+  Apply: https://www.bayt.com/en/job/apply/index/75272150/
+- Account Manager (Growth) - Global Business Solutions- Arabic speaking - Riyadh - GBS @ TikTok · Riyadh · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: In a dynamic environment, the role of Account Manager (Growth) focuses on driving revenue growth for SMB advertisers across the MENA region. This position emphasizes building trusted client relationships and developing s
+  Apply: https://www.bayt.com/en/job/apply/index/75270004/
+- Account Executive- Manufacturing @ IFS · Riyadh · Sales · Remote · Full Time · salary not posted · status published
+  Summary: Elevate your career with a leading enterprise software company at the forefront of AI technology. We seek a driven Saudi National with exceptional sales skills to expand our market presence. This role demands a proactive
+  Apply: https://www.bayt.com/en/job/apply/index/75270141/
+- Transport & Logistics Business Development Executive @ Emdad United Transportation · Riyadh · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Business Development Officer in the dynamic transport and logistics sector in Saudi Arabia. This role demands hands-on experience in road transport and freight, focusing on securing new business 
+  Apply: https://www.bayt.com/en/job/apply/index/5491417/
+- Shared Services Manager @ Intajalamal Investment CJSC · Riyadh · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: The role of Shared Services Manager is pivotal in ensuring the seamless operation of essential organizational functions such as Human Resources, Government Relations, and Administration. This position is responsible for 
+  Apply: https://www.bayt.com/en/job/apply/index/5491336/
+- Head of Commercial @ Abdul Latif Jameel Enterprises · Jeddah · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact leadership role is available, focusing on driving sustainable revenue and market performance in the real estate sector. The commercial function will be led to optimize asset monetization and ensure discipli
+  Apply: https://www.bayt.com/en/job/apply/index/5491056/
+- Business Development Specialist – Heavy Equipment @ Ground Equipment For Environmental Solutions · Jeddah · Sales · Hybrid · Full Time · SAR 5,625 - SAR 7,500 · status published
+  Summary: Unlock new business opportunities in the heavy equipment sector with a focus on environmental solutions. As a Business Development Specialist, you will expand our customer base in Saudi Arabia, leveraging your expertise 
+  Apply: https://www.bayt.com/en/job/apply/index/5488563/
+- Therapy Area Partner- PAH Jeddah @ Merck Sharp & Dohme Corp · Saudi Arabia · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: The PAH Therapy Area Partner role offers a significant opportunity to impact patient care in Saudi Arabia. This position involves managing key accounts and executing strategies for a new product launch in pulmonary arter
+  Apply: https://www.bayt.com/en/job/apply/index/75272279/
+- Senior Business Development Manager – KSA @ almentor.net · Riyadh · Sales · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact opportunity exists for a Senior Business Development Manager in KSA, tasked with leading strategic development and institutional sales across the Saudi market. This role demands expertise in identifying and
+  Apply: https://www.bayt.com/en/job/apply/index/75270861/
+- Instrumentation and Controls Manager / Senior MEP Project Manager @ Mace Group · Saudi Arabia · Technicians & Skilled Trades · Not specified · Full Time · salary not posted · status published
+  Summary: This role is pivotal for delivering a major entertainment and luxury hospitality project in Saudi Arabia, requiring a seasoned Instrumentation and Controls Manager or Senior MEP Project Manager. The successful candidate 
+  Apply: https://www.bayt.com/en/job/apply/index/75270498/
+- Electrical Technician @ najidsolar · Riyadh · Technicians & Skilled Trades · Not specified · Full Time · $2,000 - $3,000 · status published
+  Summary: Elevate your career as an Electrical Technician in Riyadh, Saudi Arabia, specializing in solar power projects. We're seeking skilled professionals experienced in solar power panel, inverter, and energy storage implementa
+  Apply: https://www.bayt.com/en/job/apply/index/5486662/
+- Electrician @ Saudi Dolomite · Riyadh · Technicians & Skilled Trades · Not specified · Full Time · SAR 1,875 - SAR 3,750 · status published
+  Summary: Elevate your career as an Electrician in Riyadh, Saudi Arabia, where your expertise in heavy industrial electrical maintenance will be highly valued. With a minimum of 5 years of experience, you will excel in process con
+  Apply: https://www.bayt.com/en/job/apply/index/5488876/
+- Electrical Technician @ LINEA Design & Build · Riyadh · Technicians & Skilled Trades · Not specified · Full Time · SAR 1,875 - SAR 3,750 · status published
+  Summary: A skilled electrical technician with over 8 years of experience in executing and maintaining electrical works in projects is sought. The role requires proficiency in reading schematics, executing electrical installations
+  Apply: https://www.bayt.com/en/job/apply/index/5491020/
+- Mechanic @ Saudi Dolomite · Dammam · Technicians & Skilled Trades · Not specified · Full Time · SAR 1,875 - SAR 3,750 · status published
+  Summary: With over 5 years of hands-on experience in industrial plant operations, this role demands expertise in mechanical assembly and equipment installation. Candidates should have a strong background in maintenance troublesho
+  Apply: https://www.bayt.com/en/job/apply/index/5488874/
+- Reception and Reservations Officer @ شركة ريتاج الخضراء للخدمات · Jeddah · Administration · Not specified · Full Time · $500 - $1,000 · status published
+  Summary: Elevate your career as a distinguished Reception and Reservations Officer in a dynamic market research environment. This role offers an exciting opportunity to enhance your customer service skills while being part of a d
+  Apply: https://www.bayt.com/en/job/apply/index/5490881/
+- Executive Secretary @ Shawarma Classic · Riyadh · Administration · Not specified · Full Time · $1,000 - $1,500 · status published
+  Summary: An opportunity exists for an Executive Secretary in Riyadh, Saudi Arabia, where key responsibilities include managing the executive's calendar and preparing essential documents. The role demands strong organizational ski
+  Apply: https://www.bayt.com/en/job/apply/index/5490685/
+- Early in Career Development Programme - Finance & Operations (Supply Chain & Procurement) (Roche Pharma) @ Roche · Riyadh · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: A transformative opportunity awaits in the Early in Career Development Programme at Roche Pharma, focusing on Finance & Operations. This 12-month program is designed to cultivate essential skills in supply chain and proc
+  Apply: https://www.bayt.com/en/job/apply/index/75260085/
+- AsstDir-Sales II @ Four Points · Saudi Arabia · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: A pivotal role in driving segmented sales efforts is offered, focusing on group, transient, and corporate sales. Responsibilities include implementing sales strategies, achieving revenue goals, and enhancing guest satisf
+  Apply: https://www.bayt.com/en/job/apply/index/75267544/
+- PA/Executive secretary @ Delta Hotels and Resorts · Jeddah · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Property Administrative Specialist, where your contributions are vital to hotel operations. In this role, you will support various departments, ensuring seamless administrative processes and effe
+  Apply: https://www.bayt.com/en/job/apply/index/75264846/
+- Clerk-Reservations(Saudi only) @ Sheraton · Saudi Arabia · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career in hospitality with a role focused on managing reservations and enhancing guest experiences. This position requires processing reservation requests, changes, and cancellations while ensuring guest nee
+  Apply: https://www.bayt.com/en/job/apply/index/75264005/
+- Procurement & Ordering Assistant @ Haji Husein Alireza & Co. Ltd. · Jeddah · Administration · Not specified · Full Time · salary not posted · status published
+  Summary: A Procurement & Ordering Assistant is sought to facilitate efficient procurement processes in Jeddah, Saudi Arabia. Responsibilities include processing purchase orders, tracking order status, and maintaining accurate rec
+  Apply: https://www.bayt.com/en/job/apply/index/75261571/
+- Senior Risk Manager @ KBR Inc. · Saudi Arabia · Banking & Insurance · Not specified · Full Time · salary not posted · status published
+  Summary: A pivotal role in a landmark infrastructure project in Riyadh awaits a Senior Risk Manager. This position entails overseeing comprehensive risk management services to ensure effective governance and decision-making acros
+  Apply: https://www.bayt.com/en/job/apply/index/75261990/
+- Architectural Engineer @ ساج الركايا · Jeddah · Construction & Real Estate · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic opportunity exists for a talented female architectural engineer in Jeddah, Saudi Arabia. The ideal candidate will possess the skills to prepare architectural designs and drawings while ensuring compliance with 
+  Apply: https://www.bayt.com/en/job/apply/index/5490562/
+- Lead Field inspector – Façade and Envelope @ AECOM · Riyadh · Construction & Real Estate · Not specified · Full Time · salary not posted · status published
+  Summary: As a Lead Field Engineer specializing in Façade and Envelope systems, you will play a crucial role in overseeing the design and installation processes on complex construction projects. This position demands a blend of te
+  Apply: https://www.bayt.com/en/job/apply/index/75268507/
+- Cyber Security Specialist @ Vodafone · Qatif · Cybersecurity · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact opportunity exists for a Cyber Security Specialist in Saudi Arabia, where critical responsibilities include implementing security policies and managing daily security tasks. This role is essential for safeg
+  Apply: https://www.bayt.com/en/job/apply/index/75268751/
+- Treasury and Cash Analyst @ Jazan Integrated Gasification & Power Company (JIGPC) · Jizan · Data & AI · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Treasury & Cash Analyst in Jizan, Saudi Arabia, where your expertise will drive effective cash management and liquidity strategies. This role demands a detail-oriented professional to monitor cas
+  Apply: https://www.bayt.com/en/job/apply/index/5490742/
+- LADS–Engineering Financial Analyst (P2) *HYBRID* @ Raytheon · Qatif · Data & AI · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Engineering Financial Analyst at RTX, a leader in aerospace and defense. This hybrid role requires strong analytical skills to support Engineering Product Team Leads and manage Earned Value Mana
+  Apply: https://www.bayt.com/en/job/apply/index/75267080/
+- DC Senior Data Specialist - VOIS @ Vodafone · Qatif · Data & AI · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Data Specialist at VOIS, where your expertise in SQL will drive impactful sales commission calculations. With a focus on data analysis and quality control, you'll transform complex data in
+  Apply: https://www.bayt.com/en/job/apply/index/75268756/
+- Graphic Designer @ مصنع دار القاسم للمنتجات الورقية · Riyadh · Design & Creative · Not specified · Full Time · salary not posted · status published
+  Summary: As a Graphic Designer, you will create compelling visual identities and engaging multimedia content for social media platforms. Your expertise in design software and a strong portfolio will be essential in delivering hig
+  Apply: https://www.bayt.com/en/job/apply/index/5488843/
+- Senior Planner @ WSP · Riyadh · Drivers & Transport · Not specified · Full Time · salary not posted · status published
+  Summary: A Senior Planner is sought for a major roads and highways construction project in Riyadh. This role involves leading planning and scheduling activities, developing project plans, and ensuring successful outcomes through 
+  Apply: https://www.bayt.com/en/job/apply/index/75268940/
+- Associate / Principle Strategic Urban Planners @ SNC-Lavalin Fayez Engineering · Saudi Arabia · Drivers & Transport · Not specified · Full Time · salary not posted · status published
+  Summary: Atkinsréalis is seeking a skilled Associate / Principal Strategic Urban Planner to enhance our Planning and Urban Development team. This role is pivotal in executing intricate strategic planning and urban development pro
+  Apply: https://www.bayt.com/en/job/apply/index/75260198/
+- Manager - Operational Excellence @ SNC-Lavalin Fayez Engineering · Saudi Arabia · Education & Teaching · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career in operational excellence with a pivotal managerial role focused on enhancing business performance across various sectors in the MEA region. This position demands a strategic leader with over 12 years
+  Apply: https://www.bayt.com/en/job/apply/index/75260197/
+- Operations Manager – Cars @ Soum · Riyadh · Education & Teaching · Not specified · Full Time · salary not posted · status published
+  Summary: Transform the automotive landscape in MENA as an Operations Manager at Soum, a rapidly growing startup recognized among the Top 10 LinkedIn Startups in Saudi Arabia for 2024. Lead the end-to-end car operations, ensuring 
+  Apply: https://www.bayt.com/en/job/apply/index/75260747/
+- Operations Manager @ Sisco · Riyadh · Education & Teaching · Not specified · Full Time · salary not posted · status published
+  Summary: An opportunity exists for an Operations Manager in Dammam, Saudi Arabia, with a reputable organization in the Oil & Gas Services sector. The ideal candidate will oversee daily operations, ensuring safety and efficiency w
+  Apply: https://www.bayt.com/en/job/apply/index/75260384/
+- Civil Engineer @ شركة بيت الخبرة للاستشارات الهندسية · Mecca · Engineering · Not specified · Full Time · SAR 7,500 - SAR 11,250 · status published
+  Summary: A critical role in civil engineering involves the analysis of site topography and geology, alongside the preparation of engineering designs and specifications. Responsibilities include overseeing project execution and en
+  Apply: https://www.bayt.com/en/job/apply/index/5487405/
+- Project Planning and Scheduler @ Sisco · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Project Planning and Scheduler in Riyadh, Saudi Arabia, where your expertise in civil engineering will drive project success. Our client seeks skilled professionals adept in project planning and 
+  Apply: https://www.bayt.com/en/job/apply/index/75260379/
+- Project Coordinator - Engineering @ KBR Inc. · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Project Coordinator in Engineering, where you will oversee all phases of small-scale projects, typically under $10 million. You will be responsible for planning, organizing, and executing enginee
+  Apply: https://www.bayt.com/en/job/apply/index/75268991/
+- Mechanical Engineer II (Onsite) @ Raytheon · Qatif · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Mechanical Engineer II at RTX, where you'll tackle complex aerospace and defense challenges. Collaborate with top minds in the industry while ensuring engineering requirements are met and risks a
+  Apply: https://www.bayt.com/en/job/apply/index/75267402/
+- Mechanical Engineer - Design @ AECOM · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: As a Mechanical Engineer - Design at AECOM, you'll play a crucial role in developing innovative mechanical systems that enhance infrastructure. This position requires expertise in CAD software and a strong understanding 
+  Apply: https://www.bayt.com/en/job/apply/index/75268372/
+- Senior Mechanical Engineer - Infrastructure @ WSP · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: WSP is looking for a Senior Mechanical Engineer - Infrastructure to enhance our Transport & Infrastructure team in Riyadh, Saudi Arabia. This role focuses on the design and implementation of complex infrastructure projec
+  Apply: https://www.bayt.com/en/job/apply/index/75268413/
+- Multi-Property Director of Engineering @ St. Regis · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: A high level of property maintenance knowledge is required for overseeing multiple buildings and grounds, with a focus on safety and asset protection. Responsibilities include managing budgets, capital projects, and ener
+  Apply: https://www.bayt.com/en/job/apply/index/75264534/
+- Mechanical Technical Engineer @ UrbaCon Contracting & Trading Company · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: A Mechanical Technical Engineer is responsible for supervising mechanical draftsmen, verifying shop drawings, and ensuring compliance with local regulations. This role requires a strong background in mechanical engineeri
+  Apply: https://www.bayt.com/en/job/apply/index/75268395/
+- Senior Technical Engineer @ UrbaCon Contracting & Trading Company · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Technical Engineer, where you will manage the design of diverse projects, ensuring structural integrity and compliance. Your expertise will drive value engineering initiatives, identify po
+  Apply: https://www.bayt.com/en/job/apply/index/75268408/
+- Diploma in Electrical Engineering @ DesignTech Engineering Consultants · Medina · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Electrical Technician in the vibrant cities of Madinah and Yanbu. This role demands expertise in electrical installation, maintenance, and troubleshooting, ensuring adherence to safety standards
+  Apply: https://www.bayt.com/en/job/apply/index/5490580/
+- Senior Power Design Electrical Engineer @ Raytheon · Qatif · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Senior Power Design Electrical Engineer at RTX, a leader in aerospace and defense. You will play a critical role in designing and testing power conversion circuitry, ensuring the success of vital
+  Apply: https://www.bayt.com/en/job/apply/index/75268897/
+- Principal Power Design Engineer @ Raytheon · Qatif · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as a Principal Power Design Engineer at RTX, the world's leading aerospace and defense company. With over 185,000 professionals dedicated to solving complex global challenges, this role requires exper
+  Apply: https://www.bayt.com/en/job/apply/index/75268908/
+- Electrical Estimation Engineer @ Sisco · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: An opportunity exists for an Electrical Estimation Engineer in Saudi Arabia, requiring substantial experience in electrical estimation and tendering. Candidates must possess a strong background in preparing detailed esti
+  Apply: https://www.bayt.com/en/job/apply/index/75260374/
+- Specialist - Digital Employee Experience and Automation @ El Seif Engineering Contracting Company · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact role focused on enhancing digital employee experiences and automating workflows within the organization. The Specialist will play a crucial part in designing, testing, and improving digital processes that e
+  Apply: https://www.bayt.com/en/job/apply/index/75260144/
+- Sr. Principal Designer - Electrical @ KBR Inc. · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: As a Sr. Principal Designer - Electrical, you will leverage your extensive expertise to influence critical engineering decisions and strategies. Your role involves negotiating complex issues with top engineers and provid
+  Apply: https://www.bayt.com/en/job/apply/index/75268697/
+- Electrical Engineer - Deasign @ AECOM · Riyadh · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Electrical Engineer - Design in Riyadh, Saudi Arabia, where your expertise will shape innovative electrical systems. In this role, you will design and optimize electrical components, ensuring th
+  Apply: https://www.bayt.com/en/job/apply/index/75268629/
+- Power BI Developer @ KBR Inc. · Saudi Arabia · Engineering · Not specified · Full Time · salary not posted · status published
+  Summary: As a Power BI Developer, you will play a critical role in transforming complex data into actionable insights that drive executive decision-making. This position involves designing and maintaining interactive dashboards a
+  Apply: https://www.bayt.com/en/job/apply/index/75265094/
+- Remote Accountant @ Confidential · Riyadh · Finance & Accounting · Remote · Full Time · $500 - $1,000 · status published
+  Summary: Seeking a skilled accountant with over 7 years of experience to work remotely for a Saudi company. The ideal candidate will have strong expertise in Excel and accounting software, and will be dedicated to full-time work 
+  Apply: https://www.bayt.com/en/job/apply/index/5490578/
+- Accountant @ AnchorGF · Khobar · Finance & Accounting · Not specified · Full Time · SAR 3,750 - SAR 5,625 · status published
+  Summary: As an Accountant, you will play a critical role in managing financial records and ensuring compliance with accounting standards. Your responsibilities will include preparing financial reports, recording transactions, and
+  Apply: https://www.bayt.com/en/job/apply/index/5490276/
+- SENIOR ACCOUNTANT @ UrbaCon Contracting & Trading Company · Saudi Arabia · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: As a Senior Accountant, you will engage in comprehensive accounting tasks that include financial data compilation and analysis. Your role will be pivotal in ensuring the accuracy of financial records and compliance with 
+  Apply: https://www.bayt.com/en/job/apply/index/75268602/
+- Clerk-Accounts Payable -Saudi only @ Sheraton · Riyadh · Finance & Accounting · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career in finance with a vital role in accounts payable. As a Clerk, you will ensure the accuracy of financial records and maintain compliance with company policies. Your attention to detail will contribute 
+  Apply: https://www.bayt.com/en/job/apply/index/75262631/
+- Fire And Safety Officer @ Saudi Arabian Trading and Construction Company (SATCO) · Riyadh · Health, Safety & Environment · Not specified · Full Time · SAR 7,500 - SAR 11,250 · status published
+  Summary: A critical role exists for a Fire Warden in Riyadh, focusing on fire prevention and emergency preparedness. Responsibilities include inspecting fire safety equipment, leading evacuations, and ensuring compliance with saf
+  Apply: https://www.bayt.com/en/job/apply/index/5490761/
+- Safety Officer @ Sisco · Riyadh · Health, Safety & Environment · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate workplace safety with your expertise as a Safety Officer in Saudi Arabia. Our client urgently seeks a qualified safety professional to ensure compliance and mitigate risks. This is a critical role requiring immed
+  Apply: https://www.bayt.com/en/job/apply/index/75260369/
+- Supervisor-Occupational Safety & Health(Saudi only ) @ Sheraton · Saudi Arabia · Health, Safety & Environment · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate workplace safety and health standards as a Supervisor in Saudi Arabia. This role demands a proactive approach to risk assessment, ensuring a safe environment for associates while minimizing illness and injury. Yo
+  Apply: https://www.bayt.com/en/job/apply/index/75265321/
+- HSE FIELD COMPLIANCE COORDINATOR @ Oil Support Services · Eastern Province · Health, Safety & Environment · Not specified · Full Time · $3,000 - $4,000 · status published
+  Summary: The HSE Field Compliance Coordinator plays a vital role in ensuring health, safety, and environmental regulations are met across various sites in the Eastern Province. This position is key to fostering a culture of safet
+  Apply: https://www.bayt.com/en/job/apply/index/5490645/
+- Project Quality and Safety Managers Leader @ ALSTOM Transmission & Distribution · Riyadh · Health, Safety & Environment · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career with Alstom as a Project Quality and Safety Managers Leader, where you will drive excellence across projects and ensure customer satisfaction through safety and quality. Collaborate with dedicated pro
+  Apply: https://www.bayt.com/en/job/apply/index/75268282/
+- HSE Site Coordinator @ Flowserve · Dammam · Health, Safety & Environment · Not specified · Full Time · salary not posted · status published
+  Summary: A strong safety culture is driven by the HSE Specialist, ensuring operational compliance across facility operations. This role emphasizes maintaining workplace safety standards, leading continuous improvement through 5S,
+  Apply: https://www.bayt.com/en/job/apply/index/75260136/
+- Senior Spa Therapist @ EDITION · Saudi Arabia · Healthcare & Medical · Not specified · Full Time · salary not posted · status published
+  Summary: A pivotal role is played by Spa Specialists in enhancing the guest experience through a variety of Spa services. Responsibilities include managing reservations, providing service information, and ensuring a professional 
+  Apply: https://www.bayt.com/en/job/apply/index/75265053/
+- Mgr-Restaurant (Saudi Only) @ Marriott Hotels & Resorts · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A high-impact managerial role in the restaurant sector, focusing on daily operations and guest satisfaction. Responsibilities include supervising staff, ensuring compliance with sanitation standards, and enhancing financ
+  Apply: https://www.bayt.com/en/job/apply/index/75264739/
+- AsstMgr-Front Office I @ Luxury Collection · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career in hospitality by overseeing front office operations and leading a dedicated team. As an Assistant Front Office Manager, you will ensure exceptional guest experiences while maximizing departmental per
+  Apply: https://www.bayt.com/en/job/apply/index/75267065/
+- Restaurant Manager @ W Hotels · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic Restaurant Manager role is available, focusing on enhancing guest satisfaction and optimizing financial performance. Responsibilities include supervising daily operations, maintaining sanitation standards, and 
+  Apply: https://www.bayt.com/en/job/apply/index/75264710/
+- Hotel Cleanliness Supervisor @ Luxury Collection · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A pivotal role exists for a Hotel Cleanliness Supervisor, responsible for ensuring that guest rooms and public areas meet high-quality standards. This position involves inspecting cleaned areas, managing room assignments
+  Apply: https://www.bayt.com/en/job/apply/index/75264292/
+- Operations Manager (Events) - 9 month contract @ Informa PLC · Riyadh · Hospitality & Food Service · Remote · Full Time · salary not posted · status published
+  Summary: A significant opportunity exists for an Operations Manager to oversee the delivery of high-profile events in Saudi Arabia. This role demands exceptional operational expertise to ensure the successful execution of large-s
+  Apply: https://www.bayt.com/en/job/apply/index/75260206/
+- Cake Decorator @ فن سوار · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Exceptional creativity and precision are essential for a professional Cake Decoration and Fondant Sculpting Artist. Specialization in modeling intricate 3D figures and custom shapes using fondant is required, with a focu
+  Apply: https://www.bayt.com/en/job/apply/index/5490653/
+- Cook II-Saudi Only @ Luxury Collection · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your culinary skills in a dynamic kitchen environment where precision and creativity meet. As a Cook II, you will prepare ingredients, cook dishes, and ensure food quality while adhering to safety and presentatio
+  Apply: https://www.bayt.com/en/job/apply/index/75265735/
+- A Pastry Chef @ InterContinental Hotels Group · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A high level of expertise is required for the position of Pastry Chef at the First Vignette Collection in Saudi Arabia. Responsibilities include preparing a variety of pastries, desserts, and bakery products while ensuri
+  Apply: https://www.bayt.com/en/job/apply/index/75268616/
+- Chef de Partie @ St. Regis · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic opportunity exists for a Chef de Partie in Saudi Arabia, where culinary expertise will be utilized to prepare exceptional meals and maintain high food quality standards. Responsibilities include regulating cook
+  Apply: https://www.bayt.com/en/job/apply/index/75266642/
+- CHEF DE PARTIE @ Sheraton · Dammam · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic culinary environment awaits, where the role of Chef de Partie involves the preparation of exquisite meals and meticulous monitoring of food quality. Responsibilities include regulating cooking temperatures, ens
+  Apply: https://www.bayt.com/en/job/apply/index/75266734/
+- Cook @ Westin · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic environment awaits where culinary skills are honed and creativity flourishes. Responsibilities include preparing ingredients, cooking meals according to recipes, and ensuring food quality standards are met. The
+  Apply: https://www.bayt.com/en/job/apply/index/75265728/
+- Demi Chef De Partie - The Jeddah EDITION @ EDITION · Jeddah · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: A dynamic culinary environment awaits, where the role of Demi Chef De Partie is pivotal in delivering exceptional dining experiences. Responsibilities include preparing special meals, maintaining food quality, and assist
+  Apply: https://www.bayt.com/en/job/apply/index/75265596/
+- Chef de Partie-pastry @ Sheraton · Riyadh · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your culinary career as a Chef de Partie specializing in pastry in Riyadh, Saudi Arabia. You will prepare exquisite desserts, manage kitchen operations, and ensure food quality while adhering to safety standards.
+  Apply: https://www.bayt.com/en/job/apply/index/75262712/
+- Assistant Restaurant Manager @ EDITION · Saudi Arabia · Hospitality & Food Service · Not specified · Full Time · salary not posted · status published
+  Summary: Elevate your career as an Assistant Restaurant Manager in Saudi Arabia, where teamwork and guest satisfaction are paramount. Oversee staff performance, ensure compliance with safety standards, and maintain a welcoming at
+  Apply: https://www.bayt.com/en/job/apply/index/75268019/

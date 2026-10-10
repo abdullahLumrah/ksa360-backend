@@ -7,16 +7,19 @@ const {
   userByEmail,
   requireUser,
   revokeSession,
+  revokeAllForUser,
   hashPassword,
   checkPassword,
   verifyGoogleToken,
   exchangeGoogleCode,
   fetchGoogleProfile,
+  isPermanentlyDeleted,
+  canRestore,
 } = require('../auth');
+const { recordEvent } = require('./analytics');
 
 const router = Router();
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const GENDERS = new Set(['male', 'female', 'other']);
 
 function cleanName(value) {
   return String(value || '').trim().replace(/\s+/g, ' ');
@@ -26,14 +29,12 @@ function cleanEmail(value) {
   return String(value || '').trim().toLowerCase();
 }
 
-function validDob(value) {
-  const raw = String(value || '').trim();
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return false;
-  const date = new Date(`${raw}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return false;
-  const oldest = new Date();
-  oldest.setUTCFullYear(oldest.getUTCFullYear() - 13);
-  return date <= oldest;
+function normalizeSaudiPhone(value) {
+  let digits = String(value || '').replace(/\D/g, '');
+  if (digits.startsWith('966')) digits = digits.slice(3);
+  if (digits.startsWith('0')) digits = digits.slice(1);
+  if (!/^5\d{8}$/.test(digits)) return '';
+  return `+966${digits}`;
 }
 
 function insertUser(input) {
@@ -41,8 +42,8 @@ function insertUser(input) {
   db()
     .prepare(
       `INSERT INTO users (
-        id, name, email, password_hash, google_id, date_of_birth, gender, avatar, provider
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        id, name, email, password_hash, google_id, date_of_birth, gender, phone, avatar, provider
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       id,
@@ -52,10 +53,39 @@ function insertUser(input) {
       input.google_id || null,
       input.date_of_birth || '',
       input.gender || '',
+      input.phone || '',
       input.avatar || '',
       input.provider || 'email',
     );
   return db().prepare('SELECT * FROM users WHERE id = ?').get(id);
+}
+
+function restoreIfNeeded(user) {
+  if (!user || !canRestore(user)) return user;
+  db()
+    .prepare("UPDATE users SET deleted_at = '', updated_at = datetime('now') WHERE id = ?")
+    .run(user.id);
+  recordEvent({
+    event: 'account_restore',
+    section: 'auth',
+    user,
+  });
+  return db().prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+}
+
+function issueSession(user, event) {
+  const ready = restoreIfNeeded(user);
+  recordEvent({ event, section: 'auth', user: ready });
+  return { token: signToken(ready.id), user: publicUser(ready) };
+}
+
+function rejectDeleted(user, res) {
+  if (!user) return false;
+  if (isPermanentlyDeleted(user)) {
+    res.status(403).json({ error: 'This account was permanently deleted' });
+    return true;
+  }
+  return false;
 }
 
 router.get('/google-config', (_req, res) => {
@@ -70,8 +100,7 @@ router.post('/register', async (req, res) => {
     const email = cleanEmail(body.email);
     const password = String(body.password || '');
     const confirm = String(body.confirmPassword || body.password || '');
-    const dateOfBirth = String(body.dateOfBirth || body.date_of_birth || '').trim();
-    const gender = String(body.gender || '').trim().toLowerCase();
+    const phone = normalizeSaudiPhone(body.phone);
 
     if (name.length < 2) return res.status(400).json({ error: 'Enter your name' });
     if (!EMAIL.test(email)) return res.status(400).json({ error: 'Enter a valid email' });
@@ -79,25 +108,36 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Password must be at least 8 characters' });
     }
     if (password !== confirm) return res.status(400).json({ error: 'Passwords do not match' });
-    if (!validDob(dateOfBirth)) {
-      return res.status(400).json({ error: 'Enter a valid date of birth (13+)' });
-    }
-    if (!GENDERS.has(gender)) {
-      return res.status(400).json({ error: 'Choose male, female, or other' });
-    }
-    if (userByEmail(email)) {
+    const existing = userByEmail(email);
+    if (existing && !canRestore(existing)) {
+      if (isPermanentlyDeleted(existing)) {
+        return res.status(403).json({ error: 'This account was permanently deleted' });
+      }
       return res.status(409).json({ error: 'An account with this email already exists' });
     }
 
-    const user = insertUser({
+    let user = existing;
+    if (existing && canRestore(existing)) {
+      db()
+        .prepare(
+          `UPDATE users SET
+            name = ?, password_hash = ?, phone = CASE WHEN ? != '' THEN ? ELSE phone END,
+            deleted_at = '', updated_at = datetime('now')
+           WHERE id = ?`,
+        )
+        .run(name, await hashPassword(password), phone, phone, existing.id);
+      user = db().prepare('SELECT * FROM users WHERE id = ?').get(existing.id);
+      return res.status(200).json(issueSession(user, 'account_restore'));
+    }
+
+    user = insertUser({
       name,
       email,
       password_hash: await hashPassword(password),
-      date_of_birth: dateOfBirth,
-      gender,
+      phone,
       provider: 'email',
     });
-    res.status(201).json({ token: signToken(user.id), user: publicUser(user) });
+    res.status(201).json(issueSession(user, 'register'));
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message || 'Could not create account' });
   }
@@ -111,7 +151,8 @@ router.post('/login', async (req, res) => {
     if (!user || !(await checkPassword(password, user.password_hash))) {
       return res.status(401).json({ error: 'Email or password is incorrect' });
     }
-    res.json({ token: signToken(user.id), user: publicUser(user) });
+    if (rejectDeleted(user, res)) return;
+    res.json(issueSession(user, 'login'));
   } catch (err) {
     res.status(500).json({ error: err.message || 'Could not sign in' });
   }
@@ -131,74 +172,108 @@ router.post('/google', async (req, res) => {
     const email = cleanEmail(google.email);
     const name = cleanName(people.name || google.name || email.split('@')[0]);
     const avatar = String(people.picture || google.picture || '');
-    const dateOfBirth = people.dateOfBirth || '';
-    const gender = people.gender || '';
     let user = userByEmail(email);
+    if (user && rejectDeleted(user, res)) return;
     if (!user) {
       user = insertUser({
         name,
         email,
         google_id: google.sub,
-        date_of_birth: dateOfBirth,
-        gender,
         avatar,
         provider: 'google',
       });
-    } else {
-      db()
-        .prepare(
-          `UPDATE users SET
-            google_id = COALESCE(google_id, ?),
-            name = CASE WHEN name = '' THEN ? ELSE name END,
-            avatar = CASE WHEN avatar = '' THEN ? ELSE avatar END,
-            date_of_birth = CASE WHEN date_of_birth = '' THEN ? ELSE date_of_birth END,
-            gender = CASE WHEN gender = '' THEN ? ELSE gender END,
-            provider = CASE WHEN provider = 'email' THEN 'email' ELSE 'google' END,
-            updated_at = datetime('now')
-           WHERE id = ?`,
-        )
-        .run(google.sub, name, avatar, dateOfBirth, gender, user.id);
-      user = db().prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+      return res.json(issueSession(user, 'register'));
     }
-    res.json({ token: signToken(user.id), user: publicUser(user) });
+    db()
+      .prepare(
+        `UPDATE users SET
+          google_id = COALESCE(google_id, ?),
+          name = CASE WHEN name = '' THEN ? ELSE name END,
+          avatar = CASE WHEN avatar = '' THEN ? ELSE avatar END,
+          provider = CASE WHEN provider = 'email' THEN 'email' ELSE 'google' END,
+          updated_at = datetime('now')
+         WHERE id = ?`,
+      )
+      .run(google.sub, name, avatar, user.id);
+    user = db().prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+    res.json(issueSession(user, 'login'));
   } catch (err) {
     res.status(err.status || 401).json({ error: err.message || 'Google sign-in failed' });
   }
 });
 
 router.post('/logout', requireUser, (req, res) => {
+  recordEvent({ event: 'logout', section: 'auth', user: req.user });
   revokeSession(req.jti);
   res.json({ ok: true });
 });
 
 router.get('/me', requireUser, (req, res) => {
-  res.json(publicUser(req.user));
+  if (rejectDeleted(req.user, res)) return;
+  res.json(publicUser(req.user, { refreshStats: true }));
 });
 
 router.patch('/me', requireUser, (req, res) => {
+  if (rejectDeleted(req.user, res)) return;
   const body = req.body || {};
   const name = body.name != null ? cleanName(body.name) : req.user.name;
-  const dateOfBirth = body.dateOfBirth != null || body.date_of_birth != null
-    ? String(body.dateOfBirth || body.date_of_birth || '').trim()
-    : req.user.date_of_birth;
+  const phone = body.phone != null ? normalizeSaudiPhone(body.phone) : req.user.phone;
   const gender = body.gender != null
     ? String(body.gender || '').trim().toLowerCase()
     : req.user.gender;
+  const dateOfBirth = body.dateOfBirth != null || body.date_of_birth != null
+    ? String(body.dateOfBirth || body.date_of_birth || '').trim()
+    : req.user.date_of_birth;
   if (name.length < 2) return res.status(400).json({ error: 'Enter your name' });
-  if (dateOfBirth && !validDob(dateOfBirth)) {
-    return res.status(400).json({ error: 'Enter a valid date of birth (13+)' });
+  if (body.phone != null && !phone) {
+    return res.status(400).json({ error: 'Enter a valid Saudi mobile number' });
   }
-  if (gender && !GENDERS.has(gender)) {
+  if (body.gender != null && !['male', 'female', 'other'].includes(gender)) {
     return res.status(400).json({ error: 'Choose male, female, or other' });
   }
+  if (body.dateOfBirth != null || body.date_of_birth != null) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+      return res.status(400).json({ error: 'Enter a valid date of birth' });
+    }
+    const date = new Date(`${dateOfBirth}T00:00:00Z`);
+    const oldest = new Date();
+    oldest.setUTCFullYear(oldest.getUTCFullYear() - 13);
+    if (Number.isNaN(date.getTime()) || date > oldest) {
+      return res.status(400).json({ error: 'Enter a valid date of birth (13+)' });
+    }
+  }
+  const wasComplete = Boolean(
+    String(req.user.phone || '').trim() &&
+      String(req.user.gender || '').trim() &&
+      String(req.user.date_of_birth || '').trim(),
+  );
   db()
     .prepare(
-      `UPDATE users SET name = ?, date_of_birth = ?, gender = ?, updated_at = datetime('now')
+      `UPDATE users SET name = ?, phone = ?, gender = ?, date_of_birth = ?, updated_at = datetime('now')
        WHERE id = ?`,
     )
-    .run(name, dateOfBirth, gender, req.user.id);
+    .run(name, phone, gender || '', dateOfBirth || '', req.user.id);
   const user = db().prepare('SELECT * FROM users WHERE id = ?').get(req.user.id);
+  const nowComplete = Boolean(phone && gender && dateOfBirth);
+  if (!wasComplete && nowComplete) {
+    recordEvent({ event: 'profile_complete', section: 'profile', user });
+  }
   res.json(publicUser(user));
+});
+
+router.delete('/me', requireUser, (req, res) => {
+  if (rejectDeleted(req.user, res)) return;
+  const now = new Date().toISOString();
+  db()
+    .prepare("UPDATE users SET deleted_at = ?, updated_at = datetime('now') WHERE id = ?")
+    .run(now, req.user.id);
+  recordEvent({ event: 'account_delete', section: 'auth', user: req.user });
+  revokeAllForUser(req.user.id);
+  res.json({
+    ok: true,
+    message: 'Account scheduled for deletion. Sign in within 15 days to restore it.',
+    restoreUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
+  });
 });
 
 module.exports = { router };

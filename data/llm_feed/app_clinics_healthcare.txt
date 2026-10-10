@@ -1,0 +1,362 @@
+# KSA Guide Clinics & Healthcare
+
+The Clinics / Health section lists hospitals, clinics, pharmacies and emergency info.
+When a user asks for a hospital location, ALWAYS reply with city, latitude/longitude, and the Google Maps link from this pack.
+
+## Name aliases (common misspellings)
+- Hamadi / Hammadi / Al Hammadi / Al-Hammadi Hospital = مستشفى الحمادي (Riyadh) and also Hammadi suwadi / HAMC in Riyadh data.
+- Dr Hamid Suliman Al-Ahmadi Hospital is in Madinah (different facility).
+
+## Emergency hotlines
+- 911: 911 — Police, ambulance, and fire — unified emergency number across Saudi Arabia.
+- Ambulance: 997 — Saudi Red Crescent ambulance.
+- Civil Defense: 998 — Fire and rescue.
+- Police: 999 — Direct police line.
+- MOH 937: 937 — Ministry of Health medical consultation and Seha support.
+- Traffic: 993 — Traffic accidents and Saher.
+- Electricity: 933 — Power outage.
+
+## Facility counts by city and kind
+- Riyadh / hospital: 113
+- Riyadh / clinic: 42
+- Madinah / hospital: 32
+- Khobar / hospital: 16
+- Khobar / clinic: 8
+- Madinah / clinic: 5
+- Jeddah / hospital: 4
+- Buraidah / hospital: 3
+- Hail / hospital: 3
+- Dammam / hospital: 2
+- Makkah / hospital: 2
+- Abha / hospital: 1
+- Al Baha / hospital: 1
+- Hofuf (Al Ahsa) / hospital: 1
+- Jazan / hospital: 1
+- Jubail / hospital: 1
+- Khamis Mushait / hospital: 1
+- Najran / hospital: 1
+- Tabuk / hospital: 1
+- Taif / hospital: 1
+- Yanbu / hospital: 1
+
+## All hospitals (with coordinates + maps links)
+- Asir Central Hospital (hospital) · Abha · EMERGENCY · phone: 0172250000 · lat 18.2164, lng 42.5053 · Maps: https://www.google.com/maps/search/?api=1&query=18.2164,42.5053
+  Services: emergency
+- Al Baha Hospital (hospital) · Al Baha · EMERGENCY · phone: 0177250000 · lat 20.0129, lng 41.4677 · Maps: https://www.google.com/maps/search/?api=1&query=20.0129,41.4677
+  Services: emergency
+- Buraidah Central Hospital (hospital) · Buraidah · EMERGENCY · phone: 0163240000 · lat 26.3294, lng 43.9682 · Maps: https://www.google.com/maps/search/?api=1&query=26.3294,43.9682
+  Services: emergency
+- King Fahd Hospital (hospital) · Buraidah · EMERGENCY · phone: 0137220000 · lat 28.4336, lng 45.9636 · Maps: https://www.google.com/maps/search/?api=1&query=28.4336,45.9636
+  Services: emergency
+- King Fahd Specialist Hospital (hospital) · Buraidah · EMERGENCY · phone: 0163252000 · lat 26.326, lng 43.975 · Maps: https://www.google.com/maps/search/?api=1&query=26.326,43.975
+  Services: emergency, specialist
+- Dammam Medical Complex (hospital) · Dammam · EMERGENCY · phone: 0138311111 · lat 26.4331, lng 50.1032 · Maps: https://www.google.com/maps/search/?api=1&query=26.4331,50.1032
+  Services: emergency
+- King Fahd Specialist Hospital (hospital) · Dammam · EMERGENCY · phone: 0138431111 · lat 26.3922, lng 50.1141 · Maps: https://www.google.com/maps/search/?api=1&query=26.3922,50.1141
+  Services: emergency, specialist
+- Arar Central Hospital (hospital) · Hail · EMERGENCY · phone: 0146610000 · lat 30.9753, lng 41.0381 · Maps: https://www.google.com/maps/search/?api=1&query=30.9753,41.0381
+  Services: emergency
+- King Khalid Hospital (hospital) · Hail · EMERGENCY · phone: 0165310000 · lat 27.5114, lng 41.7208 · Maps: https://www.google.com/maps/search/?api=1&query=27.5114,41.7208
+  Services: emergency
+- Prince Mutaib Hospital (hospital) · Hail · EMERGENCY · phone: 0146240000 · lat 29.9697, lng 40.2064 · Maps: https://www.google.com/maps/search/?api=1&query=29.9697,40.2064
+  Services: emergency
+- King Fahd Hospital Al Ahsa (hospital) · Hofuf (Al Ahsa) · EMERGENCY · phone: 0135750000 · lat 25.3647, lng 49.5856 · Maps: https://www.google.com/maps/search/?api=1&query=25.3647,49.5856
+  Services: emergency
+- King Fahd Central Hospital (hospital) · Jazan · EMERGENCY · phone: 0173210000 · lat 16.8892, lng 42.5511 · Maps: https://www.google.com/maps/search/?api=1&query=16.8892,42.5511
+  Services: emergency
+- East Jeddah Hospital (hospital) · Jeddah · EMERGENCY · phone: 0126129999 · lat 21.5439, lng 39.2742 · Maps: https://www.google.com/maps/search/?api=1&query=21.5439,39.2742
+  Services: emergency
+- King Abdulaziz Hospital (hospital) · Jeddah · EMERGENCY · phone: 0126375555 · lat 21.5433, lng 39.1728 · Maps: https://www.google.com/maps/search/?api=1&query=21.5433,39.1728
+  Services: emergency
+- King Fahd Hospital (hospital) · Jeddah · EMERGENCY · phone: 0126655000 · lat 21.4921, lng 39.1925 · Maps: https://www.google.com/maps/search/?api=1&query=21.4921,39.1925
+  Services: emergency
+- King Faisal Specialist Hospital (hospital) · Jeddah · EMERGENCY · phone: 0126677777 · lat 21.5438, lng 39.2106 · Maps: https://www.google.com/maps/search/?api=1&query=21.5438,39.2106
+  Services: emergency, specialist
+- Royal Commission Hospital (hospital) · Jubail · EMERGENCY · phone: 0133400000 · lat 27.0046, lng 49.6225 · Maps: https://www.google.com/maps/search/?api=1&query=27.0046,49.6225
+  Services: emergency
+- Armed Forces Hospital (hospital) · Khamis Mushait · EMERGENCY · phone: 0172500000 · lat 18.3064, lng 42.7297 · Maps: https://www.google.com/maps/search/?api=1&query=18.3064,42.7297
+  Services: emergency
+- Al Faraby Medical Group (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.32984, lng 50.162184 · Maps: https://www.google.com/maps/search/?api=1&query=26.32984,50.162184
+- Al Mana Hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.294142, lng 50.21839 · Maps: https://www.google.com/maps/search/?api=1&query=26.294142,50.21839
+- Al Mana Hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.294279, lng 50.217782 · Maps: https://www.google.com/maps/search/?api=1&query=26.294279,50.217782
+- Al Yousif Hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.266704, lng 50.206652 · Maps: https://www.google.com/maps/search/?api=1&query=26.266704,50.206652
+- Al mana general hospital (14,224 patient ) (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.29726, lng 50.215094 · Maps: https://www.google.com/maps/search/?api=1&query=26.29726,50.215094
+- AlJazira (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.281638, lng 50.197312 · Maps: https://www.google.com/maps/search/?api=1&query=26.281638,50.197312
+- Alauwasat hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.339712, lng 50.187884 · Maps: https://www.google.com/maps/search/?api=1&query=26.339712,50.187884
+- Almana General Hospital (hospital) · Khobar · EMERGENCY · phone: 0138200000 · lat 26.2851, lng 50.1974 · Maps: https://www.google.com/maps/search/?api=1&query=26.2851,50.1974
+  Services: emergency
+- Dr. Sulaiman Al Habib Hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.310671, lng 50.212246 · Maps: https://www.google.com/maps/search/?api=1&query=26.310671,50.212246
+- King Fahad Hospital of University (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.299953, lng 50.190245 · Maps: https://www.google.com/maps/search/?api=1&query=26.299953,50.190245
+  Website: https://www.iau.edu.sa/
+- King Fahd University Hospital (hospital) · Khobar · EMERGENCY · phone: 0138966666 · lat 26.3074, lng 50.1442 · Maps: https://www.google.com/maps/search/?api=1&query=26.3074,50.1442
+  Services: emergency, university
+- Parking Spot (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.308966, lng 50.134875 · Maps: https://www.google.com/maps/search/?api=1&query=26.308966,50.134875
+- Procare Riaya Hospital (hospital) · Khobar · EMERGENCY · phone: 0138955900 · lat 26.302786, lng 50.17313 · Maps: https://www.google.com/maps/search/?api=1&query=26.302786,50.17313
+  Website: http://www.procare.com.sa
+- Ram dental care (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.28443, lng 50.19796 · Maps: https://www.google.com/maps/search/?api=1&query=26.28443,50.19796
+- Salama Hospital (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.282513, lng 50.21267 · Maps: https://www.google.com/maps/search/?api=1&query=26.282513,50.21267
+- Security Forces Medical City Eastern Province (hospital) · Khobar · EMERGENCY · phone: n/a · lat 26.302962, lng 50.199737 · Maps: https://www.google.com/maps/search/?api=1&query=26.302962,50.199737
+- Al Dar Hospital (hospital) · Madinah · EMERGENCY · phone: +966 148 677 777 · lat 24.441564, lng 39.619789 · Maps: https://www.google.com/maps/search/?api=1&query=24.441564,39.619789
+- Al Haram Hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.473859, lng 39.603978 · Maps: https://www.google.com/maps/search/?api=1&query=24.473859,39.603978
+- Al Miqat Hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.41361, lng 39.533479 · Maps: https://www.google.com/maps/search/?api=1&query=24.41361,39.533479
+- Al Safiah Health Centre (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.465803, lng 39.610126 · Maps: https://www.google.com/maps/search/?api=1&query=24.465803,39.610126
+- Children and Maternity Hospital (hospital) · Madinah · EMERGENCY · phone: +966 14 849 9999 · lat 24.439191, lng 39.639693 · Maps: https://www.google.com/maps/search/?api=1&query=24.439191,39.639693
+- Dr Hamid Suliman Al-Ahmadi Hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.495168, lng 39.606936 · Maps: https://www.google.com/maps/search/?api=1&query=24.495168,39.606936
+- Hospital Al Amir Mohammad Bin Abdulaziz (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.533046, lng 39.637094 · Maps: https://www.google.com/maps/search/?api=1&query=24.533046,39.637094
+- Hospital Al Rahmah (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.45411, lng 39.612498 · Maps: https://www.google.com/maps/search/?api=1&query=24.45411,39.612498
+- King Fahd Hospita (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.495092, lng 39.560891 · Maps: https://www.google.com/maps/search/?api=1&query=24.495092,39.560891
+- King Fahd Hospital (hospital) · Madinah · EMERGENCY · phone: 0148460000 · lat 24.4688, lng 39.6118 · Maps: https://www.google.com/maps/search/?api=1&query=24.4688,39.6118
+  Services: emergency
+- Madinah Cardiac Center MCC (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.494852, lng 39.561504 · Maps: https://www.google.com/maps/search/?api=1&query=24.494852,39.561504
+- Magrabi Eye and Ear Center (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.524054, lng 39.676914 · Maps: https://www.google.com/maps/search/?api=1&query=24.524054,39.676914
+- Medical Rehabilitation Hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.450331, lng 39.630265 · Maps: https://www.google.com/maps/search/?api=1&query=24.450331,39.630265
+- Mouwasat Hospital (hospital) · Madinah · EMERGENCY · phone: +966 148 422 211 · lat 24.523841, lng 39.676797 · Maps: https://www.google.com/maps/search/?api=1&query=24.523841,39.676797
+- Ohud Hospital (hospital) · Madinah · EMERGENCY · phone: 0148420000 · lat 24.4674, lng 39.6142 · Maps: https://www.google.com/maps/search/?api=1&query=24.4674,39.6142
+  Services: emergency
+- Ohud Hospital (hospital) · Madinah · EMERGENCY · phone: 0148420000 · lat 24.47036, lng 39.546963 · Maps: https://www.google.com/maps/search/?api=1&query=24.47036,39.546963
+  Services: emergency
+- Safa Al-Medina Hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.453951, lng 39.615126 · Maps: https://www.google.com/maps/search/?api=1&query=24.453951,39.615126
+- Saudi German Hospital (hospital) · Madinah · EMERGENCY · phone: +966 55 300 8119 · lat 24.41824, lng 39.530001 · Maps: https://www.google.com/maps/search/?api=1&query=24.41824,39.530001
+- University Medical Center (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.477164, lng 39.56556 · Maps: https://www.google.com/maps/search/?api=1&query=24.477164,39.56556
+- Zehra hospital (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.454112, lng 39.626666 · Maps: https://www.google.com/maps/search/?api=1&query=24.454112,39.626666
+- المركز التخصصي للعيون (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.436208, lng 39.634555 · Maps: https://www.google.com/maps/search/?api=1&query=24.436208,39.634555
+- المستشفى التخصصي (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.44173, lng 39.641245 · Maps: https://www.google.com/maps/search/?api=1&query=24.44173,39.641245
+- الوزن المثالي (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.469653, lng 39.662641 · Maps: https://www.google.com/maps/search/?api=1&query=24.469653,39.662641
+- عيادات الدكتور محمد الحميدي (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.461857, lng 39.530762 · Maps: https://www.google.com/maps/search/?api=1&query=24.461857,39.530762
+- عيادات غوث (hospital) · Madinah · EMERGENCY · phone: +966551088549 · lat 24.421529, lng 39.626926 · Maps: https://www.google.com/maps/search/?api=1&query=24.421529,39.626926
+  Website: https://linktr.ee/ghouthclinics
+  Services: dentist
+- مجمع د.وفاء طلبه الطبي (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.489998, lng 39.588617 · Maps: https://www.google.com/maps/search/?api=1&query=24.489998,39.588617
+- مركز الحجامة الحديث (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.456013, lng 39.642148 · Maps: https://www.google.com/maps/search/?api=1&query=24.456013,39.642148
+- مركز الملك عبد اللة لغسيل الكلي (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.496475, lng 39.609738 · Maps: https://www.google.com/maps/search/?api=1&query=24.496475,39.609738
+- مركز صحي حي النصر (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.491618, lng 39.595522 · Maps: https://www.google.com/maps/search/?api=1&query=24.491618,39.595522
+- مستشفى الأمل لعلاج الأمراض النفسية وأمراض الإدمان (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.435669, lng 39.637768 · Maps: https://www.google.com/maps/search/?api=1&query=24.435669,39.637768
+- مستشفى المدينة الوطني (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.445923, lng 39.642556 · Maps: https://www.google.com/maps/search/?api=1&query=24.445923,39.642556
+- مستشفى الملك فهد (hospital) · Madinah · EMERGENCY · phone: n/a · lat 24.494091, lng 39.55879 · Maps: https://www.google.com/maps/search/?api=1&query=24.494091,39.55879
+- King Abdulaziz Hospital (hospital) · Makkah · EMERGENCY · phone: 0125440000 · lat 21.4225, lng 39.8261 · Maps: https://www.google.com/maps/search/?api=1&query=21.4225,39.8261
+  Services: emergency
+- King Abdullah Medical City (hospital) · Makkah · EMERGENCY · phone: 0125549999 · lat 21.4372, lng 39.7901 · Maps: https://www.google.com/maps/search/?api=1&query=21.4372,39.7901
+  Services: emergency
+- King Khalid Hospital (hospital) · Najran · EMERGENCY · phone: 0175220000 · lat 17.4924, lng 44.1277 · Maps: https://www.google.com/maps/search/?api=1&query=17.4924,44.1277
+  Services: emergency
+- AMAD (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.856312, lng 46.639014 · Maps: https://www.google.com/maps/search/?api=1&query=24.856312,46.639014
+  Services: long term care
+- Abdulrahman Al Mshari Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.701873, lng 46.686447 · Maps: https://www.google.com/maps/search/?api=1&query=24.701873,46.686447
+- About KAAUH King Abdullah bin Abdulaziz University Hospital (KAAUH) (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.836526, lng 46.7221 · Maps: https://www.google.com/maps/search/?api=1&query=24.836526,46.7221
+  Website: https://kaauh.edu.sa/
+- Al Dara Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.663358, lng 46.683216 · Maps: https://www.google.com/maps/search/?api=1&query=24.663358,46.683216
+- Al Nokhba Clinics (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.699472, lng 46.689978 · Maps: https://www.google.com/maps/search/?api=1&query=24.699472,46.689978
+- Al Salam Hospital (hospital) · Riyadh · EMERGENCY · phone: +9662222211 · lat 24.703744, lng 46.801768 · Maps: https://www.google.com/maps/search/?api=1&query=24.703744,46.801768
+  Hours: 24/7
+- Al Yamama Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.716448, lng 46.793877 · Maps: https://www.google.com/maps/search/?api=1&query=24.716448,46.793877
+- Al dyria (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.787796, lng 46.55862 · Maps: https://www.google.com/maps/search/?api=1&query=24.787796,46.55862
+- Al iman hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.600407, lng 46.737589 · Maps: https://www.google.com/maps/search/?api=1&query=24.600407,46.737589
+- AlJanadiriyahalGharbiyah (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.797495, lng 46.851917 · Maps: https://www.google.com/maps/search/?api=1&query=24.797495,46.851917
+- AlJanadiriyahashSharqiyah (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.80805, lng 46.862444 · Maps: https://www.google.com/maps/search/?api=1&query=24.80805,46.862444
+- AlYarmukalGharbi (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.805567, lng 46.763133 · Maps: https://www.google.com/maps/search/?api=1&query=24.805567,46.763133
+- Alam El Teb (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.6713, lng 46.733085 · Maps: https://www.google.com/maps/search/?api=1&query=24.6713,46.733085
+- Almawed Medical Center (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.727673, lng 46.688887 · Maps: https://www.google.com/maps/search/?api=1&query=24.727673,46.688887
+- Almawed Medical Center (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.727712, lng 46.688882 · Maps: https://www.google.com/maps/search/?api=1&query=24.727712,46.688882
+- AnNasimashSharqi (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.749248, lng 46.832551 · Maps: https://www.google.com/maps/search/?api=1&query=24.749248,46.832551
+- AsSulaymaniyahbirRiyad (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.705275, lng 46.695734 · Maps: https://www.google.com/maps/search/?api=1&query=24.705275,46.695734
+- Aster Sanad Hospital (hospital) · Riyadh · EMERGENCY · phone: 0112407778 · lat 24.77919, lng 46.739506 · Maps: https://www.google.com/maps/search/?api=1&query=24.77919,46.739506
+  Website: http://www.sanadhospital.com
+  Services: general, dentist, internal
+  Hours: 24/7
+- D.U.H (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.714812, lng 46.622614 · Maps: https://www.google.com/maps/search/?api=1&query=24.714812,46.622614
+- Dallah Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.74683, lng 46.652126 · Maps: https://www.google.com/maps/search/?api=1&query=24.74683,46.652126
+- Dallah hospital (20,586 patient ) (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.632697, lng 46.710419 · Maps: https://www.google.com/maps/search/?api=1&query=24.632697,46.710419
+- Dr Soliman Al-Kharashi Medical Center (hospital) · Riyadh · EMERGENCY · phone: +966112222822 · lat 24.751337, lng 46.699888 · Maps: https://www.google.com/maps/search/?api=1&query=24.751337,46.699888
+  Website: http://www.drsolimanalkharashi.com.sa/
+- Dr Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: +966 11 490 9999 · lat 24.721123, lng 46.774957 · Maps: https://www.google.com/maps/search/?api=1&query=24.721123,46.774957
+- Dr Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.719113, lng 46.656897 · Maps: https://www.google.com/maps/search/?api=1&query=24.719113,46.656897
+- Dr Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: +966 11 475 4444 · lat 24.567332, lng 46.640868 · Maps: https://www.google.com/maps/search/?api=1&query=24.567332,46.640868
+- Dr Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.704467, lng 46.676798 · Maps: https://www.google.com/maps/search/?api=1&query=24.704467,46.676798
+- Dr Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.720138, lng 46.656827 · Maps: https://www.google.com/maps/search/?api=1&query=24.720138,46.656827
+- Dr. Sulaiman Al Habib (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.770333, lng 46.604659 · Maps: https://www.google.com/maps/search/?api=1&query=24.770333,46.604659
+- Dr. Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: +966 11 283 3333 · lat 24.719116, lng 46.656922 · Maps: https://www.google.com/maps/search/?api=1&query=24.719116,46.656922
+- Dr. Sulaiman Al Habib Hospital (hospital) · Riyadh · EMERGENCY · phone: +966 11 525 9999 · lat 24.704359, lng 46.676677 · Maps: https://www.google.com/maps/search/?api=1&query=24.704359,46.676677
+- Dr. Suliman Alhabib - Women Health (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.722884, lng 46.654079 · Maps: https://www.google.com/maps/search/?api=1&query=24.722884,46.654079
+- East Building (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.71406, lng 46.622715 · Maps: https://www.google.com/maps/search/?api=1&query=24.71406,46.622715
+- Emergency Building - king khalid university hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.711371, lng 46.621363 · Maps: https://www.google.com/maps/search/?api=1&query=24.711371,46.621363
+- Ergah Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.692727, lng 46.584735 · Maps: https://www.google.com/maps/search/?api=1&query=24.692727,46.584735
+- HAMC (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.77389, lng 46.784926 · Maps: https://www.google.com/maps/search/?api=1&query=24.77389,46.784926
+  Website: https://www.hamc.com.sa/
+  Services: dentist, dermatology, plastic_surgery
+- Hammadi suwadi (5 patient ) (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.602214, lng 46.703075 · Maps: https://www.google.com/maps/search/?api=1&query=24.602214,46.703075
+- Hayat National Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.694016, lng 46.772785 · Maps: https://www.google.com/maps/search/?api=1&query=24.694016,46.772785
+- Hospital in Riyadh King soude (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.627841, lng 46.690477 · Maps: https://www.google.com/maps/search/?api=1&query=24.627841,46.690477
+- Imam Abdulrahman Al Faisal Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.528803, lng 46.652714 · Maps: https://www.google.com/maps/search/?api=1&query=24.528803,46.652714
+- KACSU's Clinic (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.718028, lng 46.638991 · Maps: https://www.google.com/maps/search/?api=1&query=24.718028,46.638991
+- KAL Medical Development Foundation (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.69339, lng 46.678503 · Maps: https://www.google.com/maps/search/?api=1&query=24.69339,46.678503
+- King Abdulaziz Medical City (NGHA) (hospital) · Riyadh · EMERGENCY · phone: 0118011111 · lat 24.7572, lng 46.8514 · Maps: https://www.google.com/maps/search/?api=1&query=24.7572,46.8514
+  Services: emergency, NGHA
+- King Abdulaziz University Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.660935, lng 46.719072 · Maps: https://www.google.com/maps/search/?api=1&query=24.660935,46.719072
+- King Fahad Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.749738, lng 46.856071 · Maps: https://www.google.com/maps/search/?api=1&query=24.749738,46.856071
+- King Fahad Medical City (hospital) · Riyadh · EMERGENCY · phone: 011 2889999 · lat 24.68764, lng 46.705281 · Maps: https://www.google.com/maps/search/?api=1&query=24.68764,46.705281
+  Website: https://www.kfmc.med.sa/
+  Hours: Su-Th 07:30-16:30
+- King Fahad National Centre for Children's Cancer (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.828705, lng 46.692065 · Maps: https://www.google.com/maps/search/?api=1&query=24.828705,46.692065
+  Website: https://www.kfshrc.edu.sa/en/home/hospitals/kingfahadnationalcentreforchildrenscancer
+- King Fahd Medical City (hospital) · Riyadh · EMERGENCY · phone: 920022265 · lat 24.6864, lng 46.6867 · Maps: https://www.google.com/maps/search/?api=1&query=24.6864,46.6867
+  Services: emergency, tertiary
+- King Faisal Specialist Hospital (hospital) · Riyadh · EMERGENCY · phone: 0114647272 · lat 24.6708, lng 46.6781 · Maps: https://www.google.com/maps/search/?api=1&query=24.6708,46.6781
+  Website: https://www.kfshrc.edu.sa
+  Services: emergency, specialist
+- King Faisal Specialist Hospital (hospital) · Riyadh · EMERGENCY · phone: 0114647272 · lat 24.671803, lng 46.674748 · Maps: https://www.google.com/maps/search/?api=1&query=24.671803,46.674748
+  Services: emergency, specialist
+- King Khalid Eye Specialist Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.694158, lng 46.637163 · Maps: https://www.google.com/maps/search/?api=1&query=24.694158,46.637163
+  Services: ophthalmology
+- King Khalid University Hospital (hospital) · Riyadh · EMERGENCY · phone: 0114670011 · lat 24.7256, lng 46.6194 · Maps: https://www.google.com/maps/search/?api=1&query=24.7256,46.6194
+  Services: emergency, university
+- King Saud Medical City (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.627807, lng 46.690399 · Maps: https://www.google.com/maps/search/?api=1&query=24.627807,46.690399
+- Kingdom Hospital (hospital) · Riyadh · EMERGENCY · phone: 920000751 · lat 24.801455, lng 46.654626 · Maps: https://www.google.com/maps/search/?api=1&query=24.801455,46.654626
+  Website: http://www.khccgroup.com
+- MarkazalMalikSalmanliAmradalKula (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.689331, lng 46.75479 · Maps: https://www.google.com/maps/search/?api=1&query=24.689331,46.75479
+- Markz sahe (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.562336, lng 46.540213 · Maps: https://www.google.com/maps/search/?api=1&query=24.562336,46.540213
+- Medical City (hospital) · Riyadh · EMERGENCY · phone: +966-11-8011111 · lat 24.751396, lng 46.861258 · Maps: https://www.google.com/maps/search/?api=1&query=24.751396,46.861258
+  Website: https://ngha.med.sa/English/MedicalCities/AlRiyadh/Pages/default.aspx
+- Mental Health Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.719101, lng 46.6034 · Maps: https://www.google.com/maps/search/?api=1&query=24.719101,46.6034
+- Mouwasat Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.787359, lng 46.732732 · Maps: https://www.google.com/maps/search/?api=1&query=24.787359,46.732732
+  Website: https://www.mouwasat.com/
+  Services: general
+- Mubarak hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.656666, lng 46.706969 · Maps: https://www.google.com/maps/search/?api=1&query=24.656666,46.706969
+- MustashfaalAmirMuhammadBin`Abdal`Aziz (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.708815, lng 46.79318 · Maps: https://www.google.com/maps/search/?api=1&query=24.708815,46.79318
+- MustashfaathThumayri (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.728032, lng 46.767915 · Maps: https://www.google.com/maps/search/?api=1&query=24.728032,46.767915
+- NAMAR MEDICAL COMPLEX (hospital) · Riyadh · EMERGENCY · phone: 00966550909684 · lat 24.560014, lng 46.585046 · Maps: https://www.google.com/maps/search/?api=1&query=24.560014,46.585046
+  Website: https://namarmedicalcomple.wixsite.com/namarmedicalcomplex
+  Services: clinics, مستشفى, gynaecology, نسائية_و_ولادة, عيادات, specialist_pediatrician, internist
+- NOOR  CLINICS | نور كلينك (hospital) · Riyadh · EMERGENCY · phone: +966580174991 · lat 24.773844, lng 46.709354 · Maps: https://www.google.com/maps/search/?api=1&query=24.773844,46.709354
+  Website: https://noor-clinics.com/
+  Services: dermatology, dentist, dental, oral_&_maxillofacial_surgery
+- NOOR CLINICS (hospital) · Riyadh · EMERGENCY · phone: 0114202111 · lat 24.71466, lng 46.677173 · Maps: https://www.google.com/maps/search/?api=1&query=24.71466,46.677173
+  Website: https://noor-clinics.com/
+  Services: dermatology, plastic_surgery, dentist, dental, oral_&_maxillofacial_surgery
+- National Hospital (1,398 patient ) (hospital) · Riyadh · EMERGENCY · phone: 920004585 · lat 24.679395, lng 46.727065 · Maps: https://www.google.com/maps/search/?api=1&query=24.679395,46.727065
+- PMO Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.751973, lng 46.880909 · Maps: https://www.google.com/maps/search/?api=1&query=24.751973,46.880909
+- Prince Sultan Military Medical City (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.692204, lng 46.714262 · Maps: https://www.google.com/maps/search/?api=1&query=24.692204,46.714262
+- Riyadh Care (hospital) · Riyadh · EMERGENCY · phone: 920000459 · lat 24.701133, lng 46.780192 · Maps: https://www.google.com/maps/search/?api=1&query=24.701133,46.780192
+  Website: http://www.riyadhcare.med.sa/
+- Saudi German Hospital (hospital) · Riyadh · EMERGENCY · phone: +966112685555 · lat 24.800859, lng 46.628429 · Maps: https://www.google.com/maps/search/?api=1&query=24.800859,46.628429
+  Website: https://www.sghgroup.com.sa
+- Security Forces Hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.679214, lng 46.724771 · Maps: https://www.google.com/maps/search/?api=1&query=24.679214,46.724771
+  Website: https://www.sfh.med.sa/
+- alhabib hospital (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.862902, lng 46.587374 · Maps: https://www.google.com/maps/search/?api=1&query=24.862902,46.587374
+- البرج الشمالي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.671922, lng 46.675384 · Maps: https://www.google.com/maps/search/?api=1&query=24.671922,46.675384
+- الرعايه الأوليه. حي الخليج (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.768289, lng 46.7899 · Maps: https://www.google.com/maps/search/?api=1&query=24.768289,46.7899
+- الطوارئ (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.670893, lng 46.678138 · Maps: https://www.google.com/maps/search/?api=1&query=24.670893,46.678138
+- الفارابي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.78625, lng 46.801982 · Maps: https://www.google.com/maps/search/?api=1&query=24.78625,46.801982
+- المجمع الطبي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.675547, lng 46.661891 · Maps: https://www.google.com/maps/search/?api=1&query=24.675547,46.661891
+- المدخل الرئيسي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.669688, lng 46.67735 · Maps: https://www.google.com/maps/search/?api=1&query=24.669688,46.67735
+- بنك الدم (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.670453, lng 46.676526 · Maps: https://www.google.com/maps/search/?api=1&query=24.670453,46.676526
+- صفوة المهيدب - فرع الربوة (hospital) · Riyadh · EMERGENCY · phone: +966536536366 · lat 24.678829, lng 46.776056 · Maps: https://www.google.com/maps/search/?api=1&query=24.678829,46.776056
+  Services: dentist
+- عيادات سما (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.694442, lng 46.790222 · Maps: https://www.google.com/maps/search/?api=1&query=24.694442,46.790222
+- فال العافية (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.798352, lng 46.781948 · Maps: https://www.google.com/maps/search/?api=1&query=24.798352,46.781948
+- مبنى العيادات الخارجية (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.671499, lng 46.677519 · Maps: https://www.google.com/maps/search/?api=1&query=24.671499,46.677519
+- مبنى عيادة الأورام (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.671864, lng 46.67673 · Maps: https://www.google.com/maps/search/?api=1&query=24.671864,46.67673
+- مجمع الثويني الطبي (hospital) · Riyadh · EMERGENCY · phone: +966112317744 · lat 24.741618, lng 46.815484 · Maps: https://www.google.com/maps/search/?api=1&query=24.741618,46.815484
+  Services: general, dentist, osteopathy, otolaryngology, internal, blood_check, emergency
+  Hours: Fr 16:00-22:00; Mo-Th,Sa-Su 08:00-23:30
+- مجمع الحبيب - الجلدية والعيون (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.70466, lng 46.67745 · Maps: https://www.google.com/maps/search/?api=1&query=24.70466,46.67745
+- مجمع الحبيب - العظام والعامود الفقري (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.703485, lng 46.678078 · Maps: https://www.google.com/maps/search/?api=1&query=24.703485,46.678078
+- مجمع الحبيب - النساء والولادة (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.70399, lng 46.677771 · Maps: https://www.google.com/maps/search/?api=1&query=24.70399,46.677771
+- مجمع الدكتور يوسف المقبل لطب العيون (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.710851, lng 46.670327 · Maps: https://www.google.com/maps/search/?api=1&query=24.710851,46.670327
+  Services: ophthalmology
+- مجمع طب الاسرة 2 (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.610019, lng 46.728076 · Maps: https://www.google.com/maps/search/?api=1&query=24.610019,46.728076
+- مجمع عيادات اللوتس (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.80364, lng 46.794766 · Maps: https://www.google.com/maps/search/?api=1&query=24.80364,46.794766
+- مجمع يو الطبي (hospital) · Riyadh · EMERGENCY · phone: 920021223 · lat 24.805176, lng 46.656512 · Maps: https://www.google.com/maps/search/?api=1&query=24.805176,46.656512
+  Services: general, stomatology
+- مدينة الملك فهد الطبية (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.686986, lng 46.704377 · Maps: https://www.google.com/maps/search/?api=1&query=24.686986,46.704377
+- مركز الأبحاث (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.672242, lng 46.676437 · Maps: https://www.google.com/maps/search/?api=1&query=24.672242,46.676437
+- مركز الرثوية الطبي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.711151, lng 46.671038 · Maps: https://www.google.com/maps/search/?api=1&query=24.711151,46.671038
+  Hours: Mo-Su 05:00-15:00
+- مركز الرعاية الصحية الأولية حي العريجاء الأوسط (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.602159, lng 46.628077 · Maps: https://www.google.com/maps/search/?api=1&query=24.602159,46.628077
+- مركز الصحي عسير (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.613839, lng 46.698579 · Maps: https://www.google.com/maps/search/?api=1&query=24.613839,46.698579
+  Hours: Sa-Th
+- مركز الملك فهد الوطني لسرطان الاطفال (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.828733, lng 46.692132 · Maps: https://www.google.com/maps/search/?api=1&query=24.828733,46.692132
+- مستشفى الأسرة الدولي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.584674, lng 46.592873 · Maps: https://www.google.com/maps/search/?api=1&query=24.584674,46.592873
+- مستشفى الجافل (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.578567, lng 46.604871 · Maps: https://www.google.com/maps/search/?api=1&query=24.578567,46.604871
+- مستشفى الحرس (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.749712, lng 46.853997 · Maps: https://www.google.com/maps/search/?api=1&query=24.749712,46.853997
+- مستشفى الحمادي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.602252, lng 46.703056 · Maps: https://www.google.com/maps/search/?api=1&query=24.602252,46.703056
+- مستشفى الفلاح (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.619175, lng 46.729239 · Maps: https://www.google.com/maps/search/?api=1&query=24.619175,46.729239
+- مستشفى الملك سلمان (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.606813, lng 46.641967 · Maps: https://www.google.com/maps/search/?api=1&query=24.606813,46.641967
+- مستشفى الملك عبدالعزيز الجامعي (clinic) · Riyadh · phone: n/a · lat 24.66143, lng 46.720028 · Maps: https://www.google.com/maps/search/?api=1&query=24.66143,46.720028
+- مستشفى الملك فيصل التخصصي الجناح الشرقي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.670637, lng 46.68114 · Maps: https://www.google.com/maps/search/?api=1&query=24.670637,46.68114
+- مستشفى النقاهة (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.584479, lng 46.810547 · Maps: https://www.google.com/maps/search/?api=1&query=24.584479,46.810547
+- مستشفى دلة العارض (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.859744, lng 46.642491 · Maps: https://www.google.com/maps/search/?api=1&query=24.859744,46.642491
+- مستشفى دله - نمار (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.560844, lng 46.676369 · Maps: https://www.google.com/maps/search/?api=1&query=24.560844,46.676369
+- مستوصف الخليجي الطبي بشبرا (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.585927, lng 46.679845 · Maps: https://www.google.com/maps/search/?api=1&query=24.585927,46.679845
+- مستوصف الطب الحديث (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.68593, lng 46.766424 · Maps: https://www.google.com/maps/search/?api=1&query=24.68593,46.766424
+- مستوصف اليرموك (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.810349, lng 46.790832 · Maps: https://www.google.com/maps/search/?api=1&query=24.810349,46.790832
+- مستوصف حراء الطبي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.603562, lng 46.702908 · Maps: https://www.google.com/maps/search/?api=1&query=24.603562,46.702908
+  Hours: 24/7
+- مستوصف حكومي (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.777981, lng 46.590406 · Maps: https://www.google.com/maps/search/?api=1&query=24.777981,46.590406
+- ​Primary Health Care Clinic (AlWadi) (hospital) · Riyadh · EMERGENCY · phone: n/a · lat 24.788008, lng 46.697308 · Maps: https://www.google.com/maps/search/?api=1&query=24.788008,46.697308
+  Services: general
+- King Fahd Hospital (hospital) · Tabuk · EMERGENCY · phone: 0144210000 · lat 28.3838, lng 36.555 · Maps: https://www.google.com/maps/search/?api=1&query=28.3838,36.555
+  Services: emergency
+- King Abdulaziz Specialist Hospital (hospital) · Taif · EMERGENCY · phone: 0127310000 · lat 21.2703, lng 40.4158 · Maps: https://www.google.com/maps/search/?api=1&query=21.2703,40.4158
+  Services: emergency, specialist
+- Yanbu General Hospital (hospital) · Yanbu · EMERGENCY · phone: 0143210000 · lat 24.0896, lng 38.0618 · Maps: https://www.google.com/maps/search/?api=1&query=24.0896,38.0618
+  Services: emergency
+
+## Clinics and other facilities (with coordinates)
+- Al Jazirah Clinic (clinic) · Khobar · phone: n/a · lat 26.282214, lng 50.19691 · Maps: https://www.google.com/maps/search/?api=1&query=26.282214,50.19691
+- Inpatient/Outpatient (clinic) · Khobar · phone: n/a · lat 26.309729, lng 50.136727 · Maps: https://www.google.com/maps/search/?api=1&query=26.309729,50.136727
+- Millennium Dental center (clinic) · Khobar · phone: n/a · lat 26.331794, lng 50.213961 · Maps: https://www.google.com/maps/search/?api=1&query=26.331794,50.213961
+- Oncology/Cancer Care (clinic) · Khobar · phone: n/a · lat 26.308703, lng 50.136193 · Maps: https://www.google.com/maps/search/?api=1&query=26.308703,50.136193
+- Operating Rooms (clinic) · Khobar · phone: n/a · lat 26.309061, lng 50.136938 · Maps: https://www.google.com/maps/search/?api=1&query=26.309061,50.136938
+- Primary Care (clinic) · Khobar · phone: n/a · lat 26.311071, lng 50.135779 · Maps: https://www.google.com/maps/search/?api=1&query=26.311071,50.135779
+- Sehaty Al Dana (clinic) · Khobar · phone: n/a · lat 26.325763, lng 50.152586 · Maps: https://www.google.com/maps/search/?api=1&query=26.325763,50.152586
+- Speciality Clinics (clinic) · Khobar · phone: n/a · lat 26.309816, lng 50.134839 · Maps: https://www.google.com/maps/search/?api=1&query=26.309816,50.134839
+- Atebba al Madinah Polyclinic (clinic) · Madinah · phone: 0148366601 · lat 24.479304, lng 39.640548 · Maps: https://www.google.com/maps/search/?api=1&query=24.479304,39.640548
+- Shifa Medical Center (clinic) · Madinah · phone: n/a · lat 24.446976, lng 39.644622 · Maps: https://www.google.com/maps/search/?api=1&query=24.446976,39.644622
+- العيادات المتحدة (clinic) · Madinah · phone: n/a · lat 24.432775, lng 39.633947 · Maps: https://www.google.com/maps/search/?api=1&query=24.432775,39.633947
+- عيادة د. خالد شناوي (clinic) · Madinah · phone: n/a · lat 24.451106, lng 39.620536 · Maps: https://www.google.com/maps/search/?api=1&query=24.451106,39.620536
+- مركز الرعياة الصحية الأولية (درة المدينة) (clinic) · Madinah · phone: n/a · lat 24.467937, lng 39.640878 · Maps: https://www.google.com/maps/search/?api=1&query=24.467937,39.640878
+  Website: https://moh.gov.sa/
+- ALKULD FOR EYE AND TEETH SPECHILZED (clinic) · Riyadh · phone: n/a · lat 24.685425, lng 46.68498 · Maps: https://www.google.com/maps/search/?api=1&query=24.685425,46.68498
+- Abas Medical Center (clinic) · Riyadh · phone: n/a · lat 24.758855, lng 46.735098 · Maps: https://www.google.com/maps/search/?api=1&query=24.758855,46.735098
+- Al Izdihar clinic (clinic) · Riyadh · phone: n/a · lat 24.785449, lng 46.717007 · Maps: https://www.google.com/maps/search/?api=1&query=24.785449,46.717007
+- Al Malak Dental Clinic (clinic) · Riyadh · phone: n/a · lat 24.70301, lng 46.805663 · Maps: https://www.google.com/maps/search/?api=1&query=24.70301,46.805663
+- Almuhammadiyah Clinic (clinic) · Riyadh · phone: n/a · lat 24.727386, lng 46.646595 · Maps: https://www.google.com/maps/search/?api=1&query=24.727386,46.646595
+- Alshablan Medical Center (clinic) · Riyadh · phone: +966114606600 · lat 24.716561, lng 46.681536 · Maps: https://www.google.com/maps/search/?api=1&query=24.716561,46.681536
+- Alsubhi Clinic (clinic) · Riyadh · phone: +966112335000 · lat 24.749026, lng 46.778349 · Maps: https://www.google.com/maps/search/?api=1&query=24.749026,46.778349
+- Future Medical Center (clinic) · Riyadh · phone: n/a · lat 24.744441, lng 46.704968 · Maps: https://www.google.com/maps/search/?api=1&query=24.744441,46.704968
+- Jarir Medical Center (clinic) · Riyadh · phone: n/a · lat 24.673563, lng 46.754905 · Maps: https://www.google.com/maps/search/?api=1&query=24.673563,46.754905
+- Kesay (clinic) · Riyadh · phone: n/a · lat 24.787845, lng 46.65999 · Maps: https://www.google.com/maps/search/?api=1&query=24.787845,46.65999
+  Website: https://kesay.sa/
+- Magrabi (clinic) · Riyadh · phone: n/a · lat 24.782684, lng 46.745212 · Maps: https://www.google.com/maps/search/?api=1&query=24.782684,46.745212
+  Website: http://magrabi.com.sa
+- Marley Clinic (clinic) · Riyadh · phone: n/a · lat 24.780725, lng 46.695436 · Maps: https://www.google.com/maps/search/?api=1&query=24.780725,46.695436
+- MskCare (clinic) · Riyadh · phone: n/a · lat 24.618294, lng 46.543463 · Maps: https://www.google.com/maps/search/?api=1&query=24.618294,46.543463
+- jmcim ace (clinic) · Riyadh · phone: n/a · lat 24.748879, lng 46.846375 · Maps: https://www.google.com/maps/search/?api=1&query=24.748879,46.846375
+- المركز الوطني للحساسية و الربو و المناعة (clinic) · Riyadh · phone: n/a · lat 24.67777, lng 46.677608 · Maps: https://www.google.com/maps/search/?api=1&query=24.67777,46.677608
+  Website: https://allergyarabia.com/
+- بشير عبيد لطب الاسنان (clinic) · Riyadh · phone: n/a · lat 24.645003, lng 46.70379 · Maps: https://www.google.com/maps/search/?api=1&query=24.645003,46.70379
+- رويال أورثوبيدك (clinic) · Riyadh · phone: n/a · lat 24.811145, lng 46.647078 · Maps: https://www.google.com/maps/search/?api=1&query=24.811145,46.647078
+- عيادات أصداء الصحة الطبي (clinic) · Riyadh · phone: n/a · lat 24.636336, lng 46.536978 · Maps: https://www.google.com/maps/search/?api=1&query=24.636336,46.536978
+- عيادات الماسي (clinic) · Riyadh · phone: n/a · lat 24.798545, lng 46.643146 · Maps: https://www.google.com/maps/search/?api=1&query=24.798545,46.643146
+- عيادات روضة الأقصى الطبي ٢ (clinic) · Riyadh · phone: n/a · lat 24.75304, lng 46.719732 · Maps: https://www.google.com/maps/search/?api=1&query=24.75304,46.719732
+- عيادات كلير (clinic) · Riyadh · phone: n/a · lat 24.685179, lng 46.676018 · Maps: https://www.google.com/maps/search/?api=1&query=24.685179,46.676018
+- عيادة إنجاب (clinic) · Riyadh · phone: n/a · lat 24.685207, lng 46.675959 · Maps: https://www.google.com/maps/search/?api=1&query=24.685207,46.675959
+- مجمع الريان الطبي (clinic) · Riyadh · phone: n/a · lat 24.704049, lng 46.780786 · Maps: https://www.google.com/maps/search/?api=1&query=24.704049,46.780786
+- مجمع العارض الطبي (clinic) · Riyadh · phone: n/a · lat 24.615254, lng 46.67511 · Maps: https://www.google.com/maps/search/?api=1&query=24.615254,46.67511
+- مجمع العالمي الطبي (clinic) · Riyadh · phone: n/a · lat 24.762177, lng 46.763573 · Maps: https://www.google.com/maps/search/?api=1&query=24.762177,46.763573
+- مجمع الوطن الطبي (clinic) · Riyadh · phone: n/a · lat 24.605457, lng 46.711163 · Maps: https://www.google.com/maps/search/?api=1&query=24.605457,46.711163
+- مجمع توكير الطبي (clinic) · Riyadh · phone: n/a · lat 24.796604, lng 46.638245 · Maps: https://www.google.com/maps/search/?api=1&query=24.796604,46.638245
+- مجمع عيادات الممتاز الطبي (clinic) · Riyadh · phone: n/a · lat 24.672883, lng 46.744244 · Maps: https://www.google.com/maps/search/?api=1&query=24.672883,46.744244
+- مجمع عيادات دنت الطبي للاسنان والجلدية (clinic) · Riyadh · phone: n/a · lat 24.748984, lng 46.667294 · Maps: https://www.google.com/maps/search/?api=1&query=24.748984,46.667294
+- مجمع نون الطبي Noon Medical Clinic (clinic) · Riyadh · phone: 0114056230 · lat 24.689688, lng 46.651181 · Maps: https://www.google.com/maps/search/?api=1&query=24.689688,46.651181
+- مجموعة هاو الطبية (clinic) · Riyadh · phone: n/a · lat 24.760132, lng 46.672007 · Maps: https://www.google.com/maps/search/?api=1&query=24.760132,46.672007
+- مختبر البرج الطبي (clinic) · Riyadh · phone: n/a · lat 24.680794, lng 46.692288 · Maps: https://www.google.com/maps/search/?api=1&query=24.680794,46.692288
+- مختبر البرج الطبي (clinic) · Riyadh · phone: n/a · lat 24.680726, lng 46.692245 · Maps: https://www.google.com/maps/search/?api=1&query=24.680726,46.692245
+- مراس (clinic) · Riyadh · phone: n/a · lat 24.814001, lng 46.6322 · Maps: https://www.google.com/maps/search/?api=1&query=24.814001,46.6322
+- مركز اشبيليا (clinic) · Riyadh · phone: n/a · lat 24.799636, lng 46.7898 · Maps: https://www.google.com/maps/search/?api=1&query=24.799636,46.7898
+- مركز العلم الطبي (clinic) · Riyadh · phone: n/a · lat 24.764325, lng 46.761225 · Maps: https://www.google.com/maps/search/?api=1&query=24.764325,46.761225
+- مركز فيتامين الطبي (clinic) · Riyadh · phone: n/a · lat 24.737026, lng 46.830689 · Maps: https://www.google.com/maps/search/?api=1&query=24.737026,46.830689
+- مركز فيتامين الطبي (clinic) · Riyadh · phone: n/a · lat 24.814138, lng 46.632515 · Maps: https://www.google.com/maps/search/?api=1&query=24.814138,46.632515
+- مستوصف الراية (clinic) · Riyadh · phone: n/a · lat 24.761813, lng 46.780951 · Maps: https://www.google.com/maps/search/?api=1&query=24.761813,46.780951
+- مستوصف الشمال الطبي (clinic) · Riyadh · phone: n/a · lat 24.733558, lng 46.847631 · Maps: https://www.google.com/maps/search/?api=1&query=24.733558,46.847631
+- وايت كلينيك (clinic) · Riyadh · phone: n/a · lat 24.811315, lng 46.646993 · Maps: https://www.google.com/maps/search/?api=1&query=24.811315,46.646993

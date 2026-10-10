@@ -410,7 +410,354 @@ function openDb() {
   `);
   migrateSouqAds(db);
   migratePosts(db);
+  migrateCommunities(db);
+  migrateDummyFlags(db);
+  migrateCommunityFeedSeen(db);
+  migrateUserActivity(db);
+  migrateUserProfile(db);
+  migratePush(db);
   return db;
+}
+
+function migratePush(db) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS push_tokens (
+      token TEXT PRIMARY KEY,
+      user_id TEXT,
+      platform TEXT NOT NULL DEFAULT 'android',
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS push_tokens_user_idx ON push_tokens(user_id);
+    CREATE INDEX IF NOT EXISTS push_tokens_platform_idx ON push_tokens(platform);
+
+    CREATE TABLE IF NOT EXISTS push_jobs (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      platform TEXT NOT NULL DEFAULT 'all',
+      user_id TEXT,
+      send_at TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      token_count INTEGER NOT NULL DEFAULT 0,
+      sent_count INTEGER NOT NULL DEFAULT 0,
+      failed_count INTEGER NOT NULL DEFAULT 0,
+      error TEXT NOT NULL DEFAULT '',
+      created_by TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS push_jobs_status_idx ON push_jobs(status, send_at);
+    CREATE INDEX IF NOT EXISTS push_jobs_created_idx ON push_jobs(created_at);
+  `);
+}
+
+function ensureColumn(db, table, column, ddl) {
+  const cols = new Set(
+    db.prepare(`PRAGMA table_info(${table})`).all().map((col) => col.name),
+  );
+  if (!cols.has(column)) {
+    db.exec(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
+  }
+}
+
+function migrateUserProfile(db) {
+  ensureColumn(db, 'users', 'phone', "phone TEXT NOT NULL DEFAULT ''");
+  ensureColumn(db, 'users', 'deleted_at', "deleted_at TEXT NOT NULL DEFAULT ''");
+}
+
+function migrateUserActivity(db) {
+  ensureColumn(db, 'users', 'is_community_member', 'is_community_member INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'community_ids', "community_ids TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn(db, 'users', 'community_names', "community_names TEXT NOT NULL DEFAULT '[]'");
+  ensureColumn(db, 'users', 'pages_owned_count', 'pages_owned_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'has_placed_ad', 'has_placed_ad INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'ad_count', 'ad_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'community_post_count', 'community_post_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'job_count', 'job_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'users', 'comment_count', 'comment_count INTEGER NOT NULL DEFAULT 0');
+  // Backfill counters from existing tables once columns exist.
+  const users = db.prepare('SELECT id FROM users').all();
+  const sync = db.transaction((userId) => syncUserActivityStats(userId, db));
+  for (const row of users) {
+    try {
+      sync(row.id);
+    } catch (_) {
+      /* ignore single-user sync failures during migrate */
+    }
+  }
+}
+
+/** Recompute denormalized activity fields on the users row from live tables. */
+function syncUserActivityStats(userId, database = null) {
+  if (!userId) return null;
+  const d = database || db();
+  const memberships = d
+    .prepare(
+      `SELECT c.id, c.name FROM community_members m
+       INNER JOIN communities c ON c.id = m.community_id
+       WHERE m.user_id = ? AND c.status = 'active'
+       ORDER BY m.joined_at DESC`,
+    )
+    .all(userId);
+  const pagesOwned = d
+    .prepare(
+      `SELECT COUNT(*) AS n FROM communities
+       WHERE creator_id = ? AND status = 'active'`,
+    )
+    .get(userId).n;
+  const adCount = d
+    .prepare(
+      `SELECT COUNT(*) AS n FROM souq_ads
+       WHERE seller_id = ? AND status != 'removed'`,
+    )
+    .get(userId).n;
+  const communityPostCount = d
+    .prepare(
+      `SELECT COUNT(*) AS n FROM community_posts
+       WHERE author_id = ? AND status IN ('approved','pending')`,
+    )
+    .get(userId).n;
+  const jobCount = d
+    .prepare(
+      `SELECT COUNT(*) AS n FROM jobs
+       WHERE author_id = ? AND status != 'removed'`,
+    )
+    .get(userId).n;
+  const commentCount = d
+    .prepare(
+      `SELECT COUNT(*) AS n FROM community_comments
+       WHERE author_id = ? AND status = 'active'`,
+    )
+    .get(userId).n;
+  const ids = memberships.map((m) => m.id);
+  const names = memberships.map((m) => m.name);
+  d.prepare(
+    `UPDATE users SET
+       is_community_member = ?,
+       community_ids = ?,
+       community_names = ?,
+       pages_owned_count = ?,
+       has_placed_ad = ?,
+       ad_count = ?,
+       community_post_count = ?,
+       job_count = ?,
+       comment_count = ?,
+       updated_at = datetime('now')
+     WHERE id = ?`,
+  ).run(
+    ids.length > 0 ? 1 : 0,
+    JSON.stringify(ids),
+    JSON.stringify(names),
+    pagesOwned,
+    adCount > 0 ? 1 : 0,
+    adCount,
+    communityPostCount,
+    jobCount,
+    commentCount,
+    userId,
+  );
+  return d.prepare('SELECT * FROM users WHERE id = ?').get(userId);
+}
+
+function migrateCommunities(db) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS communities (
+      id TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      slug TEXT NOT NULL UNIQUE,
+      description TEXT NOT NULL DEFAULT '',
+      cover_image TEXT NOT NULL DEFAULT '',
+      topic TEXT NOT NULL DEFAULT 'General',
+      city TEXT NOT NULL DEFAULT '',
+      creator_id TEXT NOT NULL,
+      creator_name TEXT NOT NULL DEFAULT '',
+      member_count INTEGER NOT NULL DEFAULT 1,
+      post_count INTEGER NOT NULL DEFAULT 0,
+      view_count INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS communities_topic_idx ON communities(topic, status);
+    CREATE INDEX IF NOT EXISTS communities_creator_idx ON communities(creator_id);
+    CREATE INDEX IF NOT EXISTS communities_name_idx ON communities(name);
+
+    CREATE TABLE IF NOT EXISTS community_members (
+      community_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'member',
+      joined_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (community_id, user_id)
+    );
+    CREATE INDEX IF NOT EXISTS community_members_user_idx ON community_members(user_id);
+
+    CREATE TABLE IF NOT EXISTS community_posts (
+      id TEXT PRIMARY KEY,
+      community_id TEXT NOT NULL,
+      author_id TEXT NOT NULL,
+      author_name TEXT NOT NULL DEFAULT '',
+      author_avatar TEXT NOT NULL DEFAULT '',
+      body TEXT NOT NULL,
+      image TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'pending',
+      like_count INTEGER NOT NULL DEFAULT 0,
+      comment_count INTEGER NOT NULL DEFAULT 0,
+      view_count INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+      approved_at TEXT NOT NULL DEFAULT '',
+      approved_by TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX IF NOT EXISTS community_posts_page_idx ON community_posts(community_id, status, created_at);
+    CREATE INDEX IF NOT EXISTS community_posts_author_idx ON community_posts(author_id);
+
+    CREATE TABLE IF NOT EXISTS community_views (
+      viewer_key TEXT NOT NULL,
+      target_type TEXT NOT NULL,
+      target_id TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (viewer_key, target_type, target_id)
+    );
+    CREATE INDEX IF NOT EXISTS community_views_target_idx
+      ON community_views(target_type, target_id);
+
+    CREATE TABLE IF NOT EXISTS community_comments (
+      id TEXT PRIMARY KEY,
+      post_id TEXT NOT NULL,
+      community_id TEXT NOT NULL,
+      author_id TEXT NOT NULL,
+      author_name TEXT NOT NULL DEFAULT '',
+      author_avatar TEXT NOT NULL DEFAULT '',
+      parent_id TEXT NOT NULL DEFAULT '',
+      body TEXT NOT NULL,
+      like_count INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS community_comments_post_idx ON community_comments(post_id, created_at);
+    CREATE INDEX IF NOT EXISTS community_comments_parent_idx ON community_comments(parent_id);
+
+    CREATE TABLE IF NOT EXISTS community_likes (
+      user_id TEXT NOT NULL,
+      target_type TEXT NOT NULL,
+      target_id TEXT NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (user_id, target_type, target_id)
+    );
+    CREATE INDEX IF NOT EXISTS community_likes_target_idx ON community_likes(target_type, target_id);
+
+    CREATE TABLE IF NOT EXISTS community_reports (
+      id TEXT PRIMARY KEY,
+      reporter_id TEXT NOT NULL,
+      reporter_name TEXT NOT NULL DEFAULT '',
+      target_type TEXT NOT NULL,
+      target_id TEXT NOT NULL,
+      reported_user_id TEXT NOT NULL DEFAULT '',
+      reported_user_name TEXT NOT NULL DEFAULT '',
+      community_id TEXT NOT NULL DEFAULT '',
+      reason TEXT NOT NULL,
+      details TEXT NOT NULL DEFAULT '',
+      status TEXT NOT NULL DEFAULT 'open',
+      admin_note TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS community_reports_status_idx ON community_reports(status, created_at);
+  `);
+  ensureColumn(db, 'communities', 'view_count', 'view_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'community_posts', 'view_count', 'view_count INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'community_reports', 'snapshot', "snapshot TEXT NOT NULL DEFAULT ''");
+}
+
+function migrateDummyFlags(db) {
+  ensureColumn(db, 'users', 'is_dummy', 'is_dummy INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'communities', 'is_dummy', 'is_dummy INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'community_posts', 'is_dummy', 'is_dummy INTEGER NOT NULL DEFAULT 0');
+  ensureColumn(db, 'community_comments', 'is_dummy', 'is_dummy INTEGER NOT NULL DEFAULT 0');
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS users_dummy_idx ON users(is_dummy);
+    CREATE INDEX IF NOT EXISTS communities_dummy_idx ON communities(is_dummy);
+    CREATE INDEX IF NOT EXISTS community_posts_dummy_idx ON community_posts(is_dummy);
+    CREATE INDEX IF NOT EXISTS community_posts_feed_idx
+      ON community_posts(status, created_at, id);
+    UPDATE users SET is_dummy = 1
+      WHERE id LIKE 'cuser_seed_%' OR email LIKE '%.seed@ksaguide.local';
+    UPDATE communities SET is_dummy = 1 WHERE id LIKE 'comm_seed_%';
+    UPDATE community_posts SET is_dummy = 1 WHERE id LIKE 'cpost_seed_%';
+    UPDATE community_comments SET is_dummy = 1 WHERE id LIKE 'ccom_seed_%';
+  `);
+}
+
+function migrateCommunityFeedSeen(db) {
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS community_feed_seen (
+      user_id TEXT NOT NULL,
+      post_id TEXT NOT NULL,
+      seen_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (user_id, post_id)
+    );
+    CREATE INDEX IF NOT EXISTS community_feed_seen_user_idx
+      ON community_feed_seen(user_id, seen_at);
+    CREATE INDEX IF NOT EXISTS community_feed_seen_post_idx
+      ON community_feed_seen(post_id);
+  `);
+}
+
+function markFeedSeen(userId, postIds) {
+  if (!userId) return 0;
+  const ids = [...new Set((postIds || []).map((id) => String(id || '').trim()).filter(Boolean))];
+  if (!ids.length) return 0;
+  const insert = db().prepare(
+    `INSERT OR IGNORE INTO community_feed_seen (user_id, post_id, seen_at)
+     VALUES (?, ?, datetime('now'))`,
+  );
+  const tx = db().transaction(() => {
+    let n = 0;
+    for (const id of ids) n += insert.run(userId, id).changes;
+    return n;
+  });
+  return tx();
+}
+
+/** Increment view_count every open. viewerKey is logged for analytics. */
+function recordCommunityView({ targetType, targetId, viewerKey }) {
+  if (!targetId) return 0;
+  const type = targetType === 'post' ? 'post' : 'page';
+  const key = viewerKey || 'anon';
+  // Always record an open event (allows many rows per viewer over time).
+  db()
+    .prepare(
+      `INSERT INTO community_views (viewer_key, target_type, target_id, created_at)
+       VALUES (?, ?, ?, datetime('now'))
+       ON CONFLICT(viewer_key, target_type, target_id) DO UPDATE SET
+         created_at = datetime('now')`,
+    )
+    .run(key, type, targetId);
+  // Count every open, not only first unique viewer.
+  if (type === 'post') {
+    db()
+      .prepare(
+        `UPDATE community_posts SET view_count = view_count + 1,
+         updated_at = datetime('now') WHERE id = ?`,
+      )
+      .run(targetId);
+    return Number(
+      db().prepare('SELECT view_count FROM community_posts WHERE id = ?').get(targetId)
+        ?.view_count || 0,
+    );
+  }
+  db()
+    .prepare(
+      `UPDATE communities SET view_count = view_count + 1,
+       updated_at = datetime('now') WHERE id = ?`,
+    )
+    .run(targetId);
+  return Number(
+    db().prepare('SELECT view_count FROM communities WHERE id = ?').get(targetId)
+      ?.view_count || 0,
+  );
 }
 
 function migrateSouqAds(db) {
@@ -839,6 +1186,104 @@ function publicJob(row, { detail = false } = {}) {
   };
 }
 
+function publicCommunity(row, { viewerId = '', role = '', joined = false } = {}) {
+  return {
+    id: row.id,
+    name: row.name,
+    slug: row.slug,
+    description: row.description || '',
+    coverImage: row.cover_image || '',
+    topic: row.topic || 'General',
+    city: row.city || '',
+    creatorId: row.creator_id,
+    creatorName: row.creator_name || '',
+    memberCount: Number(row.member_count || 0),
+    postCount: Number(row.post_count || 0),
+    viewCount: Number(row.view_count || 0),
+    status: row.status || 'active',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    joined: Boolean(joined),
+    role: role || '',
+    isOwner: Boolean(viewerId && row.creator_id === viewerId),
+    isDummy: row.is_dummy === 1 || row.is_dummy === true,
+  };
+}
+
+function publicCommunityPost(row, { liked = false, detail = false } = {}) {
+  const item = {
+    id: row.id,
+    communityId: row.community_id,
+    communityName: row.community_name || '',
+    authorId: row.author_id,
+    authorName: row.author_name || 'Member',
+    authorAvatar: row.author_avatar || '',
+    body: row.body || '',
+    image: row.image || '',
+    status: row.status || 'pending',
+    likeCount: Number(row.like_count || 0),
+    commentCount: Number(row.comment_count || 0),
+    viewCount: Number(row.view_count || 0),
+    liked: Boolean(liked),
+    joined: row.joined === 1 || row.joined === true,
+    isOwner: row.is_owner === 1 || row.is_owner === true,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    approvedAt: row.approved_at || '',
+    isDummy: row.is_dummy === 1 || row.is_dummy === true,
+  };
+  if (!detail) return item;
+  return item;
+}
+
+function publicCommunityComment(row, { liked = false } = {}) {
+  return {
+    id: row.id,
+    postId: row.post_id,
+    communityId: row.community_id,
+    authorId: row.author_id,
+    authorName: row.author_name || 'Member',
+    authorAvatar: row.author_avatar || '',
+    parentId: row.parent_id || '',
+    body: row.body || '',
+    likeCount: Number(row.like_count || 0),
+    liked: Boolean(liked),
+    status: row.status || 'active',
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    isDummy: row.is_dummy === 1 || row.is_dummy === true,
+  };
+}
+
+function publicCommunityReport(row) {
+  let snapshot = null;
+  if (row.snapshot) {
+    try {
+      snapshot = JSON.parse(row.snapshot);
+    } catch (_) {
+      snapshot = null;
+    }
+  }
+  return {
+    id: row.id,
+    reporterId: row.reporter_id,
+    reporterName: row.reporter_name || '',
+    targetType: row.target_type,
+    targetId: row.target_id,
+    reportedUserId: row.reported_user_id || '',
+    reportedUserName: row.reported_user_name || '',
+    communityId: row.community_id || '',
+    communityName: (snapshot && snapshot.communityName) || '',
+    reason: row.reason || '',
+    details: row.details || '',
+    status: row.status || 'open',
+    adminNote: row.admin_note || '',
+    snapshot,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
 function publicReel(row, place) {
   const activity = row.source === 'activity' ? place : null;
   const restaurant = row.source === 'restaurant' ? place : null;
@@ -871,4 +1316,11 @@ module.exports = {
   publicShopCategory,
   publicHealthFacility,
   publicJob,
+  publicCommunity,
+  publicCommunityPost,
+  publicCommunityComment,
+  publicCommunityReport,
+  syncUserActivityStats,
+  recordCommunityView,
+  markFeedSeen,
 };

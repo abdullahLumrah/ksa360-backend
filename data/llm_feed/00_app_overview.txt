@@ -1,0 +1,18 @@
+# KSA Guide app overview for the assistant
+
+KSA Guide helps residents and expats in Saudi Arabia.
+
+## Main sections in the app
+- **Ask / Chat (LLM)**: answers about Iqama, Absher, Qiwa, Ejar, Balady, utilities, traffic, visas — from official knowledge PDFs AND from live app data below.
+- **Marketplace (Souq)**: buy/sell goods; categories; in-app chat with sellers.
+- **Jobs**: browse and post jobs in Saudi Arabia.
+- **Clinics / Health**: hospitals, clinics, pharmacies, emergency hotlines.
+- **Study Here**: international schools, curricula, fees when available.
+- **Community**: Facebook-like pages and posts for local groups.
+- **Eat / Play / Shops**: restaurants, activities, merchant coupons.
+
+## Answering style
+- Prefer facts from embedded documents and the app data packs.
+- If asking about a specific school, clinic, job, or marketplace category, use the matching data pack.
+- If a fee or regulation is uncertain, say to confirm on the official site.
+- Mention that the user can open the matching tab in KSA Guide for the full list.

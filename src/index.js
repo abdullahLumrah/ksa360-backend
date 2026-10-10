@@ -10,6 +10,7 @@ const { seedSouq } = require('./seed_souq');
 const { seedShops, seedHealthcare, seedRestaurants, seedPlaceVideos } = require('./seed');
 const { seedSchools } = require('./seed_schools');
 const { seedJobs } = require('./seed_jobs');
+const { seedCommunities } = require('./seed_communities');
 const { router: restaurants } = require('./routes/restaurants');
 const { router: activities } = require('./routes/activities');
 const { router: reels } = require('./routes/reels');
@@ -18,6 +19,8 @@ const { router: auth } = require('./routes/auth');
 const { router: souq } = require('./routes/souq');
 const { router: admin } = require('./routes/admin');
 const { router: analytics } = require('./routes/analytics');
+const { router: me } = require('./routes/me');
+const { startPushWorker } = require('./push');
 
 const PORT = Number(process.env.PORT) || 4000;
 const HOST = process.env.HOST || '0.0.0.0';
@@ -61,6 +64,7 @@ app.use((req, res, next) => {
   }
   if (
     req.path.startsWith('/analytics') ||
+    req.path.startsWith('/me') ||
     req.path.startsWith('/shops') ||
     req.path.startsWith('/healthcare') ||
     req.path.startsWith('/schools') ||
@@ -68,11 +72,16 @@ app.use((req, res, next) => {
     req.path.startsWith('/activities') ||
     req.path.startsWith('/reels') ||
     req.path.startsWith('/guides') ||
-    req.path.startsWith('/jobs')
+    req.path.startsWith('/jobs') ||
+    req.path.startsWith('/communities')
   ) {
     return softUser(req, res, next);
   }
   return optionalUser(req, res, next);
+});
+
+app.get(['/privacy', '/privacy-policy'], (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'privacy.html'));
 });
 
 app.get('/health', (_req, res) => {
@@ -90,6 +99,8 @@ app.get('/health', (_req, res) => {
     healthFacilities: db().prepare('SELECT COUNT(*) AS n FROM health_facilities').get().n,
     schools: db().prepare('SELECT COUNT(*) AS n FROM schools').get().n,
     jobs: db().prepare("SELECT COUNT(*) AS n FROM jobs WHERE status = 'published'").get().n,
+    communities: db().prepare("SELECT COUNT(*) AS n FROM communities WHERE status = 'active'").get().n,
+    pushTokens: db().prepare('SELECT COUNT(*) AS n FROM push_tokens').get().n,
   });
 });
 
@@ -99,10 +110,12 @@ app.use('/shops', require('./routes/shops').router);
 app.use('/healthcare', require('./routes/healthcare').router);
 app.use('/schools', require('./routes/schools').router);
 app.use('/jobs', require('./routes/jobs').router);
+app.use('/communities', require('./routes/communities').router);
 app.use('/activities', activities);
 app.use('/reels', reels);
 app.use('/guides', guides);
 app.use('/auth', auth);
+app.use('/me', me);
 app.use('/souq', souq);
 app.use('/admin', admin);
 app.use('/analytics', analytics);
@@ -126,10 +139,12 @@ try {
   seedHealthcare();
   seedSchools();
   seedJobs();
+  seedCommunities();
 } catch (err) {
   console.error('Shops/healthcare/restaurants seed failed', err);
 }
 
 app.listen(PORT, HOST, () => {
   console.log(`KSA Guide backend on http://${HOST}:${PORT}`);
+  startPushWorker();
 });

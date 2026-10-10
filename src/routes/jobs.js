@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { Router } = require('express');
-const { db, publicJob } = require('../db');
+const { db, publicJob, syncUserActivityStats } = require('../db');
 const { requireUser } = require('../auth');
 const { isInSaudiArabia } = require('../seed_jobs');
 
@@ -236,6 +236,7 @@ router.post('/', requireUser, (req, res) => {
       req.user.name || '',
       JSON.stringify({ contact_email: contactEmail }),
     );
+  syncUserActivityStats(req.user.id);
   const row = db().prepare('SELECT * FROM jobs WHERE id = ?').get(id);
   res.status(201).json({
     ...publicJob(row, { detail: true }),

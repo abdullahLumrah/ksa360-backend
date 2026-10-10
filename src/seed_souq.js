@@ -2,7 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 const { db } = require('./db');
-const { classifyCar, listingSpecs } = require('./souq_taxonomy');
+const { classifyCar, listingSpecs, repairListingPrice } = require('./souq_taxonomy');
+const { isMoverPackerListing } = require('./souq_quality');
 
 const DATA = path.join(__dirname, '..', 'data');
 const APP_DATA = path.join(__dirname, '..', '..', 'KSAGUIDE', 'assets', 'data');
@@ -57,6 +58,8 @@ function mapImported(source, item) {
   const id = `${source}-${item.id}`;
   const images = Array.isArray(item.images) ? item.images.filter(Boolean).map(String) : [];
   const title = String(item.title || '').trim() || 'Listing';
+  const rawDescription = String(item.description || '').trim();
+  if (isMoverPackerListing(title, rawDescription)) return null;
   const souqCat = String(item.souqCategory || item.categoryId || '').trim() || 'cars';
   const specs = listingSpecs(source, item);
   if (souqCat !== 'cars') {
@@ -210,13 +213,14 @@ function seedImportedAds() {
   const rows = [
     ...haraj.map((item) => mapImported('haraj', item)),
     ...expat.map((item) => mapImported('expatriates', item)),
-  ];
+  ].filter(Boolean);
   const count = run(rows);
   console.log(`Seeded ${count} Souq ads (${haraj.length} Haraj, ${expat.length} Expat).`);
   return count;
 }
 
 function insertAds(rows) {
+  rows = rows.filter((row) => row && !isMoverPackerListing(row.title, row.description));
   if (!rows.length) return 0;
   const insert = db().prepare(`
     INSERT INTO souq_ads (
@@ -329,6 +333,7 @@ function refreshImportedSpecs() {
       const raw = row.source === 'haraj' ? haraj.get(row.ad_id) : expat.get(row.ad_id);
       if (!raw) continue;
       const mapped = mapImported(row.source, raw);
+      if (!mapped) continue;
       update.run({
         ad_id: row.ad_id,
         title: mapped.title,
@@ -351,12 +356,45 @@ function refreshImportedSpecs() {
   return count;
 }
 
+function repairImportedPrices() {
+  const rows = db()
+    .prepare(
+      `SELECT ad_id, title, description, category_id, source, price
+       FROM souq_ads WHERE source != 'user'`,
+    )
+    .all();
+  const update = db().prepare(
+    `UPDATE souq_ads SET price = @price, is_negotiable = @neg, updated_at = datetime('now')
+     WHERE ad_id = @ad_id`,
+  );
+  const run = db().transaction(() => {
+    let changed = 0;
+    for (const row of rows) {
+      const next = repairListingPrice(row);
+      const prev = row.price == null ? null : Number(row.price);
+      if (next !== prev) {
+        update.run({
+          ad_id: row.ad_id,
+          price: next,
+          neg: next == null ? 1 : 0,
+        });
+        changed += 1;
+      }
+    }
+    return changed;
+  });
+  const changed = run();
+  console.log(`Repaired prices on ${changed} marketplace ads.`);
+  return changed;
+}
+
 function seedSouq() {
   const cats = seedSouqCategories();
   const ads = seedImportedAds();
   const extra = seedExpatClassifieds();
   refreshImportedSpecs();
   backfillCarFilters();
+  repairImportedPrices();
   console.log(`Souq ready: ${cats} categories, ${ads} imported ads (+${extra} classifieds).`);
 }
 

@@ -126,21 +126,109 @@ function mapGear(raw) {
 
 function parseNumber(raw) {
   if (raw == null || raw === '') return null;
-  const n = Number(String(raw).replace(/,/g, '').replace(/[^\d.]/g, ''));
+  const match = String(raw).replace(/,/g, '').match(/(\d+(?:\.\d+)?)/);
+  if (!match) return null;
+  const n = Number(match[1]);
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 
-function parsePrice(raw, extraText = '') {
-  const blob = `${raw || ''} ${extraText || ''}`;
-  const kMatch = blob.match(/(\d+(?:\.\d+)?)\s*[kK](?![mMا])|(\d+)\s*ألف|(\d+)\s*الف/);
-  if (kMatch) {
-    const n = Number(kMatch[1] || kMatch[2] || kMatch[3]);
-    if (n > 0) return n * 1000;
+/** Split glued figures like 16501 or 1600018000 back into the first real price. */
+function ungluePrice(n) {
+  if (!Number.isFinite(n) || n < 10000) return n;
+  const digits = String(Math.round(n));
+  if (digits.length >= 8 && digits.length <= 12 && digits.length % 2 === 0) {
+    const half = digits.length / 2;
+    const a = Number(digits.slice(0, half));
+    const b = Number(digits.slice(half));
+    if (a >= 400 && b >= 400 && Math.max(a, b) / Math.min(a, b) <= 8) {
+      return a;
+    }
+  }
+  return n;
+}
+
+function looksLikePhone(n) {
+  const s = String(Math.round(n));
+  return /^(966|05|5)\d{8,}$/.test(s) || s.length >= 10;
+}
+
+function sanitizePrice(n, { isCar = false, assumeThousands = false } = {}) {
+  if (!Number.isFinite(n) || n <= 0) return null;
+  if (n === 1 || n === 12 || n === 1111111) return null;
+  if (looksLikePhone(n)) return null;
+  n = ungluePrice(n);
+  if (assumeThousands && n < 400) n *= 1000;
+  if (isCar && n >= 8e6 && n % 1000 === 0) {
+    const down = n / 1000;
+    if (down >= 4000 && down <= 3e6) n = down;
+  }
+  if (!isCar && n > 2e6) return null;
+  if (isCar && n > 5e6) return null;
+  return n;
+}
+
+function firstLabeledPrice(text) {
+  const raw = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!raw) return null;
+  const head = raw.match(
+    /^(?:(SAR|USD|AED|SR|ر\.?\s*س)\s*)?([\d,]+(?:\.\d+)?)\s*(?:(\/\s*(?:month|year|week|day|mo|yr|munthly|monthly|yearly)|per\s+(?:month|year)))?\s*(,|$)/i,
+  );
+  if (head && (head[1] || head[3] || (head[4] === ',' && raw.length > head[0].length))) {
+    const n = Number(String(head[2]).replace(/,/g, ''));
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  const labeled = raw.match(/(?:SAR|SR|USD|AED|ر\.?\s*س)\s*([\d,]+(?:\.\d+)?)/i);
+  if (labeled) {
+    const n = Number(String(labeled[1]).replace(/,/g, ''));
+    if (Number.isFinite(n) && n > 0) return n;
+  }
+  const range = raw.match(/(\d{3,6})\s*(?:-|–|to|\/)\s*(\d{3,6})/i);
+  if (range) {
+    const a = Number(range[1]);
+    if (a > 0) return a;
+  }
+  const listed = raw.match(/\((\d{4,6})(?:\s*,\s*\d{4,6})+\)/);
+  if (listed) {
+    const a = Number(listed[1]);
+    if (a > 0) return a;
+  }
+  return null;
+}
+
+function parsePrice(raw, extraText = '', opts = {}) {
+  const isCar = Boolean(opts.isCar);
+  const assumeThousands = Boolean(opts.assumeThousands);
+  const fromText = firstLabeledPrice(extraText);
+  if (fromText != null) {
+    return sanitizePrice(fromText, { isCar, assumeThousands: false });
+  }
+  const fromRawLabel = firstLabeledPrice(raw);
+  if (fromRawLabel != null) {
+    return sanitizePrice(fromRawLabel, { isCar, assumeThousands: false });
+  }
+  const blob = `${extraText || ''} ${raw || ''}`;
+  const kRe = /(\d+(?:\.\d+)?)\s*(?:[kK](?![mMا\w])|ألف|الف)/g;
+  let kMatch;
+  while ((kMatch = kRe.exec(String(blob)))) {
+    const before = blob.slice(Math.max(0, kMatch.index - 18), kMatch.index);
+    const after = blob.slice(kMatch.index + kMatch[0].length, kMatch.index + kMatch[0].length + 10);
+    if (/(ممشي|ممشى|كم|km|كيلو)/i.test(before) || /^(?:\s*(?:km|كم|كيلو))/i.test(after)) {
+      continue;
+    }
+    const n = Number(kMatch[1]);
+    if (n > 0 && n < 1000) return sanitizePrice(n * 1000, { isCar });
+    if (n >= 1000) return sanitizePrice(n, { isCar });
   }
   const n = parseNumber(raw);
-  if (n == null || n === 1 || n === 12) return null;
-  if (n < 400) return n * 1000;
-  return n;
+  if (n == null) return null;
+  return sanitizePrice(n, { isCar, assumeThousands });
+}
+
+function repairListingPrice({ title, description, categoryId, source } = {}) {
+  const isCar = categoryId === 'cars';
+  const assumeThousands = source === 'haraj' && isCar;
+  const text = `${title || ''} ${description || ''}`;
+  return parsePrice(null, text, { isCar, assumeThousands });
 }
 
 function parseMileage(raw, extraText = '') {
@@ -154,23 +242,21 @@ function parseMileage(raw, extraText = '') {
   return n == null ? null : n <= 400 ? n * 1000 : n;
 }
 
-function parseExpatTitle(title, { literalSar = false } = {}) {
+function parseExpatTitle(title, { literalSar = false, isCar = false } = {}) {
   const raw = String(title || '').replace(/\s+/g, ' ').trim();
   let price = null;
   let rest = raw;
-  const priceHead = raw.match(/^(SAR|USD|AED)?\s*([\d,]+)\s*,\s*/i);
+  const priceHead = raw.match(
+    /^(?:SAR|USD|AED|SR)?\s*([\d,]+(?:\.\d+)?)\s*(?:\/\s*(?:month|year|week|day|mo|yr|munthly|monthly|yearly))?\s*,\s*/i,
+  );
   if (priceHead) {
-    const n = parseNumber(priceHead[2]);
-    if (n == null || n === 1 || n === 12) {
-      price = null;
-    } else if (literalSar) {
-      price = n;
-    } else {
-      price = parsePrice(priceHead[2], raw);
-    }
+    price = sanitizePrice(Number(String(priceHead[1]).replace(/,/g, '')), {
+      isCar,
+      assumeThousands: false,
+    });
     rest = raw.slice(priceHead[0].length);
   } else {
-    price = literalSar ? parseNumber(raw) : parsePrice(null, raw);
+    price = parsePrice(null, raw, { isCar, assumeThousands: false });
   }
   const parts = rest.split(',').map((part) => part.trim()).filter(Boolean);
   const vehicle = parts[0] || rest;
@@ -213,13 +299,16 @@ function parseExpatTitle(title, { literalSar = false } = {}) {
 function listingSpecs(source, item) {
   const title = String(item.title || '').trim();
   const souqCat = String(item.souqCategory || item.categoryId || '').trim();
-  const literalSar = source === 'expatriates' && souqCat !== '' && souqCat !== 'cars';
-  const fromTitle = source === 'expatriates' ? parseExpatTitle(title, { literalSar }) : {};
+  const isCar = souqCat === 'cars' || souqCat === '';
+  const assumeThousands = source === 'haraj' && isCar;
+  const fromTitle =
+    source === 'expatriates' ? parseExpatTitle(title, { isCar }) : {};
   const year = Number(item.Year || item.year || fromTitle.year || 0) || null;
   const mileage = parseMileage(item.mileage ?? item.Mileage, title);
-  const price = literalSar
-    ? (fromTitle.price ?? parseNumber(item.price))
-    : (parsePrice(item.price, title) ?? fromTitle.price ?? null);
+  const price =
+    parsePrice(item.price, title, { isCar, assumeThousands }) ??
+    fromTitle.price ??
+    null;
   return {
     year,
     mileage: mileage ?? fromTitle.mileage ?? null,
@@ -266,4 +355,5 @@ module.exports = {
   mapGear,
   parsePrice,
   parseMileage,
+  repairListingPrice,
 };

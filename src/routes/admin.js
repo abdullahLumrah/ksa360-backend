@@ -1,8 +1,28 @@
 const crypto = require('crypto');
 const express = require('express');
-const { db, publicRestaurant, publicActivity, publicPost, publicSouqAd, publicHealthFacility, publicJob } = require('../db');
+const {
+  db,
+  publicRestaurant,
+  publicActivity,
+  publicPost,
+  publicSouqAd,
+  publicHealthFacility,
+  publicJob,
+  publicCommunity,
+  publicCommunityPost,
+  publicCommunityReport,
+} = require('../db');
 const { checkAdminLogin, signAdmin, requireAdmin } = require('../admin_auth');
 const { canonicalCity } = require('../cities');
+const { fcmReady } = require('../fcm');
+const {
+  createJob,
+  listJobs,
+  cancelJob,
+  deliverJob,
+  publicPushJob,
+  tokenCounts,
+} = require('../push');
 
 const router = express.Router();
 
@@ -51,9 +71,58 @@ router.get('/overview', (_req, res) => {
     publishedJobs: count("SELECT COUNT(*) AS n FROM jobs WHERE status = 'published'"),
     awaitingJobs: count("SELECT COUNT(*) AS n FROM jobs WHERE status = 'awaiting_approval'"),
     pending: count("SELECT COUNT(*) AS n FROM souq_ads WHERE status = 'pending'"),
+    communities: count("SELECT COUNT(*) AS n FROM communities WHERE status = 'active'"),
+    communityPosts: count("SELECT COUNT(*) AS n FROM community_posts WHERE status = 'approved'"),
+    openReports: count("SELECT COUNT(*) AS n FROM community_reports WHERE status = 'open'"),
     events: count('SELECT COUNT(*) AS n FROM analytics_events'),
     eventsToday: count("SELECT COUNT(*) AS n FROM analytics_events WHERE created_at >= date('now')"),
+    uniqueUsersToday: count(`SELECT COUNT(DISTINCT CASE WHEN user_id != '' THEN user_id ELSE 'd:' || device_id END) AS n
+      FROM analytics_events WHERE created_at >= date('now') AND (user_id != '' OR device_id != '')`),
+    loginsToday: count(`SELECT COUNT(*) AS n FROM analytics_events
+      WHERE event_name IN ('login','register') AND created_at >= date('now')`),
+    uniqueLoginsToday: count(`SELECT COUNT(DISTINCT user_id) AS n FROM analytics_events
+      WHERE event_name IN ('login','register') AND user_id != '' AND created_at >= date('now')`),
+    pushTokens: count('SELECT COUNT(*) AS n FROM push_tokens'),
+    pushPending: count("SELECT COUNT(*) AS n FROM push_jobs WHERE status = 'pending'"),
   });
+});
+
+router.get('/push', (req, res) => {
+  const { page, limit } = pageParams(req.query);
+  res.json({
+    ...listJobs({ page, limit }),
+    tokens: tokenCounts(),
+    fcmReady: fcmReady(),
+  });
+});
+
+router.post('/push', async (req, res, next) => {
+  try {
+    const job = createJob({
+      title: req.body.title,
+      body: req.body.body,
+      platform: req.body.platform,
+      sendAt: req.body.sendAt,
+      userId: req.body.userId,
+      createdBy: req.admin.email,
+    });
+    const due = new Date(job.send_at).getTime() <= Date.now() + 2000;
+    recordAction(req.admin, due ? 'send' : 'schedule', 'push', job.id, job.title);
+    const row = due ? await deliverJob(job) : job;
+    res.status(due ? 200 : 201).json(publicPushJob(row));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/push/:id/cancel', (req, res, next) => {
+  try {
+    const row = cancelJob(req.params.id);
+    recordAction(req.admin, 'cancel', 'push', row.id, row.title);
+    res.json(publicPushJob(row));
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/restaurants', (req, res) => {
@@ -262,53 +331,19 @@ router.delete('/activities/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-router.get('/posts', (req, res) => {
-  const { page, limit, offset } = pageParams(req.query);
-  const q = String(req.query.q || '').trim();
-  const where = q ? 'WHERE title LIKE @q OR excerpt LIKE @q OR source LIKE @q' : '';
-  const params = q ? { q: like(q) } : {};
-  const total = db().prepare(`SELECT COUNT(*) AS n FROM posts ${where}`).get(params).n;
-  const rows = db()
-    .prepare(`SELECT * FROM posts ${where} ORDER BY date DESC LIMIT @limit OFFSET @offset`)
-    .all({ ...params, limit, offset });
-  res.json({ items: rows.map((row) => publicPost(row, { includeBody: false })), total, page, limit });
-});
-
-router.get('/posts/:id', (req, res) => {
-  const row = db().prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Post not found' });
-  res.json(publicPost(row, { includeBody: true }));
-});
-
-router.patch('/posts/:id', (req, res) => {
-  const row = db().prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Post not found' });
-  const next = {
-    title: String(req.body.title ?? row.title).trim() || row.title,
-    excerpt: String(req.body.excerpt ?? row.excerpt),
-    image: String(req.body.image ?? row.image),
-  };
-  db().prepare(`UPDATE posts SET title=@title, excerpt=@excerpt, image=@image, updated_at=datetime('now') WHERE id=@id`)
-    .run({ ...next, id: row.id });
-  recordAction(req.admin, 'update', 'post', row.id, next.title);
-  res.json(publicPost(db().prepare('SELECT * FROM posts WHERE id = ?').get(row.id)));
-});
-
-router.delete('/posts/:id', (req, res) => {
-  const row = db().prepare('SELECT * FROM posts WHERE id = ?').get(req.params.id);
-  if (!row) return res.status(404).json({ error: 'Post not found' });
-  db().prepare('DELETE FROM post_categories WHERE post_id = ?').run(row.id);
-  db().prepare('DELETE FROM post_tags WHERE post_id = ?').run(row.id);
-  db().prepare('DELETE FROM posts WHERE id = ?').run(row.id);
-  recordAction(req.admin, 'delete', 'post', row.id, row.title);
-  res.json({ ok: true });
-});
-
 router.get('/users', (req, res) => {
   const { page, limit, offset } = pageParams(req.query);
   const q = String(req.query.q || '').trim();
-  const where = q ? 'WHERE name LIKE @q OR email LIKE @q OR id LIKE @q' : '';
-  const params = q ? { q: like(q) } : {};
+  const dummy = String(req.query.dummy || '').trim();
+  const clauses = [];
+  const params = {};
+  if (q) {
+    clauses.push('(name LIKE @q OR email LIKE @q OR id LIKE @q)');
+    params.q = like(q);
+  }
+  if (dummy === '1' || dummy === 'true') clauses.push('is_dummy = 1');
+  if (dummy === '0' || dummy === 'false') clauses.push('is_dummy = 0');
+  const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
   const total = db().prepare(`SELECT COUNT(*) AS n FROM users ${where}`).get(params).n;
   const rows = db()
     .prepare(`SELECT * FROM users ${where} ORDER BY created_at DESC LIMIT @limit OFFSET @offset`)
@@ -325,6 +360,7 @@ router.get('/users', (req, res) => {
       googleId: row.google_id || '',
       createdAt: row.created_at,
       updatedAt: row.updated_at,
+      isDummy: Boolean(row.is_dummy),
     })),
     total,
     page,
@@ -353,6 +389,7 @@ router.get('/users/:id', (req, res) => {
       googleId: row.google_id || '',
       createdAt: row.created_at,
       updatedAt: row.updated_at,
+      isDummy: Boolean(row.is_dummy),
     },
     sessions: sessions.map((item) => ({
       jti: item.jti,
@@ -474,38 +511,88 @@ router.delete('/souq/ads/:id', (req, res) => {
   res.json({ ok: true });
 });
 
-router.get('/analytics/summary', (_req, res) => {
+router.get('/analytics/summary', (req, res) => {
+  const days = Math.min(90, Math.max(1, Number(req.query.days || 7)));
+  const since = `datetime('now', '-${days} days')`;
+  const actor = `CASE WHEN user_id != '' THEN user_id ELSE 'd:' || device_id END`;
+  const count = (sql) => db().prepare(sql).get().n || 0;
+  const users = {
+    accounts: count('SELECT COUNT(*) AS n FROM users WHERE deleted_at = \'\''),
+    deletedPending: count("SELECT COUNT(*) AS n FROM users WHERE deleted_at != ''"),
+    uniqueActive: count(`SELECT COUNT(DISTINCT ${actor}) AS n FROM analytics_events
+      WHERE created_at >= ${since} AND (user_id != '' OR device_id != '')`),
+    uniqueSignedIn: count(`SELECT COUNT(DISTINCT user_id) AS n FROM analytics_events
+      WHERE created_at >= ${since} AND user_id != ''`),
+  };
+  const auth = {
+    logins: count(`SELECT COUNT(*) AS n FROM analytics_events WHERE event_name = 'login' AND created_at >= ${since}`),
+    uniqueLogins: count(`SELECT COUNT(DISTINCT user_id) AS n FROM analytics_events
+      WHERE event_name = 'login' AND user_id != '' AND created_at >= ${since}`),
+    registers: count(`SELECT COUNT(*) AS n FROM analytics_events WHERE event_name = 'register' AND created_at >= ${since}`),
+    signouts: count(`SELECT COUNT(*) AS n FROM analytics_events WHERE event_name = 'logout' AND created_at >= ${since}`),
+    uniqueSignouts: count(`SELECT COUNT(DISTINCT user_id) AS n FROM analytics_events
+      WHERE event_name = 'logout' AND user_id != '' AND created_at >= ${since}`),
+    profileCompletions: count(`SELECT COUNT(*) AS n FROM analytics_events
+      WHERE event_name = 'profile_complete' AND created_at >= ${since}`),
+    deletes: count(`SELECT COUNT(*) AS n FROM analytics_events
+      WHERE event_name = 'account_delete' AND created_at >= ${since}`),
+    restores: count(`SELECT COUNT(*) AS n FROM analytics_events
+      WHERE event_name = 'account_restore' AND created_at >= ${since}`),
+  };
   const bySection = db()
     .prepare(
-      `SELECT section, COUNT(*) AS n FROM analytics_events
-       WHERE created_at >= datetime('now', '-7 days')
-       GROUP BY section ORDER BY n DESC`,
+      `SELECT section,
+              COUNT(*) AS events,
+              COUNT(DISTINCT ${actor}) AS uniqueUsers
+       FROM analytics_events
+       WHERE created_at >= ${since} AND section != ''
+       GROUP BY section ORDER BY uniqueUsers DESC, events DESC`,
     )
     .all();
   const byEvent = db()
     .prepare(
-      `SELECT event_name AS name, COUNT(*) AS n FROM analytics_events
-       WHERE created_at >= datetime('now', '-7 days')
-       GROUP BY event_name ORDER BY n DESC`,
+      `SELECT event_name AS name,
+              COUNT(*) AS events,
+              COUNT(DISTINCT ${actor}) AS uniqueUsers
+       FROM analytics_events
+       WHERE created_at >= ${since}
+       GROUP BY event_name ORDER BY uniqueUsers DESC, events DESC`,
     )
     .all();
   const byDay = db()
     .prepare(
-      `SELECT substr(created_at, 1, 10) AS day, COUNT(*) AS n FROM analytics_events
+      `SELECT substr(created_at, 1, 10) AS day,
+              COUNT(*) AS events,
+              COUNT(DISTINCT ${actor}) AS uniqueUsers,
+              SUM(CASE WHEN event_name IN ('login','register') THEN 1 ELSE 0 END) AS logins
+       FROM analytics_events
        WHERE created_at >= datetime('now', '-14 days')
        GROUP BY day ORDER BY day`,
     )
     .all();
   const topTargets = db()
     .prepare(
-      `SELECT target_id AS id, target_title AS title, section, COUNT(*) AS n
+      `SELECT target_id AS id, target_title AS title, section,
+              COUNT(*) AS events,
+              COUNT(DISTINCT ${actor}) AS uniqueUsers
        FROM analytics_events
-       WHERE target_id != '' AND created_at >= datetime('now', '-7 days')
+       WHERE target_id != '' AND created_at >= ${since}
        GROUP BY target_id, target_title, section
-       ORDER BY n DESC LIMIT 12`,
+       ORDER BY uniqueUsers DESC, events DESC LIMIT 20`,
     )
     .all();
-  res.json({ bySection, byEvent, byDay, topTargets });
+  const coupons = db()
+    .prepare(
+      `SELECT target_id AS id, target_title AS title,
+              COUNT(*) AS events,
+              COUNT(DISTINCT ${actor}) AS uniqueUsers
+       FROM analytics_events
+       WHERE event_name = 'shop_coupon_copy' AND created_at >= ${since}
+       GROUP BY target_id, target_title
+       ORDER BY uniqueUsers DESC, events DESC LIMIT 12`,
+    )
+    .all();
+  res.json({ days, users, auth, bySection, byEvent, byDay, topTargets, coupons });
 });
 
 router.get('/analytics/events', (req, res) => {
@@ -707,9 +794,9 @@ router.post('/jobs/:id/approve', (req, res) => {
 router.post('/jobs/:id/decline', (req, res) => {
   const row = db().prepare('SELECT * FROM jobs WHERE id = ?').get(req.params.id);
   if (!row) return res.status(404).json({ error: 'Job not found' });
-  db().prepare("UPDATE jobs SET status = 'declined', updated_at = datetime('now') WHERE id = ?").run(row.id);
+  db().prepare('DELETE FROM jobs WHERE id = ?').run(row.id);
   recordAction(req.admin, 'decline', 'job', row.id, row.title);
-  res.json(publicJob(db().prepare('SELECT * FROM jobs WHERE id = ?').get(row.id), { detail: true }));
+  res.json({ ok: true, removed: true });
 });
 
 router.post('/jobs/:id/pending', (req, res) => {
@@ -737,6 +824,162 @@ router.get('/actions', (req, res) => {
     .prepare('SELECT * FROM admin_actions ORDER BY created_at DESC LIMIT ? OFFSET ?')
     .all(limit, offset);
   res.json({ items, total, page, limit });
+});
+
+router.get('/communities', (req, res) => {
+  const { page, limit, offset } = pageParams(req.query);
+  const q = String(req.query.q || '').trim();
+  const status = String(req.query.status || '').trim();
+  const clauses = [];
+  const params = {};
+  if (q) {
+    clauses.push('(name LIKE @q OR topic LIKE @q OR city LIKE @q OR creator_name LIKE @q)');
+    params.q = like(q);
+  }
+  if (status) {
+    clauses.push('status = @status');
+    params.status = status;
+  }
+  const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+  const total = db().prepare(`SELECT COUNT(*) AS n FROM communities ${where}`).get(params).n;
+  const rows = db()
+    .prepare(
+      `SELECT * FROM communities ${where} ORDER BY created_at DESC LIMIT @limit OFFSET @offset`,
+    )
+    .all({ ...params, limit, offset });
+  res.json({
+    items: rows.map((row) => publicCommunity(row)),
+    total,
+    page,
+    limit,
+  });
+});
+
+router.delete('/communities/:id', (req, res) => {
+  const row = db().prepare('SELECT * FROM communities WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Page not found' });
+  db()
+    .prepare("UPDATE communities SET status = 'removed', updated_at = datetime('now') WHERE id = ?")
+    .run(row.id);
+  recordAction(req.admin, 'remove', 'community', row.id, row.name);
+  res.json({ ok: true });
+});
+
+router.get('/communities/:id/posts', (req, res) => {
+  const { page, limit, offset } = pageParams(req.query);
+  const status = String(req.query.status || '').trim();
+  const clauses = ['community_id = @id'];
+  const params = { id: req.params.id };
+  if (status) {
+    clauses.push('status = @status');
+    params.status = status;
+  }
+  const where = `WHERE ${clauses.join(' AND ')}`;
+  const total = db().prepare(`SELECT COUNT(*) AS n FROM community_posts ${where}`).get(params).n;
+  const rows = db()
+    .prepare(
+      `SELECT p.*, c.name AS community_name FROM community_posts p
+       LEFT JOIN communities c ON c.id = p.community_id
+       ${where} ORDER BY p.created_at DESC LIMIT @limit OFFSET @offset`,
+    )
+    .all({ ...params, limit, offset });
+  res.json({
+    items: rows.map((row) => publicCommunityPost(row, { detail: true })),
+    total,
+    page,
+    limit,
+  });
+});
+
+router.delete('/community-posts/:id', (req, res) => {
+  const row = db().prepare('SELECT * FROM community_posts WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Post not found' });
+  db()
+    .prepare(
+      "UPDATE community_posts SET status = 'removed', updated_at = datetime('now') WHERE id = ?",
+    )
+    .run(row.id);
+  recordAction(req.admin, 'remove', 'community_post', row.id, row.body.slice(0, 80));
+  res.json({ ok: true });
+});
+
+router.delete('/community-comments/:id', (req, res) => {
+  const row = db().prepare('SELECT * FROM community_comments WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Comment not found' });
+  db()
+    .prepare(
+      "UPDATE community_comments SET status = 'removed', updated_at = datetime('now') WHERE id = ?",
+    )
+    .run(row.id);
+  if (!row.parent_id) {
+    db()
+      .prepare(
+        "UPDATE community_comments SET status = 'removed', updated_at = datetime('now') WHERE parent_id = ?",
+      )
+      .run(row.id);
+  }
+  db()
+    .prepare(
+      `UPDATE community_posts SET comment_count = (
+         SELECT COUNT(*) FROM community_comments
+         WHERE post_id = ? AND status = 'active'
+       ), updated_at = datetime('now') WHERE id = ?`,
+    )
+    .run(row.post_id, row.post_id);
+  recordAction(req.admin, 'remove', 'community_comment', row.id, row.body.slice(0, 80));
+  res.json({ ok: true });
+});
+
+router.get('/community-reports', (req, res) => {
+  const { page, limit, offset } = pageParams(req.query);
+  const status = String(req.query.status || 'open').trim();
+  const q = String(req.query.q || '').trim();
+  const clauses = [];
+  const params = {};
+  if (status && status !== 'all') {
+    clauses.push('status = @status');
+    params.status = status;
+  }
+  if (q) {
+    clauses.push(
+      '(reason LIKE @q OR details LIKE @q OR reporter_name LIKE @q OR reported_user_name LIKE @q)',
+    );
+    params.q = like(q);
+  }
+  const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+  const total = db().prepare(`SELECT COUNT(*) AS n FROM community_reports ${where}`).get(params).n;
+  const rows = db()
+    .prepare(
+      `SELECT * FROM community_reports ${where}
+       ORDER BY created_at DESC LIMIT @limit OFFSET @offset`,
+    )
+    .all({ ...params, limit, offset });
+  res.json({
+    items: rows.map((row) => publicCommunityReport(row)),
+    total,
+    page,
+    limit,
+  });
+});
+
+router.patch('/community-reports/:id', (req, res) => {
+  const row = db().prepare('SELECT * FROM community_reports WHERE id = ?').get(req.params.id);
+  if (!row) return res.status(404).json({ error: 'Report not found' });
+  const status = String(req.body.status || row.status).trim();
+  const adminNote = String(req.body.adminNote ?? req.body.admin_note ?? row.admin_note).trim();
+  if (!['open', 'reviewing', 'resolved', 'dismissed'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status' });
+  }
+  db()
+    .prepare(
+      `UPDATE community_reports SET status = ?, admin_note = ?, updated_at = datetime('now')
+       WHERE id = ?`,
+    )
+    .run(status, adminNote, row.id);
+  recordAction(req.admin, status, 'community_report', row.id, row.reason);
+  res.json(
+    publicCommunityReport(db().prepare('SELECT * FROM community_reports WHERE id = ?').get(row.id)),
+  );
 });
 
 module.exports = { router };

@@ -3,7 +3,7 @@ const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
 const multer = require('multer');
-const { db, publicSouqAd } = require('../db');
+const { db, publicSouqAd, syncUserActivityStats } = require('../db');
 const { requireUser } = require('../auth');
 const { classifyCar, normalizeBodyType } = require('../souq_taxonomy');
 const { registerChatRoutes } = require('./souq_chats');
@@ -124,6 +124,9 @@ function listWhere(query, { mine = false, sellerId = '' } = {}) {
   } else {
     where.push('status = @status');
     params.status = PUBLIC_STATUS;
+    where.push(
+      "lower(title) NOT LIKE '%mover%' AND lower(title) NOT LIKE '%packer%' AND lower(title) NOT LIKE '%shifting%'",
+    );
   }
   const category = String(query.category || query.categoryId || '').trim();
   if (category) {
@@ -391,6 +394,7 @@ router.post(
         body_type: classified.bodyType,
       });
 
+    syncUserActivityStats(req.user.id);
     const row = db().prepare('SELECT * FROM souq_ads WHERE ad_id = ?').get(adId);
     res.status(201).json(publicSouqAd(row));
   },
