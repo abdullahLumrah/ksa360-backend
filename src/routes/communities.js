@@ -9,6 +9,10 @@ const {
   publicCommunityPost,
   publicCommunityComment,
   publicCommunityReport,
+  isAppUserId,
+  blockedIdsFor,
+  blockedAdIdsFor,
+  isBlockedBy,
   syncUserActivityStats,
   recordCommunityView,
   markFeedSeen,
@@ -203,6 +207,19 @@ function buildReportSnapshot({ targetType, targetId, communityId }) {
       snapshot.comments = commentThread(post.id);
     }
   }
+  if (targetType === 'souq_ad' && targetId) {
+    const ad = db().prepare('SELECT * FROM souq_ads WHERE ad_id = ?').get(targetId);
+    if (ad) {
+      snapshot.ad = {
+        id: ad.ad_id,
+        title: ad.title,
+        city: ad.city || '',
+        sellerId: ad.seller_id || '',
+        sellerName: ad.seller_name || '',
+        price: ad.price,
+      };
+    }
+  }
   return snapshot;
 }
 
@@ -225,12 +242,13 @@ function feedRankSql() {
   ) AS INTEGER)`;
 }
 
-function encodeFeedCursor(row) {
+function encodeFeedCursor(row, { replay = false } = {}) {
   return Buffer.from(
     JSON.stringify({
       s: Number(row.rank_score),
       t: row.created_at,
       id: row.id,
+      r: replay ? 1 : 0,
     }),
     'utf8',
   ).toString('base64url');
@@ -241,53 +259,27 @@ function decodeFeedCursor(raw) {
   try {
     const parsed = JSON.parse(Buffer.from(String(raw), 'base64url').toString('utf8'));
     if (!parsed?.id || !parsed?.t) return null;
-    return { s: Number(parsed.s) || 0, t: String(parsed.t), id: String(parsed.id) };
+    return {
+      s: Number(parsed.s) || 0,
+      t: String(parsed.t),
+      id: String(parsed.id),
+      r: Number(parsed.r) || 0,
+    };
   } catch (_) {
     return null;
   }
 }
 
-router.get('/feed', (req, res) => {
-  const topic = String(req.query.topic || '').trim();
-  const q = String(req.query.q || '').trim();
-  const userId = req.user?.id || '';
-  const limit = Math.min(Number(req.query.limit) || 20, 40);
-  const page = Math.max(Number(req.query.page) || 0, 0);
-  const cursor = decodeFeedCursor(req.query.cursor);
-  const hideSeen = Boolean(userId && !q);
-  const clauses = ["p.status = 'approved'", "c.status = 'active'"];
-  const filter = { userId: userId || '' };
-  if (topic) {
-    clauses.push('c.topic = @topic');
-    filter.topic = topic;
-  }
-  if (q) {
-    clauses.push('(p.body LIKE @q OR c.name LIKE @q OR p.author_name LIKE @q)');
-    filter.q = like(q);
-  }
-  if (hideSeen) {
-    clauses.push(`NOT EXISTS (
-      SELECT 1 FROM community_feed_seen s
-      WHERE s.post_id = p.id AND s.user_id = @userId
-    )`);
-  }
-  const where = `WHERE ${clauses.join(' AND ')}`;
-  const memberCount = userId
-    ? db()
-        .prepare('SELECT COUNT(*) AS n FROM community_members WHERE user_id = ?')
-        .get(userId).n
-    : 0;
-  const personalized = Boolean(userId && memberCount > 0);
-  let total;
-  if (!cursor) {
-    total = db()
-      .prepare(
-        `SELECT COUNT(*) AS n FROM community_posts p
-         INNER JOIN communities c ON c.id = p.community_id
-         ${where}`,
-      )
-      .get(filter).n;
-  }
+function queryCommunityFeed({
+  clauses,
+  filter,
+  personalized,
+  cursor,
+  limit,
+  hideSeen,
+  excludeIds = [],
+}) {
+  const extra = [...clauses];
   const params = {
     ...filter,
     personalized: personalized ? 1 : 0,
@@ -296,8 +288,20 @@ router.get('/feed', (req, res) => {
     cursorCreated: cursor?.t ?? '',
     cursorId: cursor?.id ?? '',
     fetchLimit: limit + 1,
-    offset: cursor ? 0 : page * limit,
   };
+  if (hideSeen) {
+    extra.push(`NOT EXISTS (
+      SELECT 1 FROM community_feed_seen s
+      WHERE s.post_id = p.id AND s.user_id = @userId
+    )`);
+  }
+  if (excludeIds.length) {
+    extra.push(`p.id NOT IN (${excludeIds.map((_, i) => `@ex${i}`).join(', ')})`);
+    excludeIds.forEach((id, i) => {
+      params[`ex${i}`] = id;
+    });
+  }
+  const where = `WHERE ${extra.join(' AND ')}`;
   const rows = db()
     .prepare(
       `SELECT * FROM (
@@ -316,11 +320,78 @@ router.get('/feed', (req, res) => {
           OR (x.rank_score = @cursorScore AND x.created_at < @cursorCreated)
           OR (x.rank_score = @cursorScore AND x.created_at = @cursorCreated AND x.id < @cursorId)
        ORDER BY x.rank_score DESC, x.created_at DESC, x.id DESC
-       LIMIT @fetchLimit OFFSET @offset`,
+       LIMIT @fetchLimit`,
     )
     .all(params);
   const hasMore = rows.length > limit;
   const pageRows = hasMore ? rows.slice(0, limit) : rows;
+  return { pageRows, hasMore, last: pageRows[pageRows.length - 1] || null };
+}
+
+router.get('/feed', (req, res) => {
+  const topic = String(req.query.topic || '').trim();
+  const q = String(req.query.q || '').trim();
+  const userId = req.user?.id || '';
+  const limit = Math.min(Number(req.query.limit) || 20, 40);
+  const page = Math.max(Number(req.query.page) || 0, 0);
+  const cursor = decodeFeedCursor(req.query.cursor);
+  const replay = Boolean(cursor?.r);
+  const preferUnseen = Boolean(userId && !q && !replay);
+  const clauses = [
+    "p.status = 'approved'",
+    "c.status = 'active'",
+    `p.author_id NOT IN (SELECT blocked_id FROM blocked_users WHERE blocker_id = @userId)`,
+  ];
+  const filter = { userId: userId || '' };
+  if (topic) {
+    clauses.push('c.topic = @topic');
+    filter.topic = topic;
+  }
+  if (q) {
+    clauses.push('(p.body LIKE @q OR c.name LIKE @q OR p.author_name LIKE @q)');
+    filter.q = like(q);
+  }
+  const memberCount = userId
+    ? db()
+        .prepare('SELECT COUNT(*) AS n FROM community_members WHERE user_id = ?')
+        .get(userId).n
+    : 0;
+  const personalized = Boolean(userId && memberCount > 0);
+  let total;
+  if (!cursor) {
+    total = db()
+      .prepare(
+        `SELECT COUNT(*) AS n FROM community_posts p
+         INNER JOIN communities c ON c.id = p.community_id
+         WHERE ${clauses.join(' AND ')}`,
+      )
+      .get(filter).n;
+  }
+  let { pageRows, hasMore, last } = queryCommunityFeed({
+    clauses,
+    filter,
+    personalized,
+    cursor,
+    limit,
+    hideSeen: preferUnseen,
+  });
+  const unseenCount = pageRows.length;
+  let usedReplay = replay;
+  if (preferUnseen && pageRows.length < limit) {
+    const fill = queryCommunityFeed({
+      clauses,
+      filter,
+      personalized,
+      cursor: pageRows.length ? null : cursor,
+      limit: limit - pageRows.length,
+      hideSeen: false,
+      excludeIds: pageRows.map((row) => row.id),
+    });
+    pageRows = [...pageRows, ...fill.pageRows];
+    hasMore = fill.hasMore;
+    last = pageRows[pageRows.length - 1] || last;
+    usedReplay = true;
+  }
   if (userId && pageRows.length) {
     markFeedSeen(userId, pageRows.map((row) => row.id));
   }
@@ -329,19 +400,18 @@ router.get('/feed', (req, res) => {
     'post',
     pageRows.map((r) => r.id),
   );
-  const last = pageRows[pageRows.length - 1];
   res.json({
     items: pageRows.map((row) =>
       publicCommunityPost(row, { liked: likes.has(row.id) }),
     ),
-    nextCursor: hasMore && last ? encodeFeedCursor(last) : null,
+    nextCursor: hasMore && last ? encodeFeedCursor(last, { replay: usedReplay }) : null,
     hasMore,
     total: total ?? null,
     page,
     limit,
     feedMode: personalized ? 'home' : 'trending',
-    hideSeen,
-    caughtUp: hideSeen && !cursor && pageRows.length === 0,
+    hideSeen: preferUnseen,
+    caughtUp: preferUnseen && unseenCount === 0,
   });
 });
 
@@ -375,8 +445,12 @@ router.get('/discover', (req, res) => {
     )
     .all(groupParams);
 
-  const postClauses = ["p.status = 'approved'", "c.status = 'active'"];
-  const postParams = {};
+  const postClauses = [
+    "p.status = 'approved'",
+    "c.status = 'active'",
+    `p.author_id NOT IN (SELECT blocked_id FROM blocked_users WHERE blocker_id = @userId)`,
+  ];
+  const postParams = { userId: userId || '' };
   if (topic) {
     postClauses.push('c.topic = @topic');
     postParams.topic = topic;
@@ -486,6 +560,108 @@ router.get('/pending-inbox', requireUser, (req, res) => {
   res.json({
     items: rows.map((row) => publicCommunityPost(row)),
     total: rows.length,
+  });
+});
+
+router.get('/blocks', requireUser, (req, res) => {
+  res.json({
+    ids: blockedIdsFor(req.user.id),
+    adIds: blockedAdIdsFor(req.user.id),
+  });
+});
+
+router.post('/blocks', requireUser, (req, res) => {
+  const body = req.body || {};
+  const blockedId = String(body.userId || body.blockedId || body.blocked_id || '').trim();
+  const adId = String(body.adId || body.ad_id || '').trim();
+  const reason = String(body.reason || 'Block user').trim() || 'Block user';
+  const details = String(body.details || '').trim().slice(0, 2000);
+  let targetType = String(body.targetType || body.target_type || '').trim();
+  const catalogSeller = Boolean(blockedId) && !isAppUserId(blockedId);
+  let listingId = adId || (targetType === 'souq_ad' ? String(body.targetId || body.target_id || '').trim() : '');
+  if (!listingId && catalogSeller) {
+    const adRow = db().prepare('SELECT ad_id FROM souq_ads WHERE ad_id = ?').get(blockedId);
+    if (adRow) listingId = blockedId;
+  }
+  if (catalogSeller || (listingId && !isAppUserId(blockedId))) targetType = 'souq_ad';
+  if (!targetType) targetType = 'user';
+  const targetId = String(body.targetId || body.target_id || listingId || blockedId).trim();
+  let communityId = String(body.communityId || body.community_id || '').trim();
+  if (!blockedId && !listingId) {
+    return res.status(400).json({ error: 'userId is required' });
+  }
+  if (isAppUserId(blockedId) && blockedId === req.user.id) {
+    return res.status(400).json({ error: 'You cannot block yourself' });
+  }
+  const target = isAppUserId(blockedId)
+    ? db().prepare('SELECT id, name FROM users WHERE id = ?').get(blockedId)
+    : null;
+  let reportedUserName = target?.name || '';
+  if (['post', 'comment'].includes(targetType) && targetId) {
+    if (targetType === 'post') {
+      const post = db().prepare('SELECT community_id FROM community_posts WHERE id = ?').get(targetId);
+      if (post) communityId = communityId || post.community_id;
+    } else {
+      const comment = db().prepare('SELECT community_id FROM community_comments WHERE id = ?').get(targetId);
+      if (comment) communityId = communityId || comment.community_id;
+    }
+  }
+  const allowedTypes = ['user', 'post', 'comment', 'community', 'souq_ad'];
+  const reportType = allowedTypes.includes(targetType) ? targetType : 'user';
+  const snapshot = buildReportSnapshot({
+    targetType: reportType,
+    targetId: targetId || listingId || blockedId,
+    communityId,
+  });
+  if (reportType === 'souq_ad' && snapshot.ad?.sellerName) {
+    reportedUserName = reportedUserName || snapshot.ad.sellerName;
+  }
+  const tx = db().transaction(() => {
+    if (isAppUserId(blockedId)) {
+      db()
+        .prepare(
+          `INSERT INTO blocked_users (blocker_id, blocked_id, reason, created_at)
+           VALUES (?, ?, ?, datetime('now'))
+           ON CONFLICT(blocker_id, blocked_id) DO UPDATE SET reason = excluded.reason`,
+        )
+        .run(req.user.id, blockedId, reason);
+    }
+    if (listingId) {
+      db()
+        .prepare(
+          `INSERT INTO blocked_ads (blocker_id, ad_id, reason, created_at)
+           VALUES (?, ?, ?, datetime('now'))
+           ON CONFLICT(blocker_id, ad_id) DO UPDATE SET reason = excluded.reason`,
+        )
+        .run(req.user.id, listingId, reason);
+    }
+    const reportId = `crep_${crypto.randomUUID()}`;
+    db()
+      .prepare(
+        `INSERT INTO community_reports
+         (id, reporter_id, reporter_name, target_type, target_id, reported_user_id,
+          reported_user_name, community_id, reason, details, snapshot)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(
+        reportId,
+        req.user.id,
+        req.user.name || '',
+        reportType,
+        targetId || listingId || blockedId,
+        isAppUserId(blockedId) ? blockedId : (snapshot.ad?.sellerId || ''),
+        reportedUserName,
+        communityId,
+        reason,
+        details,
+        JSON.stringify(snapshot),
+      );
+  });
+  tx();
+  res.status(201).json({
+    ok: true,
+    ids: blockedIdsFor(req.user.id),
+    adIds: blockedAdIdsFor(req.user.id),
   });
 });
 
@@ -625,6 +801,9 @@ router.get('/posts/:postId', (req, res) => {
   if (row.status !== 'approved' && row.author_id !== userId && !admin) {
     return res.status(404).json({ error: 'Post not found' });
   }
+  if (userId && isBlockedBy(userId, row.author_id)) {
+    return res.status(404).json({ error: 'Post not found' });
+  }
   const viewCount = recordCommunityView({
     targetType: 'post',
     targetId: row.id,
@@ -712,13 +891,15 @@ router.get('/posts/:postId/comments', (req, res) => {
   const post = db().prepare('SELECT * FROM community_posts WHERE id = ?').get(req.params.postId);
   if (!post) return res.status(404).json({ error: 'Post not found' });
   const userId = req.user?.id || '';
+  const blocked = new Set(blockedIdsFor(userId));
   const rows = db()
     .prepare(
       `SELECT * FROM community_comments
        WHERE post_id = ? AND status = 'active'
        ORDER BY created_at ASC`,
     )
-    .all(post.id);
+    .all(post.id)
+    .filter((row) => !blocked.has(row.author_id));
   const likes = likedSet(
     userId,
     'comment',
@@ -964,20 +1145,27 @@ router.get('/:id/posts', (req, res) => {
   let whereStatus = "p.status = 'approved'";
   if (admin && status === 'pending') whereStatus = "p.status = 'pending'";
   else if (admin && status === 'all') whereStatus = "p.status IN ('approved','pending')";
+  const blockedSql = userId
+    ? ' AND p.author_id NOT IN (SELECT blocked_id FROM blocked_users WHERE blocker_id = ?)'
+    : '';
   const total = db()
     .prepare(
       `SELECT COUNT(*) AS n FROM community_posts p
-       WHERE p.community_id = ? AND ${whereStatus}`,
+       WHERE p.community_id = ? AND ${whereStatus}${blockedSql}`,
     )
-    .get(community.id).n;
+    .get(...(userId ? [community.id, userId] : [community.id])).n;
   const rows = db()
     .prepare(
       `SELECT p.*, c.name AS community_name FROM community_posts p
        INNER JOIN communities c ON c.id = p.community_id
-       WHERE p.community_id = ? AND ${whereStatus}
+       WHERE p.community_id = ? AND ${whereStatus}${blockedSql}
        ORDER BY p.created_at DESC LIMIT ? OFFSET ?`,
     )
-    .all(community.id, limit, offset);
+    .all(
+      ...(userId
+        ? [community.id, userId, limit, offset]
+        : [community.id, limit, offset]),
+    );
   const likes = likedSet(
     userId,
     'post',

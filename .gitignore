@@ -1,6 +1,8 @@
 node_modules/
 data/*.sqlite
 data/*.sqlite-*
+data/*.db
+data/hs_enrich_progress.json
 data/uploads/
 data/firebase-service-account.json
 .env

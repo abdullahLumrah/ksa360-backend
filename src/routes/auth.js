@@ -5,12 +5,14 @@ const {
   publicUser,
   signToken,
   userByEmail,
+  userByAppleId,
   requireUser,
   revokeSession,
   revokeAllForUser,
   hashPassword,
   checkPassword,
   verifyGoogleToken,
+  verifyAppleToken,
   exchangeGoogleCode,
   fetchGoogleProfile,
   isPermanentlyDeleted,
@@ -42,8 +44,8 @@ function insertUser(input) {
   db()
     .prepare(
       `INSERT INTO users (
-        id, name, email, password_hash, google_id, date_of_birth, gender, phone, avatar, provider
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        id, name, email, password_hash, google_id, apple_id, date_of_birth, gender, phone, avatar, provider
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
       id,
@@ -51,6 +53,7 @@ function insertUser(input) {
       input.email,
       input.password_hash || null,
       input.google_id || null,
+      input.apple_id || null,
       input.date_of_birth || '',
       input.gender || '',
       input.phone || '',
@@ -202,6 +205,51 @@ router.post('/google', async (req, res) => {
   }
 });
 
+router.post('/apple', async (req, res) => {
+  try {
+    const identityToken = String(req.body?.identityToken || req.body?.identity_token || '').trim();
+    const appleUserId = String(req.body?.appleUserId || req.body?.apple_user_id || '').trim();
+    const clientEmail = cleanEmail(req.body?.email);
+    const fullName = cleanName(req.body?.fullName || req.body?.full_name);
+    const apple = await verifyAppleToken(identityToken);
+    const sub = String(apple.sub || appleUserId || '').trim();
+    if (!sub) return res.status(401).json({ error: 'Apple could not verify this account' });
+    const tokenEmail = cleanEmail(apple.email);
+    const email =
+      tokenEmail ||
+      clientEmail ||
+      `apple.${sub.replace(/[^a-zA-Z0-9._-]/g, '')}@privaterelay.appleid.com`;
+    const name = fullName || (email.includes('@') ? email.split('@')[0] : 'Apple user');
+    let user = userByAppleId(sub) || (tokenEmail ? userByEmail(tokenEmail) : null) || (clientEmail ? userByEmail(clientEmail) : null);
+    if (user && rejectDeleted(user, res)) return;
+    if (!user) {
+      user = insertUser({
+        name,
+        email,
+        apple_id: sub,
+        provider: 'apple',
+      });
+      return res.json(issueSession(user, 'register'));
+    }
+    db()
+      .prepare(
+        `UPDATE users SET
+          apple_id = COALESCE(NULLIF(apple_id, ''), ?),
+          email = CASE WHEN email = '' THEN ? ELSE email END,
+          name = CASE WHEN name = '' THEN ? ELSE name END,
+          provider = CASE WHEN provider = 'email' THEN 'email' ELSE
+            CASE WHEN provider = 'google' THEN 'google' ELSE 'apple' END END,
+          updated_at = datetime('now')
+         WHERE id = ?`,
+      )
+      .run(sub, email, name, user.id);
+    user = db().prepare('SELECT * FROM users WHERE id = ?').get(user.id);
+    res.json(issueSession(user, 'login'));
+  } catch (err) {
+    res.status(err.status || 401).json({ error: err.message || 'Apple sign-in failed' });
+  }
+});
+
 router.post('/logout', requireUser, (req, res) => {
   recordEvent({ event: 'logout', section: 'auth', user: req.user });
   revokeSession(req.jti);
@@ -261,19 +309,51 @@ router.patch('/me', requireUser, (req, res) => {
   res.json(publicUser(user));
 });
 
-router.delete('/me', requireUser, (req, res) => {
-  if (rejectDeleted(req.user, res)) return;
+function scheduleAccountDeletion(user) {
   const now = new Date().toISOString();
   db()
     .prepare("UPDATE users SET deleted_at = ?, updated_at = datetime('now') WHERE id = ?")
-    .run(now, req.user.id);
-  recordEvent({ event: 'account_delete', section: 'auth', user: req.user });
-  revokeAllForUser(req.user.id);
-  res.json({
+    .run(now, user.id);
+  recordEvent({ event: 'account_delete', section: 'auth', user });
+  revokeAllForUser(user.id);
+  const restoreUntil = new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString();
+  return {
     ok: true,
     message: 'Account scheduled for deletion. Sign in within 15 days to restore it.',
-    restoreUntil: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString(),
-  });
+    restoreUntil,
+  };
+}
+
+router.delete('/me', requireUser, (req, res) => {
+  if (rejectDeleted(req.user, res)) return;
+  res.json(scheduleAccountDeletion(req.user));
+});
+
+router.post('/delete-account', async (req, res) => {
+  try {
+    const email = cleanEmail(req.body?.email);
+    const password = String(req.body?.password || '');
+    if (!EMAIL.test(email)) {
+      return res.status(400).json({ error: 'Enter the email on the KSA 360 account' });
+    }
+    const user = userByEmail(email);
+    if (!user) {
+      return res.status(401).json({ error: 'Email or password is incorrect' });
+    }
+    if (rejectDeleted(user, res)) return;
+    if (!user.password_hash) {
+      return res.status(400).json({
+        error:
+          'This account uses Google sign-in. Delete it in KSA 360 → Profile → Manage profile, or email privacy@lumrah.co from this same address.',
+      });
+    }
+    if (!(await checkPassword(password, user.password_hash))) {
+      return res.status(401).json({ error: 'Email or password is incorrect' });
+    }
+    res.json(scheduleAccountDeletion(user));
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message || 'Could not delete the account' });
+  }
 });
 
 module.exports = { router };

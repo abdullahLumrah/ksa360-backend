@@ -111,7 +111,7 @@ function sortSql(sort) {
   }
 }
 
-function listWhere(query, { mine = false, sellerId = '' } = {}) {
+function listWhere(query, { mine = false, sellerId = '', viewerId = '' } = {}) {
   const where = [];
   const params = {};
   if (mine) {
@@ -127,6 +127,15 @@ function listWhere(query, { mine = false, sellerId = '' } = {}) {
     where.push(
       "lower(title) NOT LIKE '%mover%' AND lower(title) NOT LIKE '%packer%' AND lower(title) NOT LIKE '%shifting%'",
     );
+    if (viewerId) {
+      where.push(
+        'seller_id NOT IN (SELECT blocked_id FROM blocked_users WHERE blocker_id = @viewerId)',
+      );
+      where.push(
+        'ad_id NOT IN (SELECT ad_id FROM blocked_ads WHERE blocker_id = @viewerId)',
+      );
+      params.viewerId = viewerId;
+    }
   }
   const category = String(query.category || query.categoryId || '').trim();
   if (category) {
@@ -272,7 +281,7 @@ router.get('/ads', (req, res) => {
   const page = Math.max(0, Number(req.query.page || 0));
   const limit = Math.min(50, Math.max(1, Number(req.query.limit || req.query.pageSize || 20)));
   const offset = page * limit;
-  const { where, params } = listWhere(req.query);
+  const { where, params } = listWhere(req.query, { viewerId: req.user?.id || '' });
   const order = sortSql(req.query.sort);
   const total = db().prepare(`SELECT COUNT(*) AS n FROM souq_ads ${where}`).get(params).n;
   const rows = db()

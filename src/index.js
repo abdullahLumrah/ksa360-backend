@@ -28,7 +28,9 @@ const PUBLIC_AUTH = new Set([
   '/auth/login',
   '/auth/register',
   '/auth/google',
+  '/auth/apple',
   '/auth/google-config',
+  '/auth/delete-account',
   '/admin/login',
 ]);
 
@@ -56,6 +58,8 @@ app.use(generalLimit);
 app.use('/auth/login', authLimit);
 app.use('/auth/register', authLimit);
 app.use('/auth/google', authLimit);
+app.use('/auth/apple', authLimit);
+app.use('/auth/delete-account', authLimit);
 
 app.use((req, res, next) => {
   if (req.path === '/health' || PUBLIC_AUTH.has(req.path) || req.path.startsWith('/admin')) {
@@ -82,6 +86,14 @@ app.use((req, res, next) => {
 
 app.get(['/privacy', '/privacy-policy'], (_req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'privacy.html'));
+});
+
+app.get(['/terms', '/terms-of-use', '/eula'], (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'terms.html'));
+});
+
+app.get(['/delete', '/delete-account', '/account-deletion'], (_req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'delete.html'));
 });
 
 app.get('/health', (_req, res) => {

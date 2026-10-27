@@ -82,6 +82,12 @@ function userByEmail(email) {
     .get(email);
 }
 
+function userByAppleId(appleId) {
+  const id = String(appleId || '').trim();
+  if (!id) return null;
+  return db().prepare('SELECT * FROM users WHERE apple_id = ?').get(id);
+}
+
 function readBearer(req) {
   const header = String(req.headers.authorization || '');
   if (!header.startsWith('Bearer ')) return '';
@@ -290,11 +296,83 @@ async function fetchGoogleProfile(accessToken) {
   }
 }
 
+let appleKeysCache = { keys: [], fetchedAt: 0 };
+
+async function appleJwks() {
+  if (appleKeysCache.keys.length && Date.now() - appleKeysCache.fetchedAt < 6 * 60 * 60 * 1000) {
+    return appleKeysCache.keys;
+  }
+  const res = await fetch('https://appleid.apple.com/auth/keys');
+  if (!res.ok) {
+    const err = new Error('Apple could not verify this account');
+    err.status = 503;
+    throw err;
+  }
+  const data = await res.json();
+  appleKeysCache = { keys: data.keys || [], fetchedAt: Date.now() };
+  return appleKeysCache.keys;
+}
+
+function appleAudiences() {
+  return [
+    process.env.APPLE_CLIENT_ID,
+    process.env.APPLE_BUNDLE_ID,
+    'com.ksaguide.ksa360',
+  ]
+    .map((value) => String(value || '').trim())
+    .filter(Boolean);
+}
+
+async function verifyAppleToken(identityToken) {
+  const token = String(identityToken || '').trim();
+  if (!token) {
+    const err = new Error('Apple token is required');
+    err.status = 400;
+    throw err;
+  }
+  let header;
+  try {
+    header = JSON.parse(Buffer.from(token.split('.')[0], 'base64url').toString('utf8'));
+  } catch (_) {
+    const err = new Error('Apple could not verify this account');
+    err.status = 401;
+    throw err;
+  }
+  const keys = await appleJwks();
+  const jwk = keys.find((key) => key.kid === header.kid);
+  if (!jwk) {
+    const err = new Error('Apple could not verify this account');
+    err.status = 401;
+    throw err;
+  }
+  const key = crypto.createPublicKey({ key: jwk, format: 'jwk' });
+  let payload;
+  try {
+    payload = jwt.verify(token, key, {
+      algorithms: ['RS256'],
+      issuer: 'https://appleid.apple.com',
+      audience: appleAudiences(),
+    });
+  } catch (_) {
+    const err = new Error('Apple could not verify this account');
+    err.status = 401;
+    throw err;
+  }
+  if (!payload.sub) {
+    const err = new Error('Apple could not verify this account');
+    err.status = 401;
+    throw err;
+  }
+  return payload;
+}
+
 module.exports = {
   publicUser,
   signToken,
   userById,
   userByEmail,
+  userByAppleId,
+  verifyAppleToken,
   requireUser,
   optionalUser,
   softUser,

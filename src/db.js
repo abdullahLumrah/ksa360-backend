@@ -464,6 +464,33 @@ function ensureColumn(db, table, column, ddl) {
 function migrateUserProfile(db) {
   ensureColumn(db, 'users', 'phone', "phone TEXT NOT NULL DEFAULT ''");
   ensureColumn(db, 'users', 'deleted_at', "deleted_at TEXT NOT NULL DEFAULT ''");
+  ensureColumn(db, 'users', 'apple_id', 'apple_id TEXT');
+  db.exec('CREATE UNIQUE INDEX IF NOT EXISTS users_apple_id_idx ON users(apple_id) WHERE apple_id IS NOT NULL AND apple_id != \'\'');
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS blocked_users (
+      blocker_id TEXT NOT NULL,
+      blocked_id TEXT NOT NULL,
+      reason TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (blocker_id, blocked_id)
+    );
+    CREATE INDEX IF NOT EXISTS blocked_users_blocked_idx ON blocked_users(blocked_id);
+    CREATE INDEX IF NOT EXISTS blocked_users_blocker_idx ON blocked_users(blocker_id);
+    CREATE TABLE IF NOT EXISTS blocked_ads (
+      blocker_id TEXT NOT NULL,
+      ad_id TEXT NOT NULL,
+      reason TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      PRIMARY KEY (blocker_id, ad_id)
+    );
+    CREATE INDEX IF NOT EXISTS blocked_ads_ad_idx ON blocked_ads(ad_id);
+    CREATE INDEX IF NOT EXISTS blocked_ads_blocker_idx ON blocked_ads(blocker_id);
+  `);
+  db.exec(`
+    DELETE FROM blocked_users
+    WHERE blocked_id = 'unknown'
+       OR blocked_id LIKE '%:%'
+  `);
 }
 
 function migrateUserActivity(db) {
@@ -1123,7 +1150,7 @@ function publicSouqAd(row) {
     bodyType: isCar ? row.body_type || '' : '',
     attributes,
     seller: {
-      id: row.seller_id || 'unknown',
+      id: isAppUserId(row.seller_id) ? row.seller_id : (row.ad_id || row.seller_id || 'unknown'),
       name: row.seller_name || 'Seller',
       avatar: row.seller_avatar || '',
       phone: row.phone || '',
@@ -1301,9 +1328,47 @@ function publicReel(row, place) {
   };
 }
 
+function isAppUserId(id) {
+  const value = String(id || '').trim();
+  if (!value || value === 'unknown') return false;
+  if (value.includes(':')) return false;
+  return true;
+}
+
+function blockedIdsFor(userId) {
+  if (!userId) return [];
+  return db()
+    .prepare('SELECT blocked_id FROM blocked_users WHERE blocker_id = ?')
+    .all(userId)
+    .map((row) => row.blocked_id)
+    .filter(isAppUserId);
+}
+
+function blockedAdIdsFor(userId) {
+  if (!userId) return [];
+  return db()
+    .prepare('SELECT ad_id FROM blocked_ads WHERE blocker_id = ?')
+    .all(userId)
+    .map((row) => row.ad_id)
+    .filter(Boolean);
+}
+
+function isBlockedBy(blockerId, blockedId) {
+  if (!blockerId || !blockedId) return false;
+  return Boolean(
+    db()
+      .prepare('SELECT 1 FROM blocked_users WHERE blocker_id = ? AND blocked_id = ?')
+      .get(blockerId, blockedId),
+  );
+}
+
 module.exports = {
   db,
   DB_PATH,
+  isAppUserId,
+  blockedIdsFor,
+  blockedAdIdsFor,
+  isBlockedBy,
   restaurantRow,
   activityRow,
   publicRestaurant,

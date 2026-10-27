@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Delete your KSA 360 account · Lumrah</title>
+  <style>
+    :root { color-scheme: light; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: #f4f0e8;
+      color: #1b1916;
+      line-height: 1.55;
+    }
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 20px 72px;
+    }
+    h1 { font-size: 2rem; letter-spacing: -0.03em; margin: 0 0 8px; }
+    h2 { font-size: 1.15rem; margin: 28px 0 8px; }
+    p, li { color: #2e2a26; }
+    .muted { color: #6e665c; font-size: 0.95rem; }
+    a { color: #8a5e2e; }
+    ol, ul { padding-left: 1.2rem; }
+    form {
+      margin-top: 16px;
+      padding: 18px;
+      background: #fffcf7;
+      border: 1px solid #d9cfc0;
+      border-radius: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 12px 0 6px;
+    }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px 12px;
+      border: 1px solid #d9cfc0;
+      border-radius: 12px;
+      font: inherit;
+      background: #fff;
+    }
+    button {
+      margin-top: 16px;
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: 800;
+      color: #fff;
+      background: #b33a2b;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: default; }
+    .msg { margin-top: 12px; font-weight: 700; }
+    .ok { color: #1e7a4c; }
+    .err { color: #b33a2b; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="muted">KSA 360 · Lumrah</p>
+    <h1>Delete your KSA 360 account</h1>
+    <p class="muted">This page is for the KSA 360 app by Lumrah. Use it to request that your account and associated data be deleted.</p>
+
+    <h2>How to request deletion</h2>
+    <p><strong>In the app (fastest)</strong></p>
+    <ol>
+      <li>Open <strong>KSA 360</strong> and sign in</li>
+      <li>Go to <strong>Profile</strong></li>
+      <li>Tap <strong>Manage profile</strong></li>
+      <li>Tap <strong>Delete account</strong> and confirm</li>
+    </ol>
+    <p><strong>On this page</strong> — if you signed up with email, enter the same email and password below. You do not need the app installed.</p>
+    <p>Google-only accounts have no password here. Delete them in the app, or email <a href="mailto:privacy@lumrah.co">privacy@lumrah.co</a> from that same Google address.</p>
+
+    <form id="form">
+      <label for="email">Email on your KSA 360 account</label>
+      <input id="email" name="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit" id="go">Delete my account</button>
+      <p id="msg" class="msg" hidden></p>
+    </form>
+
+    <h2>What is deleted</h2>
+    <ul>
+      <li>Your name, email, phone, date of birth, gender, and profile photo</li>
+      <li>Sign-in sessions and push tokens</li>
+      <li>Your marketplace ads, chats, job posts, community pages, posts, comments, and likes — after the retention window below</li>
+    </ul>
+
+    <h2>What we keep, and for how long</h2>
+    <ul>
+      <li>The account is deactivated immediately. You cannot use the app until you restore it.</li>
+      <li>You have <strong>15 days</strong> to sign in again and restore the account.</li>
+      <li>After 15 days the account and the personal data above are permanently deleted.</li>
+      <li>We may keep limited records needed for safety, fraud, or law (for example a deletion log without your profile).</li>
+      <li>Public content other people still need to understand a thread may stay in anonymized form, or be removed with the account.</li>
+    </ul>
+
+    <h2>Need help?</h2>
+    <p>
+      Lumrah · KSA 360<br>
+      <a href="mailto:privacy@lumrah.co">privacy@lumrah.co</a><br>
+      <a href="/privacy">Privacy Policy</a> ·
+      <a href="https://www.lumrah.co">www.lumrah.co</a>
+    </p>
+  </main>
+  <script>
+    const form = document.getElementById('form');
+    const msg = document.getElementById('msg');
+    const go = document.getElementById('go');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      msg.hidden = true;
+      go.disabled = true;
+      try {
+        const res = await fetch('/auth/delete-account', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        msg.hidden = false;
+        if (!res.ok) {
+          msg.className = 'msg err';
+          msg.textContent = data.error || 'Could not delete the account.';
+          return;
+        }
+        msg.className = 'msg ok';
+        msg.textContent = data.message || 'Account scheduled for deletion. Sign in within 15 days to restore it.';
+        form.reset();
+      } catch (_) {
+        msg.hidden = false;
+        msg.className = 'msg err';
+        msg.textContent = 'Could not reach the server. Try again.';
+      } finally {
+        go.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
